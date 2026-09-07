@@ -1,7 +1,7 @@
 ---
-title: 优质面经汇总(付费)
-description: 优质面经汇总：整理 30+ 篇高质量 Java 后端校招/社招面经与复盘，总结高频考点与面试策略，适合对照自测与查缺补漏。
-category: 知识星球
+title: Tổng hợp kinh nghiệm phỏng vấn chất lượng cao (trả phí)
+description: Tổng hợp kinh nghiệm phỏng vấn chất lượng cao：tổng hợp 30+ bài chia sẻ kinh nghiệm phỏng vấn và review Java backend campus/xã hội chất lượng cao, tóm tắt các điểm kiến thức hay gặp và chiến lược phỏng vấn, phù hợp để tự kiểm tra và bổ sung kiến thức còn thiếu.
+category: Tinh Cầu Tri Thức
 icon: "mdi:chart-timeline-variant"
 head:
   - - meta
@@ -9,15 +9,15 @@ head:
       content: Java面经,校招面经,社招面经,大厂面经,面试经验,面经汇总,Java后端面试,付费专栏
 ---
 
-古人云:“**他山之石，可以攻玉**” 。善于学习借鉴别人的面试的成功经验或者失败的教训，可以让自己少走许多弯路。
+Người xưa có câu: "**Gương người khác có thể soi sáng chính mình**". Biết học hỏi và tham khảo kinh nghiệm thành công hoặc bài học thất bại từ các cuộc phỏng vấn của người khác sẽ giúp bạn tránh được nhiều vấp ngã không đáng có.
 
-在 **[《Java 面试指北》](../zhuanlan/java-mian-shi-zhi-bei.md)** 的 **「面经篇」** ，我分享了 30+ 篇高质量的 Java 后端面经，有校招的，也有社招的，有大厂的，也有中小厂的。
+Trong **[《Java 面试指北》](../zhuanlan/java-mian-shi-zhi-bei.md)** phần **「Kinh nghiệm phỏng vấn」**, tôi đã chia sẻ 30+ bài kinh nghiệm phỏng vấn Java backend chất lượng cao, bao gồm cả campus recruit và xã hội, cả công ty lớn lẫn công ty vừa và nhỏ.
 
-如果你是非科班的同学，也能在这些文章中找到对应的非科班的同学写的面经。
+Nếu bạn không có nền tảng chuyên ngành IT, bạn vẫn có thể tìm thấy các bài chia sẻ kinh nghiệm phỏng vấn của những người cùng hoàn cảnh trong các bài viết này.
 
 ![](https://oss.javaguide.cn/githubjuejinjihua/thinkimage-20220612185810480.png)
 
-并且，[知识星球](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html)还有专门分享面经和面试题的专题，里面会分享很多优质的面经和面试题。
+Ngoài ra, [知识星球](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html) còn có chuyên mục riêng dành để chia sẻ kinh nghiệm phỏng vấn và câu hỏi phỏng vấn, nơi sẽ có rất nhiều kinh nghiệm và câu hỏi phỏng vấn chất lượng cao được chia sẻ.
 
 ![](https://oss.javaguide.cn/xingqiu/image-20220304120018731.png)
 
@@ -25,11 +25,11 @@ head:
 
 ![](https://oss.javaguide.cn/xingqiu/image-20220628101805897.png)
 
-相比于牛客网或者其他网站的面经，《Java 面试指北》中整理的面经质量更高，并且，我会提供优质的参考资料。
+So với các bài kinh nghiệm phỏng vấn trên Niuke.com hay các trang web khác, các bài được tổng hợp trong 《Java 面试指北》 có chất lượng cao hơn, và tôi sẽ cung cấp các tài liệu tham khảo chất lượng.
 
-有很多同学要说了：“为什么不直接给出具体答案呢？”。主要原因有如下两点：
+Có nhiều bạn sẽ hỏi: "Tại sao không đưa ra câu trả lời cụ thể luôn?". Có hai lý do chính:
 
-1. 参考资料解释的要更详细一些，还可以顺便让你把相关的知识点复习一下。
-2. 给出的参考资料基本都是我的原创，假如后续我想对面试问题的答案进行完善，就不需要挨个把之前的面经写的答案给修改了（面试中的很多问题都是比较类似的）。当然了，我的原创文章也不太可能覆盖到面试的每个点，部分面试问题的答案，我是精选的其他技术博主写的优质文章，文章质量都很高。
+1. Tài liệu tham khảo giải thích chi tiết hơn, đồng thời cho phép bạn tiện thể ôn lại các kiến thức liên quan.
+2. Các tài liệu tham khảo được cung cấp hầu hết đều là bài gốc của tôi. Nếu sau này tôi muốn hoàn thiện câu trả lời cho các câu hỏi phỏng vấn, tôi sẽ không cần phải sửa từng câu trả lời đã viết trong từng bài kinh nghiệm phỏng vấn (nhiều câu hỏi phỏng vấn khá tương tự nhau). Tất nhiên, các bài gốc của tôi cũng không thể bao quát hết mọi điểm kiến thức phỏng vấn; đối với một số câu hỏi phỏng vấn, tôi có chọn lọc những bài viết chất lượng cao từ các kỹ thuật blogger khác, tất cả đều có chất lượng rất tốt.
 
 <!-- @include: @planet.snippet.md -->

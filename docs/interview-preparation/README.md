@@ -1,96 +1,96 @@
 ---
-title: 面试准备知识体系：复习计划、简历、项目经验、学习路线、面试重点与心态调整
-description: Java 后端面试准备路线，涵盖复习计划、简历编写、项目经验、Java 学习路线、面试重点、PDF 资料、实习经历、面经复盘和心态调整。
-category: 面试准备
+title: Hệ thống kiến thức chuẩn bị phỏng vấn: Kế hoạch ôn tập, CV, kinh nghiệm dự án, lộ trình học tập, trọng tâm phỏng vấn và điều chỉnh tâm lý
+description: Lộ trình chuẩn bị phỏng vấn Java Backend, bao gồm kế hoạch ôn tập, viết CV, kinh nghiệm dự án, lộ trình học Java, trọng tâm phỏng vấn, tài liệu PDF, kinh nghiệm thực tập, review phỏng vấn và điều chỉnh tâm lý.
+category: Chuẩn bị phỏng vấn
 tag:
-  - 面试准备
-  - Java面试
-  - 后端面试
+  - Chuẩn bị phỏng vấn
+  - Phỏng vấn Java
+  - Phỏng vấn Backend
 sitemap:
   changefreq: weekly
   priority: 0.95
 head:
   - - meta
     - name: keywords
-      content: 面试准备,Java面试,后端面试,校招,社招,简历,项目经验,Java学习路线,面试重点,面经,JavaGuide
+      content: Chuẩn bị phỏng vấn, Phỏng vấn Java, Phỏng vấn Backend, Campus recruitment, Tuyển dụng có kinh nghiệm, CV, Kinh nghiệm dự án, Lộ trình học Java, Trọng tâm phỏng vấn, Kinh nghiệm phỏng vấn, JavaGuide
 ---
 
 <!-- @include: @small-advertisement.snippet.md -->
 
-这份 **面试准备知识体系** 面向 Java 后端校招和社招复习，围绕“制定计划 -> 完善简历 -> 梳理项目 -> 补齐技术重点 -> 自测复盘 -> 调整心态”的顺序整理本站面试准备相关文章。
+Hệ thống **kiến thức chuẩn bị phỏng vấn** này hướng tới việc ôn tập phỏng vấn Java Backend cho cả sinh viên mới ra trường (Campus recruitment) và lập trình viên đã có kinh nghiệm (Social recruitment), được sắp xếp theo trình tự: "Lập kế hoạch -> Hoàn thiện CV -> Tổng hợp dự án -> Bổ sung trọng tâm kỹ thuật -> Tự kiểm tra và Review -> Điều chỉnh tâm lý".
 
-面试准备不是简单背题，更像一次面向岗位要求的系统工程：技术知识要扎实，简历和项目要经得起深挖，表达和复盘也要跟上。
+Chuẩn bị phỏng vấn không đơn thuần là học vẹt các câu hỏi, mà giống như một quy trình kỹ thuật có hệ thống hướng tới yêu cầu công việc: Kiến thức kỹ thuật phải vững vàng, CV và dự án phải chịu được việc đào sâu phỏng vấn, kỹ năng diễn đạt và review rút kinh nghiệm cũng cần được trau dồi song song.
 
-## 适合谁看
+## Phù hợp với ai
 
-- 准备 Java 后端校招、春招、秋招的同学。
-- 准备跳槽或转岗，需要重新梳理 Java 后端知识体系的开发者。
-- 简历、项目经历、面试表达比较薄弱，不知道从哪里开始准备的读者。
-- 已经刷过不少面试题，但缺少整体复习节奏和查漏补缺方法的同学。
+- Các bạn đang chuẩn bị cho các đợt tuyển dụng sinh viên/thực tập sinh Java Backend (Spring recruitment, Autumn recruitment).
+- Các developer đang chuẩn bị chuyển việc hoặc đổi hướng, cần hệ thống hóa lại toàn bộ kiến thức Java Backend.
+- Những bạn có CV, kinh nghiệm dự án, kỹ năng diễn đạt phỏng vấn còn yếu, chưa biết bắt đầu chuẩn bị từ đâu.
+- Các bạn đã làm nhiều câu hỏi phỏng vấn nhưng thiếu nhịp độ ôn tập tổng thể và phương pháp rà soát lỗ hổng kiến thức.
 
-## 学习重点
+## Trọng tâm học tập
 
-- 面试准备要先明确目标岗位和时间周期，再拆成可执行的复习计划。
-- 简历是面试提问地图，项目经历、技术栈和成果描述都要能被追问。
-- 技术复习要按优先级推进，Java、MySQL、Redis、Spring、JVM、计算机基础、分布式和系统设计都要结合目标岗位取舍。
-- 项目准备要能讲清业务背景、个人职责、技术难点、方案取舍和最终结果。
-- 面经、自测和模拟面试的价值在于暴露盲区，面后复盘要持续沉淀问题清单。
+- Chuẩn bị phỏng vấn trước hết cần xác định rõ vị trí mục tiêu và khoảng thời gian chuẩn bị, sau đó chia nhỏ thành kế hoạch ôn tập khả thi.
+- CV là bản đồ câu hỏi của người phỏng vấn; kinh nghiệm dự án, tech stack và mô tả thành quả đều phải sẵn sàng để được hỏi sâu.
+- Ôn tập kỹ thuật cần đẩy mạnh theo thứ tự ưu tiên: Java, MySQL, Redis, Spring, JVM, cơ sở máy tính, hệ thống phân tán và thiết kế hệ thống đều cần chọn lọc dựa trên vị trí mục tiêu.
+- Chuẩn bị dự án cần trình bày rõ bối cảnh nghiệp vụ, trách nhiệm cá nhân, khó khăn kỹ thuật, sự đánh đổi giải pháp (trade-offs) và kết quả cuối cùng.
+- Giá trị của các bài chia sẻ phỏng vấn (interview experience), tự kiểm tra và phỏng vấn thử (mock interview) nằm ở việc phát hiện các điểm mù kiến thức; sau phỏng vấn cần liên tục tích lũy danh sách câu hỏi để rút kinh nghiệm.
 
-## 建议阅读顺序
+## Thứ tự đọc khuyến nghị
 
-1. [2026 最新版 Java 后端面试通关计划](./backend-interview-plan.md)：先建立 4-8 周复习路线和阶段目标。
-2. [如何高效准备 Java 面试？](./teach-you-how-to-prepare-for-the-interview-hand-in-hand.md)：理解求职导向学习、技能清单和复习方法。
-3. [程序员简历编写指南](./resume-guide.md)、[项目经验指南](./project-experience-guide.md) 和 [后端项目面试怎么讲？](./backend-project-interview-guide.md)：先把简历和项目经历打磨到可深挖，再准备项目介绍、技术选型、难点和故障复盘。
-4. [2026 最新版 Java 后端面试重点总结](./key-points-of-interview.md)：按高频考点集中补技术短板。
-5. [常见面试题自测](./self-test-of-common-interview-questions.md)、[优质面经汇总](./interview-experience.md)：通过自测和面经做查漏补缺。
-6. [面试太紧张怎么办？](./how-to-handle-interview-nerves.md)：面试前补齐心态、表达和临场应对。
+1. [Kế hoạch vượt qua phỏng vấn Java Backend phiên bản mới nhất 2026](./backend-interview-plan.md): Thiết lập lộ trình ôn tập từ 4-8 tuần và mục tiêu từng giai đoạn trước.
+2. [Làm thế nào để chuẩn bị phỏng vấn Java hiệu quả?](./teach-you-how-to-prepare-for-the-interview-hand-in-hand.md): Hiểu về học tập định hướng tìm việc, danh mục kỹ năng và phương pháp ôn tập.
+3. [Hướng dẫn viết CV cho lập trình viên](./resume-guide.md), [Hướng dẫn kinh nghiệm dự án](./project-experience-guide.md) và [Trình bày dự án Backend trong phỏng vấn như thế nào?](./backend-project-interview-guide.md): Trau chuốt CV và kinh nghiệm dự án đến mức có thể đào sâu, sau đó chuẩn bị phần giới thiệu dự án, lựa chọn công nghệ (tech selection), điểm khó và review sự cố.
+4. [Tổng hợp trọng tâm phỏng vấn Java Backend phiên bản mới nhất 2026](./key-points-of-interview.md): Tập trung bù đắp các lỗ hổng kỹ thuật theo các điểm thi tần suất cao.
+5. [Tự kiểm tra các câu hỏi phỏng vấn thường gặp](./self-test-of-common-interview-questions.md), [Tổng hợp kinh nghiệm phỏng vấn chất lượng cao](./interview-experience.md): Rà soát lỗ hổng thông qua tự kiểm tra và các bài chia sẻ kinh nghiệm phỏng vấn thực tế.
+6. [Phải làm gì khi quá hồi hộp trong phỏng vấn?](./how-to-handle-interview-nerves.md): Bổ sung tâm lý, kỹ năng diễn đạt và khả năng ứng biến trước khi phỏng vấn.
 
-## 核心文章
+## Các bài viết cốt lõi
 
-### 复习计划与学习路线
+### Kế hoạch ôn tập & Lộ trình học tập
 
-- [2026 最新版 Java 后端面试通关计划](./backend-interview-plan.md)：按项目经历、Java/MySQL/Redis、框架、系统设计、计算机基础、分布式和 JVM 编排复习节奏。
-- [如何高效准备 Java 面试？](./teach-you-how-to-prepare-for-the-interview-hand-in-hand.md)：讲清面试准备方法、求职导向学习、技能清单和冲刺策略。
-- [2026 最新版 Java 学习路线](./java-roadmap.md)：从 Java 基础到数据库、缓存、中间件、框架和面试重点，适合长期补基础。
+- [Kế hoạch vượt qua phỏng vấn Java Backend phiên bản mới nhất 2026](./backend-interview-plan.md): Sắp xếp nhịp độ ôn tập theo kinh nghiệm dự án, Java/MySQL/Redis, framework, thiết kế hệ thống, cơ sở máy tính, hệ thống phân tán và JVM.
+- [Làm thế nào để chuẩn bị phỏng vấn Java hiệu quả?](./teach-you-how-to-prepare-for-the-interview-hand-in-hand.md): Giải thích rõ phương pháp chuẩn bị phỏng vấn, học tập định hướng tìm việc, danh mục kỹ năng và chiến lược chạy nước rút.
+- [Lộ trình học Java phiên bản mới nhất 2026](./java-roadmap.md): Từ cơ bản Java đến cơ sở dữ liệu, cache, middleware, framework và trọng tâm phỏng vấn, thích hợp cho việc củng cố nền tảng lâu dài.
 
-### 简历与项目经验
+### CV & Kinh nghiệm dự án
 
-- [程序员简历编写指南](./resume-guide.md)：从简历筛选逻辑出发，讲清简历结构、技能描述、项目经历和模板选择。
-- [项目经验指南](./project-experience-guide.md)：帮助没有项目或项目平淡的同学补强项目亮点，学会复盘和表达。
-- [后端项目面试怎么讲？](./backend-project-interview-guide.md)：准备 30 秒和 3 分钟项目介绍，并围绕个人职责、核心链路、技术选型、量化指标和线上故障应对项目深挖。
-- [校招没有实习经历怎么办？实习经历怎么写？](./internship-experience.md)：讲清实习缺失时如何通过项目、简历和技术面试弥补短板。
+- [Hướng dẫn viết CV cho lập trình viên](./resume-guide.md): Xuất phát từ góc nhìn sàng lọc CV, làm rõ cấu trúc CV, cách mô tả kỹ năng, kinh nghiệm dự án và lựa chọn template.
+- [Hướng dẫn kinh nghiệm dự án](./project-experience-guide.md): Giúp các bạn chưa có dự án hoặc dự án mờ nhạt tạo điểm nhấn, học cách review và diễn đạt.
+- [Trình bày dự án Backend trong phỏng vấn như thế nào?](./backend-project-interview-guide.md): Chuẩn bị bản giới thiệu dự án 30 giây và 3 phút, xoay quanh trách nhiệm cá nhân, luồng xử lý cốt lõi, lựa chọn công nghệ, chỉ số định lượng và sự cố online để đối phó với việc bị hỏi sâu.
+- [Sinh viên ứng tuyển chưa có kinh nghiệm thực tập thì làm sao? Viết kinh nghiệm thực tập thế nào?](./internship-experience.md): Làm rõ cách bù đắp thiếu sót thực tập thông qua dự án, CV và phỏng vấn kỹ thuật.
 
-### 技术重点与资料
+### Trọng tâm kỹ thuật & Tài liệu
 
-- [2026 最新版 Java 后端面试重点总结](./key-points-of-interview.md)：梳理 Java 基础、集合、并发、MySQL、Redis、Spring、JVM 和项目经验等高频重点。
-- [2026 最新 Java 面试 + 后端面试 PDF 资料](./pdf-interview-javaguide.md)：整理 JavaGuide 后端面试 PDF 资料，适合集中复习和离线查阅。
-- [常见面试题自测](./self-test-of-common-interview-questions.md)：按面试提问方式整理高频问题，适合面前自查掌握程度。
+- [Tổng hợp trọng tâm phỏng vấn Java Backend phiên bản mới nhất 2026](./key-points-of-interview.md): Tổng hợp các trọng tâm tần suất cao như Java cơ bản, Collections, Concurrency, MySQL, Redis, Spring, JVM và kinh nghiệm dự án.
+- [Tài liệu PDF Phỏng vấn Java + Phỏng vấn Backend mới nhất 2026](./pdf-interview-javaguide.md): Tổng hợp tài liệu PDF phỏng vấn backend của JavaGuide, thích hợp ôn tập tập trung và tra cứu offline.
+- [Tự kiểm tra các câu hỏi phỏng vấn thường gặp](./self-test-of-common-interview-questions.md): Sắp xếp các câu hỏi tần suất cao theo cách hỏi trong phỏng vấn, thích hợp tự đánh giá mức độ nắm vững trước khi phỏng vấn.
 
-### 面经复盘与临场状态
+### Review kinh nghiệm phỏng vấn & Trạng thái tâm lý
 
-- [优质面经汇总](./interview-experience.md)：通过真实面经理解不同公司、不同轮次的提问方式和复盘方法。
-- [面试太紧张怎么办？](./how-to-handle-interview-nerves.md)：从心态调整、准备方式、模拟面试和面后复盘降低临场焦虑。
+- [Tổng hợp kinh nghiệm phỏng vấn chất lượng cao](./interview-experience.md): Hiểu cách đặt câu hỏi và phương pháp review của các công ty khác nhau, các vòng phỏng vấn khác nhau qua các bài chia sẻ thực tế.
+- [Phải làm gì khi quá hồi hộp trong phỏng vấn?](./how-to-handle-interview-nerves.md): Giảm bớt lo âu lúc phỏng vấn từ điều chỉnh tâm lý, phương pháp chuẩn bị, mock interview và review sau phỏng vấn.
 
-## 高频问题
+## Câu hỏi tần suất cao
 
-- Java 后端面试应该按什么顺序准备？
-- 校招和社招的准备重点有什么区别？
-- 简历应该怎么写，才能让面试官更容易看到亮点？
-- 项目经历比较普通，如何提炼技术难点和个人贡献？
-- 后端项目应该怎样介绍，如何应对技术选型、性能优化和线上故障追问？
-- 没有实习经历会不会影响校招？应该如何弥补？
-- Java、MySQL、Redis、Spring、JVM 哪些知识点最值得优先复习？
-- 面经应该怎么用，如何避免只背答案？
-- 面试紧张、表达卡壳、遇到不会的问题时应该怎么办？
-- 面试结束后如何复盘，才能让下一次表现更好？
+- Phỏng vấn Java Backend nên chuẩn bị theo thứ tự nào?
+- Trọng tâm chuẩn bị cho tuyển dụng sinh viên (Campus) và tuyển dụng người có kinh nghiệm (Social) khác nhau như thế nào?
+- Nên viết CV như thế nào để người phỏng vấn dễ dàng thấy được điểm nổi bật?
+- Kinh nghiệm dự án tương đối bình thường, làm sao để rút trích được điểm khó kỹ thuật và đóng góp cá nhân?
+- Dự án backend nên giới thiệu ra sao, làm thế nào để ứng phó với các câu hỏi đào sâu về lựa chọn công nghệ, tối ưu hiệu năng và sự cố online?
+- Không có kinh nghiệm thực tập có ảnh hưởng đến tuyển dụng sinh viên không? Nên bù đắp thế nào?
+- Trong các kiến thức Java, MySQL, Redis, Spring, JVM thì điểm nào đáng ưu tiên ôn tập nhất?
+- Nên sử dụng các bài chia sẻ kinh nghiệm phỏng vấn như thế nào để tránh việc chỉ học vẹt câu trả lời?
+- Khi phỏng vấn bị căng thẳng, diễn đạt ấp úng hoặc gặp câu hỏi không biết làm thì phải xử lý thế nào?
+- Sau khi kết thúc phỏng vấn nên review rút kinh nghiệm như thế nào để lần sau thể hiện tốt hơn?
 
-## 相关专题
+## Chuyên đề liên quan
 
-- [Java 基础](../java/basis/java-basic-questions-01.md)
-- [计算机基础](../cs-basics/)
-- [开发工具](../tools/)
-- [分布式系统](../distributed-system/)
-- [高性能系统设计](../high-performance/)
-- [高可用系统设计](../high-availability/)
+- [Java cơ bản](../java/basis/java-basic-questions-01.md)
+- [Cơ sở máy tính](../cs-basics/)
+- [Công cụ phát triển](../tools/)
+- [Hệ thống phân tán](../distributed-system/)
+- [Thiết kế hệ thống hiệu năng cao](../high-performance/)
+- [Thiết kế hệ thống độ sẵn sàng cao](../high-availability/)
 
 <!-- @include: @article-footer.snippet.md -->

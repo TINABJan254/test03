@@ -1,7 +1,7 @@
 ---
-title: 2026最新版Java学习路线(4w+字)
-description: Java学习路线最新版：结合当下 Java 后端招聘要求，提供从基础到进阶的系统学习路径与资料建议，覆盖Java核心、数据库、缓存、中间件、框架与面试重点，帮助高效规划与提速上岸。
-category: 面试准备
+title: Lộ trình học Java mới nhất 2026 (4w+ từ)
+description: Lộ trình học Java mới nhất：dựa trên yêu cầu tuyển dụng Java backend hiện tại, cung cấp con đường học tập hệ thống và gợi ý tài liệu từ cơ bản đến nâng cao, bao gồm Java core, database, cache, middleware, framework và trọng tâm phỏng vấn, giúp lên kế hoạch hiệu quả và tiến nhanh hơn.
+category: Chuẩn bị phỏng vấn
 icon: mdi:map-marker-path
 head:
   - - meta
@@ -9,32 +9,32 @@ head:
       content: Java学习路线,Java后端路线,Java学习计划,校招准备,面试路线,Spring Boot,MySQL,Redis,JVM
 ---
 
-::: tip 重要说明
+::: tip Lưu ý quan trọng
 
-本学习路线保持**年度系统性修订**，严格同步 Java 技术生态与招聘市场的最新动态，**确保内容时效性与前瞻性**。
+Lộ trình học này được **cập nhật hệ thống hàng năm**, đồng bộ chặt chẽ với hệ sinh thái công nghệ Java và xu hướng thị trường tuyển dụng mới nhất, **đảm bảo tính cập nhật và tính dự báo của nội dung**.
 
 :::
 
-历时一个月精心打磨，笔者基于当下 Java 后端开发岗位招聘的最新要求，对既有学习路线进行了全面升级。本次升级涵盖技术栈增删、学习路径优化、配套学习资源更新等维度，力争构建出更符合 Java 开发者成长曲线的知识体系。
+Sau một tháng dày công chỉnh sửa, tác giả đã toàn diện nâng cấp lộ trình học hiện có dựa trên các yêu cầu tuyển dụng mới nhất của vị trí phát triển Java backend. Lần nâng cấp này bao gồm các chiều: bổ sung/loại bỏ tech stack, tối ưu hóa con đường học tập, cập nhật tài nguyên học tập đi kèm, nhằm xây dựng hệ thống kiến thức phù hợp hơn với đường cong trưởng thành của developer Java.
 
-亮色板概览：
+Tổng quan bản sáng:
 
 ![Java 学习路线 PDF 概览 - 亮色板](https://oss.javaguide.cn/github/javaguide/interview-preparation/java-road-map-pdf.png)
 
-暗色板概览：
+Tổng quan bản tối:
 
 ![Java 学习路线 PDF 概览 - 暗色版](https://oss.javaguide.cn/github/javaguide/interview-preparation/java-road-map-pdf-dark.png)
 
-这可能是你见过的最用心、最全面的 Java 后端学习路线。这份学习路线共包含 **4w+** 字，但你完全不用担心内容过多而学不完。我会根据学习难度，划分出适合找小厂工作必学的内容，以及适合逐步提升 Java 后端开发能力的学习路径。
+Đây có thể là lộ trình học Java backend tâm huyết và toàn diện nhất bạn từng thấy. Lộ trình học này bao gồm hơn **4w+** chữ, nhưng bạn hoàn toàn không cần lo lắng về việc quá nhiều nội dung không học hết được. Tôi sẽ phân loại theo độ khó học tập, chỉ rõ nội dung bắt buộc phải học để xin việc ở công ty nhỏ, cũng như con đường học tập phù hợp để nâng cao dần năng lực phát triển Java backend.
 
 ![Java 学习路线图](https://oss.javaguide.cn/github/javaguide/interview-preparation/java-road-map.png)
 
-对于初学者，你可以按照这篇文章推荐的学习路线和资料进行系统性的学习；对于有经验的开发者，你可以根据这篇文章更一步地深入学习 Java 后端开发，提升个人竞争力。
+Với người mới bắt đầu, bạn có thể học có hệ thống theo lộ trình và tài liệu được gợi ý trong bài viết này; với developer có kinh nghiệm, bạn có thể dựa theo bài viết này để đào sâu hơn vào phát triển Java backend, nâng cao năng lực cạnh tranh cá nhân.
 
-在看这份学习路线的过程中，建议搭配 [Java 面试重点总结(重要)](https://javaguide.cn/interview-preparation/key-points-of-interview.html)，可以让你在学习过程中更有目的性。
+Trong quá trình xem lộ trình học này, bạn nên kết hợp với [Tóm tắt trọng tâm phỏng vấn Java (quan trọng)](https://javaguide.cn/interview-preparation/key-points-of-interview.html), giúp bạn có mục đích rõ ràng hơn trong quá trình học.
 
-由于这份学习路线内容太多，因此我将其整理成了 PDF 版本（共 **55** 页），方便大家阅读。这份 PDF 有黑夜和白天两种阅读版本，满足大家的不同需求。
+Do lộ trình học này có quá nhiều nội dung, tôi đã tổng hợp thành phiên bản PDF (tổng cộng **55** trang) để tiện cho mọi người đọc. PDF này có hai phiên bản đọc: ban đêm và ban ngày, đáp ứng nhu cầu khác nhau của mọi người.
 
-这份学习路线的获取方法很简单：直接在公众号「**JavaGuide**」后台回复“**路线**”即可获取。
+Cách lấy lộ trình học này rất đơn giản: trực tiếp trả lời "**路线**" ở phần backend của tài khoản công khai「**JavaGuide**」là có thể nhận được.
 
 ![JavaGuide 官方公众号](https://oss.javaguide.cn/github/javaguide/gongzhonghaoxuanchuan.png)

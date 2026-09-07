@@ -1,300 +1,296 @@
 ---
-title: 程序员简历编写指南
-description: 程序员简历编写指南：从筛选逻辑出发讲清简历结构、项目经历与技能描述写法，提供简历模板与避坑建议，帮助你提高简历通过率并让面试官更好地深挖你的亮点。
-category: 面试准备
+title: Hướng dẫn viết CV cho lập trình viên
+description: Hướng dẫn viết CV cho lập trình viên: Xuất phát từ logic sàng lọc CV để làm rõ cấu trúc CV, cách viết kinh nghiệm dự án và mô tả kỹ năng, cung cấp mẫu CV và lời khuyên tránh bẫy, giúp bạn nâng cao tỷ lệ đậu CV và giúp người phỏng vấn đào sâu các điểm sáng của bạn tốt hơn.
+category: Chuẩn bị phỏng vấn
 icon: "mdi:account-tie-outline"
 head:
   - - meta
     - name: keywords
-      content: 程序员简历,Java简历,简历优化,项目经历写法,简历模板,校招简历,社招简历,面试准备
+      content: CV lập trình viên, CV Java, Tối ưu CV, Cách viết kinh nghiệm dự án, Mẫu CV, CV sinh viên, CV người có kinh nghiệm, Chuẩn bị phỏng vấn
 ---
 
-::: tip 友情提示
-本文节选自 **[《Java 面试指北》](../zhuanlan/java-mian-shi-zhi-bei.md)**。这是一份教你如何更高效地准备面试的小册，涵盖常见八股文（系统设计、常见框架、分布式、高并发 ……）、优质面经等内容。
+::: tip Lời nhắc thân thiện
+Bài viết này được trích từ **[《Java 面试指北》](../zhuanlan/java-mian-shi-zhi-bei.md)**. Đây là một cẩm nang hướng dẫn bạn cách chuẩn bị phỏng vấn hiệu quả hơn, bao gồm các câu hỏi phỏng vấn cốt lõi (Thiết kế hệ thống, Framework phổ biến, Hệ thống phân tán, High concurrency ……), các bài review phỏng vấn chất lượng cao, v.v.
 :::
 
-## 前言
+## Lời nói đầu
 
-一份好的简历可以在整个申请面试以及面试过程中起到非常重要的作用。
+Một bản CV tốt có thể đóng vai trò cực kỳ quan trọng trong toàn bộ quá trình ứng tuyển và phỏng vấn.
 
-**为什么说简历很重要呢？** 我们可以从下面几点来说：
+**Tại sao nói CV lại quan trọng như vậy?** Chúng ta có thể nhìn nhận qua các điểm sau:
 
-**1、简历就像是我们的一个门面一样，它在很大程度上决定了是否能够获得面试机会。**
+**1. CV giống như bộ mặt của chúng ta, nó quyết định phần lớn việc bạn có nhận được cơ hội phỏng vấn hay không.**
 
-- 假如你是网申，你的简历必然会经过 HR 的筛选，一张简历 HR 可能也就花费 10 秒钟左右看一下，然后决定你能否进入面试。
-- 假如你是内推，如果你的简历没有什么优势的话，就算是内推你的人再用心，也无能为力。
+- Nếu bạn nộp đơn trực tuyến (apply online), CV của bạn chắc chắn sẽ qua vòng lọc của HR. Một bản CV, HR có thể chỉ dành khoảng 10 giây để lướt qua rồi quyết định bạn có được vào vòng phỏng vấn hay không.
+- Nếu bạn được giới thiệu nội bộ (referral), nếu CV không có điểm nổi bật thì dù người giới thiệu có nhiệt tình đến đâu cũng đành bất lực.
 
-另外，就算你通过了第一轮的筛选获得面试机会，后面的面试中，面试官也会根据你的简历来判断你究竟是否值得他花费很多时间去面试。
+Ngoài ra, ngay cả khi bạn đã vượt qua vòng lọc đầu tiên để nhận lời mời phỏng vấn, trong các vòng phỏng vấn tiếp theo, người phỏng vấn cũng sẽ dựa vào CV để đánh giá xem bạn có xứng đáng để họ dành nhiều thời gian phỏng vấn hay không.
 
-**2、简历上的内容很大程度上决定了面试官提问的侧重点。**
+**2. Nội dung trên CV quyết định phần lớn trọng tâm câu hỏi của người phỏng vấn.**
 
-- 一般情况下你的简历上注明你会的东西才会被问到（Java 基础、集合、并发、MySQL、Redis 、Spring、Spring Boot 这些算是每个人必问的），比如写了你熟练使用 Redis,那面试官就很大概率会问你 Redis 的一些问题，再比如你写了你在项目中使用了消息队列，那面试官大概率问很多消息队列相关的问题。
-- 技能熟练度在很大程度上也决定了面试官提问的深度。
+- Thông thường, những thứ ghi trên CV bạn biết mới được hỏi đến (Java cơ bản, Collections, Concurrency, MySQL, Redis, Spring, Spring Boot là những thứ gần như ai cũng bị hỏi). Ví dụ nếu ghi bạn sử dụng thành thạo Redis, người phỏng vấn rất có thể sẽ hỏi bạn các câu hỏi về Redis; nếu ghi bạn có sử dụng Message Queue trong dự án, người phỏng vấn rất có thể sẽ hỏi nhiều câu hỏi liên quan đến Message Queue.
+- Mức độ thành thạo kỹ năng cũng quyết định phần lớn độ sâu của câu hỏi phỏng vấn.
 
-在不夸大自己能力的情况下，写出一份好的简历也是一项很棒的能力。一般情况下，技术能力和学习能力比较厉害的，写出来的简历也比较棒！
+Trong điều kiện không phóng đại năng lực của bản thân, viết được một bản CV chất lượng cũng là một năng lực tuyệt vời. Thông thường, những người có năng lực kỹ thuật và khả năng tự học tốt thì CV viết ra cũng rất ấn tượng!
 
-## 简历模板
+## Mẫu CV (Resume Template)
 
-简历的样式真的非常非常重要！！！如果你的简历样式丑到没朋友的话，面试官真的没有看下去的欲望。一天处理上百份的简历的痛苦，你不懂！
+Hình thức và bố cục của CV thực sự rất, rất quan trọng! Nếu phong cách trình bày CV của bạn xấu không thể tả, người phỏng vấn thực sự không có hứng thú để đọc tiếp. Nỗi khổ của việc xử lý hàng trăm bản CV mỗi ngày, bạn không hiểu được đâu!
 
-我这里的话，推荐大家使用 Markdown 语法写简历，然后再将 Markdown 格式转换为 PDF 格式后进行简历投递。如果你对 Markdown 语法不太了解的话，可以花半个小时简单看一下 Markdown 语法说明: <http://www.markdown.cn/>。
+Ở đây, tôi khuyên mọi người nên dùng cú pháp Markdown để viết CV, sau đó chuyển định dạng Markdown sang file PDF để nộp. Nếu bạn chưa hiểu rõ cú pháp Markdown, có thể dành nửa tiếng xem hướng dẫn cú pháp Markdown: <http://www.markdown.cn/>.
 
-下面是我收集的一些还不错的简历模板：
+Dưới đây là một số mẫu CV khá tốt mà tôi đã tổng hợp:
 
-- 适合中文的简历模板收集（推荐，开源免费）：<https://github.com/dyweb/awesome-resume-for-chinese>
-- 木及简历（推荐，部分免费） ： <https://www.mujicv.com/>
-- 简单简历（推荐，部分免费）：<https://easycv.cn/>
-- 极简简历（免费）： <https://www.polebrief.com/index>
-- Markdown 简历排版工具（开源免费）：<https://resume.mdnice.com/>
-- 站长简历（收费，支持 AI 生成）：<https://jianli.chinaz.com/>
-- typora+markdown+css 自定义简历模板 ：<https://github.com/Snailclimb/typora-markdown-resume>
-- 超级简历（部分收费） ： <https://www.wondercv.com/>
+- Mẫu CV phù hợp tiếng Trung/tiếng Việt (Khuyên dùng, open source miễn phí): <https://github.com/dyweb/awesome-resume-for-chinese>
+- Muji CV (Khuyên dùng, một phần miễn phí): <https://www.mujicv.com/>
+- Easy CV (Khuyên dùng, một phần miễn phí): <https://easycv.cn/>
+- Polebrief CV (Miễn phí): <https://www.polebrief.com/index>
+- Công cụ dàn trang CV Markdown (Open source miễn phí): <https://resume.mdnice.com/>
+- Jianli Chinaz (Trả phí, hỗ trợ tạo bằng AI): <https://jianli.chinaz.com/>
+- Typora + Markdown + CSS Custom Template: <https://github.com/Snailclimb/typora-markdown-resume>
+- Wonder CV (Một phần trả phí): <https://www.wondercv.com/>
 
-上面这些简历模板大多是只有 1 页内容，很难展现足够的信息量。如果你不是顶级大牛（比如 ACM 大赛获奖）的话，我建议还是尽可能多写一点可以突出你自己能力的内容（校招生 2 页之内，社招生 3 页之内，记得精炼语言，不要过多废话）。
+Hầu hết các mẫu CV trên chỉ có 1 trang, rất khó thể hiện đủ lượng thông tin. Nếu bạn không phải là "pro đỉnh cấp" (chẳng hạn như đạt giải ACM), tôi khuyên bạn nên viết nhiều hơn một chút các nội dung có thể làm nổi bật năng lực của mình (Sinh viên mới ra trường trong vòng 2 trang, người đã đi làm trong vòng 3 trang, nhớ cô đọng ngôn ngữ, không dài dòng vô ích).
 
-再总结几点 **简历排版的注意事项**：
+Tổng kết một số **lưu ý về cách dàn trang CV**:
 
-- 尽量简洁，不要太花里胡哨。
-- 技术名词最好规范大小写比较好，比如 java->Java ，spring boot -> Spring Boot 。这个虽然有些面试官不会介意，但是很多面试官都会在意这个细节的。
-- 中文和数字英文之间加上空格的话看起来会舒服一点。
+- Cố gắng súc tích, không nên quá màu mè hoa mỹ.
+- Thuật ngữ kỹ thuật nên chuẩn hóa cách viết hoa - thường, ví dụ `java` -> `Java`, `spring boot` -> `Spring Boot`. Dù một số người phỏng vấn không để bụng, nhưng rất nhiều người phỏng vấn sẽ để ý chi tiết này.
+- Giữa chữ và số/tiếng Anh nên có khoảng trắng để nhìn thoải mái hơn.
 
-另外，知识星球里还有真实的简历模板可供参考，地址：<https://t.zsxq.com/12ypxGNzU> （需加入[知识星球](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html)获取）。
+Ngoài ra, trong Tinh Cầu Tri Thức còn có các mẫu CV thực tế để tham khảo: <https://t.zsxq.com/12ypxGNzU> (cần tham gia [Tinh Cầu Tri Thức](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html)).
 
 ![](https://oss.javaguide.cn/javamianshizhibei/image-20230918073550606.png)
 
-## 简历内容
+## Nội dung CV
 
-### 个人信息
+### Thông tin cá nhân
 
-- 最基本的 ：姓名（身份证上的那个）、年龄、电话、籍贯、联系方式、邮箱地址
-- 潜在加分项 ： Github 地址、博客地址（如果技术博客和 Github 上没有什么内容的话，就不要写了）
+- Cơ bản nhất: Họ tên, Tuổi, Số điện thoại, Địa chỉ/Quê quán, Email
+- Điểm cộng tiềm năng: Địa chỉ GitHub, Địa chỉ Blog kỹ thuật (Nếu Blog và GitHub chưa có nội dung gì nổi bật thì không nên ghi)
 
-示例：
+Ví dụ:
 
 ![](https://oss.javaguide.cn/zhishixingqiu/20210428212337599.png)
 
-**简历要不要放照片呢？** 很多人写简历的时候都有这个问题。
+**Có nên để ảnh trong CV không?** Rất nhiều người khi viết CV đều băn khoăn câu hỏi này.
 
-其实放不放都行，影响不大，完全不用在意这个问题。除非，你投递的岗位明确要求要放照片。 不过，如果要放的话，不要放生活照，还是应该放正规一些的照片比如证件照。
+Thực ra để hay không đều được, không ảnh hưởng nhiều, hoàn toàn không cần quá bận tâm. Trừ khi vị trí bạn ứng tuyển có yêu cầu rõ ràng phải kèm ảnh. Tuy nhiên, nếu để ảnh, đừng dùng ảnh đời thường mà nên dùng ảnh trang trọng, chỉn chu (ảnh thẻ/chân dung nghề nghiệp).
 
-### 求职意向
+### Mục tiêu nghề nghiệp (Career Objective)
 
-你想要应聘什么岗位，希望在什么城市。另外，你也可以将求职意向放到个人信息这块写。
+Vị trí bạn muốn ứng tuyển là gì, mong muốn làm việc ở thành phố nào. Ngoài ra, bạn cũng có thể gộp phần mục tiêu nghề nghiệp vào phần thông tin cá nhân.
 
-示例：
+Ví dụ:
 
 ![](https://oss.javaguide.cn/zhishixingqiu/20210428212410288.png)
 
-### 教育经历
+### Quá trình học vấn (Education)
 
-教育经历也不可或缺。通过教育经历的介绍，你要确保能让面试官就可以知道你的学历、专业、毕业学校以及毕业的日期。
+Quá trình học vấn cũng không thể thiếu. Qua phần này, bạn cần đảm bảo người phỏng vấn biết được bằng cấp, chuyên ngành, trường tốt nghiệp và ngày tốt nghiệp của bạn.
 
-示例：
+Ví dụ:
 
-> 北京理工大学 硕士，软件工程 2019.09 - 2022.01
-> 湖南大学 学士，应用化学 2015.09 ~ 2019.06
+> Đại học Bách Khoa Hà Nội | Thạc sĩ, Kỹ thuật Phần mềm | 2019.09 - 2022.01
+> Đại học Bách Khoa Hà Nội | Cử nhân, Công nghệ Thông tin | 2015.09 ~ 2019.06
 
-### 专业技能
+### Kỹ năng chuyên môn (Professional Skills)
 
-先问一下你自己会什么，然后看看你意向的公司需要什么。一般 HR 可能并不太懂技术，所以他在筛选简历的时候可能就盯着你专业技能的关键词来看。对于公司有要求而你不会的技能，你可以花几天时间学习一下，然后在简历上可以写上自己了解这个技能。
+Trước hết hãy tự hỏi bản thân biết những gì, sau đó xem công ty mục tiêu cần những gì. Thông thường HR có thể không quá am hiểu kỹ thuật, nên khi lọc CV họ sẽ nhìn chăm chú vào các từ khóa kỹ năng chuyên môn. Đối với những kỹ năng công ty yêu cầu mà bạn chưa biết, bạn có thể dành vài ngày để tìm hiểu rồi ghi trong CV là mình "có hiểu biết" về kỹ năng đó.
 
-下面是一份最新的 Java 后端开发技能清单，你可以根据自身情况以及岗位招聘要求做动态调整，核心思想就是尽可能满足岗位招聘的所有技能要求。
+Dưới đây là danh sách kỹ năng phát triển Java Backend mẫu, bạn có thể điều chỉnh linh hoạt theo tình hình bản thân và yêu cầu tuyển dụng, tư tưởng cốt lõi là cố gắng đáp ứng tối đa các yêu cầu kỹ năng của công việc.
 
-![Java 后端技能模板](https://oss.javaguide.cn/zhishixingqiu/jinengmuban.png)
+![Mẫu kỹ năng Java Backend](https://oss.javaguide.cn/zhishixingqiu/jinengmuban.png)
 
-我这里再单独放一个我看过的某位同学的技能介绍，我们来找找问题。
+Dưới đây là một phần giới thiệu kỹ năng của một bạn ứng viên, chúng ta cùng chỉ ra các vấn đề:
 
 ![](https://oss.javaguide.cn/zhishixingqiu/up-a58d644340f8ce5cd32f9963f003abe4233.png)
 
-上图中的技能介绍存在的问题：
+Các vấn đề tồn tại trong ảnh trên:
 
-- 技术名词最好规范大小写比较好，比如 java->Java ，spring boot -> Spring Boot 。这个虽然有些面试官不会介意，但是很多面试官都会在意这个细节的。
-- 技能介绍太杂，没有亮点。不需要全才，某个领域做得好就行了！
-- 对 Java 后台开发的部分技能比如 Spring Boot 的熟悉度仅仅为了解，无法满足企业的要求。
+- Thuật ngữ kỹ thuật viết hoa - thường chưa chuẩn (ví dụ `java` -> `Java`, `spring boot` -> `Spring Boot`).
+- Giới thiệu kỹ năng quá dàn trải, không có điểm nhấn. Nhà tuyển dụng không cần người biết tuốt mọi thứ mà cần người làm thật tốt trong một mảng!
+- Đối với một số kỹ năng quan trọng của Java Backend như Spring Boot mà chỉ ở mức "tìm hiểu qua" thì khó đáp ứng yêu cầu doanh nghiệp.
 
-### 实习经历/工作经历（重要）
+### Kinh nghiệm thực tập / Kinh nghiệm làm việc (Quan trọng)
 
-工作经历针对社招，实习经历针对校招。
+Kinh nghiệm làm việc dành cho người đã có kinh nghiệm (Social), kinh nghiệm thực tập dành cho sinh viên (Campus).
 
-工作经历建议采用时间倒序的方式来介绍。实习经历和工作经历都需要简单突出介绍自己在职期间主要做了什么。
+Kinh nghiệm làm việc nên sắp xếp theo thứ tự thời gian đảo ngược (mới nhất lên đầu). Cả hai đều cần làm nổi bật một cách ngắn gọn mình đã làm những gì trong thời gian làm việc.
 
-示例：
+Ví dụ:
 
-> **XXX 公司 （201X 年 X 月 ~ 201X 年 X 月 ）**
+> **Công ty ABC (202X.XX ~ 202X.XX)**
 >
-> - **职位**：Java 后端开发工程师
-> - **工作内容**：主要负责 XXX
+> - **Vị trí**: Kỹ sư phát triển Java Backend
+> - **Nội dung công việc**: Phụ trách chính về XXX
 
-### 项目经历（重要）
+### Kinh nghiệm dự án (Quan trọng)
 
-简历上有一两个项目经历很正常，但是真正能把项目经历很好的展示给面试官的非常少。
+Trên CV có 1-2 kinh nghiệm dự án là bình thường, nhưng thực sự có thể trình bày tốt kinh nghiệm dự án cho người phỏng vấn thì rất ít.
 
-很多求职者的项目经历介绍都会面临过于啰嗦、过于简单、没突出亮点等问题。
+Nhiều ứng viên khi giới thiệu dự án thường gặp các vấn đề: quá dài dòng, quá sơ sài, không làm nổi bật được điểm sáng.
 
-项目经历介绍模板如下：
+Template giới thiệu kinh nghiệm dự án như sau:
 
-> 项目名称（字号要大一些）
+> Tên dự án (Cỡ chữ to hơn một chút)
 >
-> 2017-05~2018-06 淘宝 Java 后端开发工程师
+> 2017-05 ~ 2018-06 | Kỹ sư phát triển Java Backend
 >
-> - **项目描述** : 简单描述项目是做什么的。
-> - **技术栈** ：用了什么技术（如 Spring Boot + MySQL + Redis + Mybatis-plus + Spring Security + Oauth2）
-> - **工作内容/个人职责** : 简单描述自己做了什么，解决了什么问题，带来了什么实质性的改善。突出自己的能力，不要过于平淡的叙述。
-> - **个人收获（可选）** : 从这个项目中你学会了那些东西，使用到了那些技术，学会了那些新技术的使用。通常是可以不用写个人收获的，因为你在个人职责介绍中写的东西已经表明了自己的主要收获。
-> - **项目成果（可选）** :简单描述这个项目取得了什么成绩。
+> - **Mô tả dự án**: Mô tả ngắn gọn dự án làm về cái gì.
+> - **Tech Stack**: Đã sử dụng những công nghệ gì (Ví dụ: Spring Boot + MySQL + Redis + MyBatis-Plus + Spring Security + OAuth2)
+> - **Trách nhiệm cá nhân**: Mô tả ngắn gọn bản thân đã làm những gì, giải quyết vấn đề gì, mang lại cải thiện thực chất nào. Làm nổi bật năng lực bản thân, tránh trần thuật quá mờ nhạt.
+> - **Thu hoạch cá nhân (Tùy chọn)**: Từ dự án này bạn học được những gì, áp dụng những công nghệ nào, làm chủ việc sử dụng công nghệ mới ra sao. Thông thường không cần viết vì phần trách nhiệm đã thể hiện điều này.
+> - **Thành quả dự án (Tùy chọn)**: Mô tả ngắn gọn dự án đạt được thành tích gì.
 
-**1、项目经历应该突出自己做了什么，简单概括项目基本情况。**
+**1. Kinh nghiệm dự án nên làm nổi bật bản thân đã làm gì, khái quát ngắn gọn tình hình cơ bản của dự án.**
 
-项目介绍尽量压缩在两行之内，不需要介绍太多，但也不要随便几个字就介绍完了。
+Phần giới thiệu dự án cố gắng gói gọn trong 2 dòng, không cần giới thiệu quá nhiều nhưng cũng đừng viết qua loa vài chữ.
 
-另外，个人收获和项目成果都是可选的，如果选择写的话，也不要花费太多篇幅，记住你的重点是介绍工作内容/个人职责。
+Ngoài ra, thu hoạch cá nhân và thành quả dự án là tùy chọn, nếu viết thì đừng chiếm quá nhiều dung lượng, hãy nhớ trọng tâm là nội dung công việc / trách nhiệm cá nhân.
 
-**2、技术架构直接写技术名词就行，不要再介绍技术是干嘛的了，没意义，属于无效介绍。**
+**2. Kiến trúc kỹ thuật chỉ cần ghi trực tiếp tên công nghệ, không cần giải thích công nghệ đó để làm gì, điều đó vô nghĩa.**
 
 ![](https://oss.javaguide.cn/github/javaguide/interview-preparation/46c92fbc5160e65dd85c451143177144.png)
 
-**3、尽量减少纯业务的个人职责介绍，对于面试不太友好。尽量再多挖掘一些亮点（6~8 条个人职责介绍差不多了，做好筛选），最好可以体现自己的综合素质，比如你是如何协调项目组成员协同开发的或者在遇到某一个棘手的问题的时候你是如何解决的又或者说你在这个项目优化了某个模块的性能。**
+**3. Giảm bớt các mô tả trách nhiệm thuần túy về nghiệp vụ (CRUD đơn thuần). Cố gắng khai thác thêm điểm sáng (khoảng 6~8 gạch đầu dòng trách nhiệm là vừa), tốt nhất có thể thể hiện tố chất tổng hợp của bản thân: ví dụ bạn điều phối các thành viên cùng phát triển ra sao, khi gặp bài toán hóc búa bạn giải quyết thế nào, hoặc bạn tối ưu hiệu năng module nào trong dự án.**
 
-即使不是你做的功能模块或者解决的问题，你只要搞懂吃透了就能拿来自己用，适当润色即可！
+Ngay cả khi tính năng hoặc vấn đề đó không phải do bạn trực tiếp làm, chỉ cần bạn thấu hiểu cặn kẽ thì hoàn toàn có thể lấy làm kinh nghiệm của mình, trau chuốt lại câu chữ là được!
 
-像性能优化方向上的亮点面试之前也比较容易准备，但也不要都是性能优化相关的，这种也算是一个极端。
+Các điểm sáng về tối ưu hiệu năng trước khi phỏng vấn cũng tương đối dễ chuẩn bị, nhưng cũng đừng biến toàn bộ thành tối ưu hiệu năng, đó cũng là một thái cực cực đoan.
 
-另外，技术优化取得的成果尽量要量化一下：
+Ngoài ra, thành quả tối ưu kỹ thuật nên cố gắng lượng hóa bằng con số:
 
-- 使用 xxx 技术解决了 xxx 问题，系统 QPS 从 xxx 提高到了 xxx。
-- 使用 xxx 技术了优化了 xxx 接口，系统 QPS 从 xxx 提高到了 xxx。
-- 使用 xxx 技术解决了 xxx 问题，查询速度优化了 xxx，系统 QPS 达到 10w+。
-- 使用 xxx 技术优化了 xxx 模块，响应时间从 2s 降低到 0.2s。
+- Sử dụng công nghệ xxx giải quyết vấn đề xxx, QPS hệ thống từ xxx tăng lên xxx.
+- Sử dụng công nghệ xxx tối ưu API xxx, QPS hệ thống từ xxx tăng lên xxx.
+- Sử dụng công nghệ xxx giải quyết vấn đề xxx, tốc độ truy vấn tối ưu xxx, QPS hệ thống đạt 10w+.
+- Sử dụng công nghệ xxx tối ưu module xxx, thời gian phản hồi từ 2s giảm xuống 0.2s.
 - ……
 
-个人职责介绍示例（这里只是举例，不要照搬，结合自己项目经历自己去写，不然面试的时候容易被问倒） ：
+Ví dụ mô tả trách nhiệm cá nhân (Đây chỉ là ví dụ tham khảo, đừng copy nguyên xi, hãy tự viết theo trải nghiệm dự án của mình):
 
-- 基于 Spring Cloud Gateway + Spring Security OAuth2 + JWT 实现微服务统一认证授权和鉴权，使用 RBAC 权限模型实现动态权限控制。
-- 参与项目订单模块的开发，负责订单创建、删除、查询等功能，基于 Spring 状态机实现订单状态流转。
-- 商品和订单搜索场景引入 Elasticsearch，并且实现了相关商品推荐以及搜索提示功能。
-- 整合 Canal + RabbitMQ 将 MySQL 增量数据（如商品、订单数据）同步到 Elasticsearch。
-- 利用 RabbitMQ 官方提供的延迟队列插件实现延时任务场景比如订单超时自动取消、优惠券过期提醒、退款处理。
-- 消息推送系统引入 RabbitMQ 实现异步处理、削峰填谷和服务解耦，最高推送速度 10w/s，单日最大消息量 2000 万。
-- 使用 MAT 工具分析 dump 文件解决了广告服务新版本上线后导致大量的服务超时告警的问题。
-- 排查并解决扣费模块由于扣费父任务和反作弊子任务使用同一个线程池导致的死锁问题。
-- 基于 EasyExcel 实现广告投放数据的导入导出，通过 MyBatis 批处理插入数据，基于任务表实现异步。
-- 负责用户统计模块的开发，使用 CompletableFuture 并行加载后台用户统计模块的数据信息，平均相应时间从 3.5s 降低到 1s。
-- 基于 Sentinel 对核心场景(如用户登入注册、收货地址查询等)进行限流、降级，保护系统，提升用户体验。
-- 热门数据（如首页、热门博客）使用 Redis+Caffeine 两级缓存，解决了缓存击穿和穿透问题，查询速度毫秒级，QPS 30w+。
-- 使用 CompletableFuture 优化购物车查询模块，对获取用户信息、商品详情、优惠券信息等异步 RPC 调用进行编排，响应时间从 2s 降低为 0.2s。
-- 搭建 EasyMock 服务，用于模拟第三方平台接口，方便了在网络隔离情况下的接口对接工作。
-- 基于 SkyWalking + Elasticsearch 搭建分布式链路追踪系统实现全链路监控。
+- Dựa trên Spring Cloud Gateway + Spring Security OAuth2 + JWT triển khai xác thực và phân quyền tập trung cho Microservices, sử dụng mô hình RBAC để kiểm soát quyền động.
+- Tham gia phát triển module đơn hàng, phụ trách các tính năng tạo, hủy, tra cứu đơn hàng, dựa trên Spring StateMachine để quản lý luồng chuyển trạng thái đơn hàng.
+- Tích hợp Elasticsearch cho kịch bản tìm kiếm sản phẩm và đơn hàng, hiện thực tính năng gợi ý tìm kiếm và gợi ý sản phẩm liên quan.
+- Tích hợp Canal + RabbitMQ để đồng bộ dữ liệu gia tăng của MySQL (dữ liệu sản phẩm, đơn hàng) sang Elasticsearch.
+- Sử dụng plugin Delayed Message của RabbitMQ để triển khai các kịch bản tác vụ hẹn giờ như tự động hủy đơn hàng timeout, nhắc nhở coupon hết hạn, xử lý hoàn tiền.
+- Tích hợp RabbitMQ vào hệ thống gửi thông báo để xử lý bất đồng bộ, san phẳng đỉnh tải (peak shaving) và giảm phụ thuộc dịch vụ (decoupling), tốc độ gửi tối đa đạt 10w/s, lượng tin nhắn tối đa 20 triệu/ngày.
+- Sử dụng công cụ Memory Analyzer Tool (MAT) phân tích Heap Dump để khắc phục sự cố cảnh báo timeout dịch vụ hàng loạt sau khi release phiên bản mới của dịch vụ quảng cáo.
+- Điều tra và giải quyết vấn đề Deadlock trong module trừ phí do task cha trừ phí và task con chống gian lận dùng chung một Thread Pool, loại bỏ triệt để nguy cơ bằng chiến lược Thread Pool Isolation.
+- Dựa trên EasyExcel triển khai import/export dữ liệu chạy quảng cáo, tối ưu insert dữ liệu bằng MyBatis Batch, xử lý bất đồng bộ dựa trên bảng tác vụ (task table).
+- Phụ trách phát triển module thống kê người dùng, sử dụng CompletableFuture để tải song song dữ liệu đa chiều, thời gian phản hồi trung bình giảm từ 3.5s xuống 1s.
+- Tích hợp Sentinel để Rate Limiting và Circuit Breaking cho các kịch bản cốt lõi (đăng nhập, đăng ký, tra cứu địa chỉ nhận hàng), bảo vệ hệ thống và nâng cao trải nghiệm người dùng.
+- Dữ liệu hot (trang chủ, bài viết nổi bật) sử dụng 2 tầng cache Redis + Caffeine, giải quyết vấn đề Cache Breakdown và Cache Penetration, tốc độ truy vấn đạt mức mili-giây, QPS 30w+.
+- Sử dụng CompletableFuture tối ưu module giỏ hàng, phối hợp bất đồng bộ các RPC call lấy thông tin user, chi tiết sản phẩm, coupon, thời gian phản hồi giảm từ 2s xuống 0.2s.
+- Dựng dịch vụ EasyMock để giả lập API của bên thứ ba, hỗ trợ công tác tích hợp API trong điều kiện mạng bị cô lập.
+- Dựng hệ thống Distributed Tracing dựa trên SkyWalking + Elasticsearch để giám sát toàn bộ chuỗi request.
 
-**4、如果你觉得你的项目技术比较落后的话，可以自己私下进行改进。重要的是让项目比较有亮点，通过什么方式就无所谓了。**
+**4. Nếu bạn thấy công nghệ trong dự án của mình tương đối cũ, bạn có thể tự mình cải tiến bên ngoài. Quan trọng là làm cho dự án có điểm sáng, bằng cách nào không quá quan trọng.**
 
-项目经历这部分对于简历来说非常重要，[《Java 面试指北》](https://javaguide.cn/zhuanlan/java-mian-shi-zhi-bei.html)的面试准备篇有好几篇关于优化项目经历的文章，建议你仔细阅读一下，应该会对你有帮助。
+Kinh nghiệm dự án rất quan trọng trong CV. Phần "Chuẩn bị phỏng vấn" của [《Java 面试指北》](https://javaguide.cn/zhuanlan/java-mian-shi-zhi-bei.html) có nhiều bài viết hướng dẫn tối ưu kinh nghiệm dự án, rất khuyên bạn nên đọc kỹ.
 
 ![](https://oss.javaguide.cn/zhishixingqiu/4e11dbc842054e53ad6c5f0445023eb5~tplv-k3u1fbpfcp-zoom-1.png)
 
-**5、避免个人职责介绍都是围绕一个技术点来写，非常不可取。**
+**5. Tránh việc tất cả mô tả trách nhiệm chỉ xoay quanh một điểm kỹ thuật duy nhất.**
 
 ![](https://oss.javaguide.cn/zhishixingqiu/image-20230424222513028.png)
 
-**6、避免模糊性描述，介绍要具体（技术+场景+效果），也要注意精简语言（避免堆砌技术词，省略不必要的描述）。**
+**6. Tránh các mô tả mơ hồ, giới thiệu phải cụ thể (Công nghệ + Bối cảnh + Hiệu quả), đồng thời chú ý súc tích ngôn từ (tránh nhồi nhét từ khóa kỹ thuật, lược bỏ mô tả không cần thiết).**
 
 ![](https://oss.javaguide.cn/github/javaguide/interview-preparation/project-experience-avoiding-ambiguity-descriptio.png)
 
-### 荣誉奖项（可选）
+### Giải thưởng & Danh hiệu (Tùy chọn)
 
-如果你有含金量比较高的竞赛（比如 ACM、阿里的天池大赛）的获奖经历的话，荣誉奖项这块内容一定要写一下！并且，你还可以将荣誉奖项这块内容适当往前放，放在一个更加显眼的位置。
+Nếu bạn có các giải thưởng giá trị cao trong các cuộc thi (như ACM, Cuộc thi Tianchi của Alibaba), phần này nhất định phải viết! Bạn còn có thể đẩy phần này lên vị trí nổi bật hơn ở phía trên.
 
-### 校园经历（可选）
+### Hoạt động ngoại khóa / Trải nghiệm tại trường (Tùy chọn)
 
-如果有比较亮眼的校园经历的话就简单写一下，没有就不写！
+Nếu có hoạt động nào thực sự nổi bật thì viết ngắn gọn, không có thì bỏ qua!
 
-### 个人评价
+### Tự đánh giá bản thân (Personal Evaluation)
 
-**个人评价就是对自己的解读，一定要用简洁的语言突出自己的特点和优势，避免废话！** 像勤奋、吃苦这些比较虚的东西就不要扯了，面试官看着这种个人评价就烦。
+**Đánh giá bản thân là cách bạn tự định vị mình, nhất định phải dùng ngôn ngữ súc tích làm nổi bật đặc điểm và ưu thế của bản thân, tránh nói suông!** Những từ sáo rỗng như chăm chỉ, chịu khó thì không nên đưa vào, người phỏng vấn nhìn rất ngán ngẩm.
 
-我们可以从下面几个角度来写个人评价：
+Chúng ta có thể viết đánh giá bản thân từ các góc độ sau:
 
-- 文档编写能力、学习能力、沟通能力、团队协作能力
-- 对待工作的态度以及个人的责任心
-- 能承受的工作压力以及对待困难的态度
-- 对技术的追求、对代码质量的追求
-- 分布式、高并发系统开发或维护经验
+- Khả năng viết tài liệu, khả năng tự học, giao tiếp và làm việc nhóm
+- Thái độ đối với công việc và tinh thần trách nhiệm cá nhân
+- Khả năng chịu áp lực công việc và thái độ khi đối mặt khó khăn
+- Tinh thần cầu tiến về kỹ thuật, sự chỉn chu đối với chất lượng code
+- Kinh nghiệm phát triển hoặc vận hành bảo trì hệ thống Distributed, High Concurrency
 
-列举 3 个实际的例子：
+3 ví dụ thực tế:
 
-- 学习能力较强，大三参加国家软件设计大赛的时候快速上手 Python 写了一个可配置化的爬虫系统。
-- 具有团队协作精神，大三参加国家软件设计大赛的时候协调项目组内 5 名开发同学，并对编码遇到困难的同学提供帮助，最终顺利在 1 个月的时间完成项目的核心功能。
-- 项目经验丰富，在校期间主导过多个企业级项目的开发。
+- Khả năng tự học tốt, năm 3 đại học khi tham gia Cuộc thi Thiết kế Phần mềm Quốc gia đã nhanh chóng học Python để viết một hệ thống Crawler có khả năng cấu hình linh hoạt.
+- Có tinh thần làm việc nhóm, khi tham gia thi đấu đã điều phối 5 thành viên phát triển trong nhóm, hỗ trợ các bạn gặp khó khăn khi code, cuối cùng hoàn thành các tính năng cốt lõi thuận lợi trong 1 tháng.
+- Kinh nghiệm dự án phong phú, từng chủ trì phát triển nhiều dự án cấp doanh nghiệp trong thời gian học đại học.
 
-## STAR 法则和 FAB 法则
+## Nguyên tắc STAR và Nguyên tắc FAB
 
-### STAR 法则（Situation Task Action Result）
+### Nguyên tắc STAR (Situation Task Action Result)
 
-相信大家一定听说过 STAR 法则。对于面试，你可以将这个法则用在自己的简历以及和面试官沟通交流的过程中。
+Chắc hẳn mọi người đều đã nghe qua nguyên tắc STAR. Đối với phỏng vấn, bạn có thể áp dụng nguyên tắc này vào CV và trong quá trình giao tiếp với người phỏng vấn:
 
-STAR 法则由下面 4 个单词组成（STAR 法则的名字就是由它们的首字母组成）：
+- **Situation (Bối cảnh):** Sự việc xảy ra trong bối cảnh/tình huống nào?
+- **Task (Nhiệm vụ):** Nhiệm vụ của bạn là gì?
+- **Action (Hành động):** Bạn đã làm những gì?
+- **Result (Kết quả):** Kết quả cuối cùng ra sao?
 
-- **Situation：** 情景。 事情是在什么情况下发生的？
-- **Task：** 任务。你的任务是什么？
-- **Action：** 行动。你做了什么？
-- **Result：** 结果。最终的结果怎样？
+### Nguyên tắc FAB (Feature Advantage Benefit)
 
-### FAB 法则（Feature Advantage Benefit）
+Ngoài STAR, bạn cũng nên biết thêm nguyên tắc FAB thường dùng trong ngành Sales:
 
-除了 STAR 法则，你还需要了解在销售行业经常用到的一个叫做 FAB 的法则。
+- **Feature (Đặc điểm):** Đặc điểm/thế mạnh của bạn là gì?
+- **Advantage (Ưu thế):** Vượt trội hơn người khác ở những điểm nào?
+- **Benefit (Lợi ích):** Nếu tuyển dụng bạn, nhà tuyển dụng sẽ nhận được lợi ích gì?
 
-FAB 法则由下面 3 个单词组成（FAB 法则的名字就是由它们的首字母组成）：
+Nói một cách đơn giản, **nguyên tắc FAB giúp người phỏng vấn biết được thế mạnh của bạn và giá trị bạn có thể mang lại cho công ty.**
 
-- **Feature：** 你的特征/优势是什么？
-- **Advantage：** 比别人好在哪些地方；
-- **Benefit：** 如果雇佣你，招聘方会得到什么好处。
+## Lời khuyên
 
-简单来说，**FAB 法则主要是让你的面试官知道你的优势和你能为公司带来的价值。**
+### Tránh số trang quá dài
 
-## 建议
+Diễn đạt súc tích, làm nổi bật điểm sáng. CV sinh viên khuyên không quá 2 trang, CV người có kinh nghiệm không quá 3 trang. Nếu nội dung nhiều, không nhất thiết phải ép vào 1 trang, chỉ cần giữ bố cục sạch sẽ, ngay ngắn là được.
 
-### 避免页数过多
+Đã đọc hàng nghìn bản CV, có một số bạn làm CV dài gần 10 trang, thực sự làm người đọc "hoa mày chóng mặt".
 
-精简表述，突出亮点。校招简历建议不要超过 2 页，社招简历建议不要超过 3 页。如果内容过多的话，不需要非把内容压缩到一页，保持排版干净整洁就可以了。
+![CV quá nhiều trang](https://oss.javaguide.cn/zhishixingqiu/image-20230508223646164.png)
 
-看了几千份简历，有少部分同学的简历页数都接近 10 页了，让我头皮发麻。
+### Tránh diễn đạt mơ hồ
 
-![简历页数过多](https://oss.javaguide.cn/zhishixingqiu/image-20230508223646164.png)
+Cố gắng tránh các diễn đạt mang tính chủ quan, bớt dùng các tính từ mơ hồ. Diễn đạt cần ngắn gọn rõ ràng, cấu trúc CV phải mạch lạc.
 
-### 避免语义模糊
+Ví dụ:
 
-尽量避免主观表述，少一点语义模糊的形容词。表述要简洁明了，简历结构要清晰。
+- Diễn đạt chưa tốt: Tôi đóng vai trò rất quan trọng trong nhóm.
+- Diễn đạt tốt: Với vai trò Tech Lead backend, tôi dẫn dắt nhóm hoàn thành thiết kế và phát triển dự án backend.
 
-举例：
+### Chú ý hình thức CV
 
-- 不好的表述：我在团队中扮演了很重要的角色。
-- 好的表述：我作为后端技术负责人，领导团队完成后端项目的设计与开发。
+Hình thức CV cũng cực kỳ quan trọng! Không cần theo đuổi sự hoa mỹ màu mè, nhưng phải đảm bảo cấu trúc rõ ràng và dễ đọc.
 
-### 注意简历样式
+### Các lưu ý khác
 
-简历样式同样很重要，一定要注意！不必追求花里胡哨，但要尽量保证结构清晰且易于阅读。
+- Nhất định phải nộp file định dạng PDF, không dùng Word hay các định dạng khác. Đây là điều cơ bản nhất!
+- Thứ gì không biết thì đừng ghi vào CV. Chú ý tính chân thực của CV, trau chuốt hợp lý thì hoàn toàn bình thường.
+- Kinh nghiệm làm việc nên xếp theo thứ tự thời gian đảo ngược, kinh nghiệm thực tập nên để cái có giá trị nhất lên đầu.
+- Thể hiện hoàn hảo kinh nghiệm dự án là rất quan trọng, trọng tâm là làm nổi bật bản thân đã làm gì (khai thác điểm sáng), chứ không phải giới thiệu dự án làm về cái gì.
+- Dự án không nằm ở số lượng (tinh tuyển 2~3 dự án là đủ) mà nằm ở việc có điểm nhấn.
+- Quá trình chuẩn bị phỏng vấn nên lấy những thứ bạn viết trên CV làm trọng tâm, đặc biệt là kinh nghiệm dự án và danh mục kỹ năng.
+- Phỏng vấn và làm việc là hai việc khác nhau. Người thông minh sẽ dẫn dắt người phỏng vấn vào lĩnh vực sở trường của mình, người khác thì bị người phỏng vấn dắt mũi. Tuy nhiên, muốn nhận được offer ưng ý thì thực lực bản thân phải đủ mạnh.
 
-### 其他
+## Sửa CV
 
-- 一定要使用 PDF 格式投递，不要使用 Word 或者其他格式投递。这是最基本的！
-- 不会的东西就不要写在简历上了。注意简历真实性，适当润色没有问题。
-- 工作经历建议采用时间倒序的方式来介绍，实习经历建议将最有价值的放在最前面。
-- 将自己的项目经历完美的展示出来非常重要，重点是突出自己做了什么（挖掘亮点），而不是介绍项目是做什么的。
-- 项目经历建议以时间倒序排序，另外项目经历不在于多（精选 2~3 即可），而在于有亮点。
-- 准备面试的过程中应该将你写在简历上的东西作为重点，尤其是项目经历上和技能介绍上的。
-- 面试和工作是两回事，聪明的人会把面试官往自己擅长的领域领，其他人则被面试官牵着鼻子走。虽说面试和工作是两回事，但是你要想要获得自己满意的 offer ，你自身的实力必须要强。
-
-## 简历修改
-
-到目前为止，我至少帮助 **6000+** 位球友提供了免费的简历修改服务。由于个人精力有限，修改简历仅限加入星球的读者，需要帮看简历的话，可以加入 [**JavaGuide 官方知识星球**](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html#%E7%AE%80%E5%8E%86%E4%BF%AE%E6%94%B9)（点击链接查看详细介绍）。
+Tính đến nay, tôi đã giúp hơn **6000+** bạn đọc sửa CV. Do thời gian có hạn, dịch vụ sửa CV chỉ dành cho thành viên Tinh Cầu. Nếu cần hỗ trợ xem CV, bạn có thể tham gia [**JavaGuide 官方知识星球**](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html#%E7%AE%80%E5%8E%86%E4%BF%AE%E6%94%B9).
 
 ![img](https://oss.javaguide.cn/xingqiu/%E7%AE%80%E5%8E%86%E4%BF%AE%E6%94%B92.jpg)
 
-虽然收费只有培训班/训练营的百分之一，但是知识星球里的内容质量更高，提供的服务也更全面，非常适合准备 Java 面试和学习 Java 的同学。
+Mặc dù học phí chỉ bằng 1% so với các trung tâm đào tạo, nhưng nội dung chất lượng cao hơn và dịch vụ toàn diện hơn, rất phù hợp với các bạn đang chuẩn bị phỏng vấn Java và học Java.
 
-下面是星球提供的部分服务（点击下方图片即可获取知识星球的详细介绍）：
+Dưới đây là một số dịch vụ trong Tinh Cầu:
 
-[![星球服务](https://oss.javaguide.cn/xingqiu/xingqiufuwu.png)](../about-the-author/zhishixingqiu-two-years.md)
+[![Dịch vụ Tinh Cầu](https://oss.javaguide.cn/xingqiu/xingqiufuwu.png)](../about-the-author/zhishixingqiu-two-years.md)
 
-这里再提供一份限时专属优惠卷：
+Coupon ưu đãi giới hạn:
 
-![知识星球30元优惠卷](https://oss.javaguide.cn/xingqiu/xingqiuyouhuijuan-30.jpg)
+![Coupon giảm giá 30 tệ Tinh Cầu](https://oss.javaguide.cn/xingqiu/xingqiuyouhuijuan-30.jpg)

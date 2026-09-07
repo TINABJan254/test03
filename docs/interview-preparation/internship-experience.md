@@ -1,7 +1,7 @@
 ---
-title: 校招没有实习经历怎么办？实习经历怎么写？
-description: 校招没有实习经历也能上岸：从补强项目经验、持续优化简历到系统准备技术面试，给出可执行的提升路径与注意事项，帮助你在没有大厂实习的情况下提高面试通过率。
-category: 面试准备
+title: Không có kinh nghiệm thực tập trong tuyển dụng đại học phải làm sao? Kinh nghiệm thực tập viết như thế nào?
+description: Không có kinh nghiệm thực tập vẫn có thể "lên bờ" trong tuyển dụng đại học: từ bổ sung kinh nghiệm dự án, liên tục tối ưu CV đến chuẩn bị hệ thống cho phỏng vấn kỹ thuật, đưa ra lộ trình nâng cao có thể thực hiện được và những lưu ý, giúp bạn tăng tỷ lệ qua phỏng vấn khi không có kinh nghiệm thực tập tại công ty lớn.
+category: Chuẩn bị phỏng vấn
 icon: "mdi:chart-timeline-variant"
 head:
   - - meta
@@ -11,84 +11,84 @@ head:
 
 <!-- @include: @small-advertisement.snippet.md -->
 
-由于目前的面试太卷，对于犹豫是否要找实习的同学来说，个人建议不论是本科生还是研究生都应该在参加校招面试之前，争取一下不错的实习机会，尤其是大厂的实习机会，日常实习或者暑期实习都可以。当然，如果大厂实习面不上，中小厂实习也是可以接受的。
+Do thị trường phỏng vấn hiện nay quá cạnh tranh, đối với các bạn còn đang phân vân có nên tìm thực tập không, cá nhân tôi khuyên rằng dù là sinh viên đại học hay cao học đều nên cố gắng tìm một cơ hội thực tập tốt trước khi tham gia phỏng vấn tuyển dụng đại học, đặc biệt là cơ hội thực tập tại công ty lớn — thực tập ngày thường hoặc thực tập hè đều được. Tất nhiên, nếu không thể vào thực tập tại công ty lớn thì thực tập ở công ty vừa và nhỏ cũng chấp nhận được.
 
-不过，现在的实习是真难找，这两年有非常多的同学没有找到实习，有一部分甚至是 211/985 名校的同学。实习难找是一方面原因，国内很多学校的导师压根不放实习，这也是很棘手的问题。
+Tuy nhiên, thực tập bây giờ thực sự rất khó tìm. Hai năm gần đây có rất nhiều bạn không tìm được thực tập, thậm chí một số bạn là sinh viên trường 211/985 danh tiếng. Thực tập khó tìm là một lý do, ở nhiều trường đại học trong nước giáo viên hướng dẫn không cho đi thực tập cũng là vấn đề nan giải.
 
-## 没有实习经历怎么办？
+## Không có kinh nghiệm thực tập thì phải làm sao?
 
-如果实在是找不到合适的实习的话，那也没办法，我们应该多花时间去把下面这三件事情给做好：
+Nếu thực sự không tìm được thực tập phù hợp thì cũng không có cách nào khác, chúng ta nên dành nhiều thời gian hơn để làm tốt ba việc sau đây:
 
-1. 补强项目经历
-2. 持续完善简历
-3. 准备技术面试
+1. Bổ sung kinh nghiệm dự án
+2. Liên tục hoàn thiện CV
+3. Chuẩn bị phỏng vấn kỹ thuật
 
-### 补强项目经历
+### Bổ sung kinh nghiệm dự án
 
-校招没有实习经历的话，找工作比较吃亏（没办法，太卷了），需要在项目经历部分多发力弥补一下。
+Trong tuyển dụng đại học mà không có kinh nghiệm thực tập thì tìm việc sẽ khá bất lợi (không có cách nào khác, thị trường quá cạnh tranh), cần đầu tư nhiều hơn vào phần kinh nghiệm dự án để bù đắp.
 
-建议你尽全力地去补强自己的项目经历，完善现有的项目或者去做更有亮点的项目，尽可能地通过项目经历去弥补一些。
+Hãy cố gắng hết sức bổ sung kinh nghiệm dự án của bạn, hoàn thiện các dự án hiện có hoặc làm thêm những dự án nổi bật hơn, cố gắng bù đắp bằng kinh nghiệm dự án.
 
-你面试中的重点就是你的项目经历涉及到的知识点，如果你的项目经历比较简单的话，面试官直接不知道问啥了。另外，你的项目经历中不涉及的知识点，但在技能介绍中提到的知识点也很大概率会被问到。像 Redis 这种基本是面试 Java 后端岗位必备的技能，我觉得大部分面试官应该都会问。
+Trọng tâm của bạn trong phỏng vấn chính là những kiến thức liên quan đến kinh nghiệm dự án. Nếu kinh nghiệm dự án của bạn khá đơn giản, nhà tuyển dụng sẽ không biết phải hỏi gì. Ngoài ra, những kiến thức không có trong kinh nghiệm dự án nhưng được đề cập trong phần giới thiệu kỹ năng cũng có xác suất cao bị hỏi. Redis chẳng hạn, là kỹ năng gần như bắt buộc khi phỏng vấn vị trí Java backend, tôi nghĩ hầu hết nhà tuyển dụng đều sẽ hỏi.
 
-推荐阅读一下网站的这篇文章：[项目经验指南](https://javaguide.cn/interview-preparation/project-experience-guide.html)。
+Gợi ý đọc bài viết này trên website: [Hướng dẫn kinh nghiệm dự án](https://javaguide.cn/interview-preparation/project-experience-guide.html).
 
-### 完善简历
+### Hoàn thiện CV
 
-一定一定一定要重视简历啊！建议至少花 2~3 天时间来专门完善自己的简历。并且，后续还要持续完善。
+Nhất định nhất định nhất định phải coi trọng CV! Gợi ý dành ít nhất 2~3 ngày để riêng hoàn thiện CV của mình. Và sau đó vẫn cần tiếp tục hoàn thiện.
 
-对于面试官来说，筛选简历的时候会比较看重下面这些维度：
+Đối với nhà tuyển dụng, khi sàng lọc CV họ thường chú trọng các chiều sau:
 
-1. **实习/工作经历**：看你是否有不错的实习经历，大厂且与面试岗位相关的实习/工作经历最佳。
-2. **获奖经历**：如果有含金量比较高（知名度较高的赛事比如 ACM、阿里云天池）的获奖经历的话，也是加分点，尤其是对于校招来说，这类求职者属于是很多大厂争抢的对象（但不是说获奖了就能进大厂，还是要面试表现还可以）。对于社招来说，获奖经历作用相对较小，通常会更看重过往的工作经历和项目经验。
-3. **项目经验**：项目经验对于面试来说非常重要，面试官会重点关注，同时也是有水平的面试提问的重点。
-4. **技能匹配度**：看你的技能是否满足岗位的需求。在投递简历之前，一定要确认一下自己的技能介绍中是否缺少一些你要投递的对应岗位的技能要求。
-5. **学历**：相对其他行业来说，程序员求职面试对于学历的包容度还是比较高的，只要你在其他方面有过人之出的话，也是可以弥补一下学历的缺陷的。你要知道，很多行业比如律师、金融，学历就是敲门砖，学历没达到要求，直接面试机会都没有。不过，由于现在面试越来越卷，一些大厂、国企和研究所也开始卡学历了，很多岗位都要求 211/985，甚至必须需要硕士学历。总之，学历很难改变，学校较差的话，就投递那些对学历没有明确要求的公司即可，努力提升自己的其他方面的硬实力。
+1. **Kinh nghiệm thực tập/làm việc**: Xem bạn có kinh nghiệm thực tập tốt không, kinh nghiệm thực tập/làm việc tại công ty lớn và liên quan đến vị trí ứng tuyển là tốt nhất.
+2. **Giải thưởng**: Nếu có giải thưởng có giá trị cao (các cuộc thi nổi tiếng như ACM, Alibaba Cloud Tianchi) thì cũng là điểm cộng, đặc biệt là trong tuyển dụng đại học, những ứng viên như vậy thuộc diện được nhiều công ty lớn tranh giành (nhưng không phải cứ đoạt giải là vào được công ty lớn, vẫn cần thể hiện tốt trong phỏng vấn). Đối với tuyển dụng xã hội, giải thưởng có tác dụng tương đối nhỏ hơn, thường sẽ chú trọng hơn vào kinh nghiệm làm việc và kinh nghiệm dự án trước đây.
+3. **Kinh nghiệm dự án**: Kinh nghiệm dự án rất quan trọng trong phỏng vấn, nhà tuyển dụng sẽ đặc biệt chú ý, đồng thời cũng là trọng tâm đặt câu hỏi của những nhà tuyển dụng có trình độ.
+4. **Độ phù hợp kỹ năng**: Xem kỹ năng của bạn có đáp ứng yêu cầu vị trí không. Trước khi nộp CV, nhất định phải kiểm tra xem phần giới thiệu kỹ năng của mình có thiếu những yêu cầu kỹ năng của vị trí muốn ứng tuyển không.
+5. **Học vấn**: So với các ngành khác, việc xin việc làm lập trình viên tương đối khoan dung hơn về học vấn, chỉ cần bạn có điểm vượt trội ở các mặt khác thì cũng có thể bù đắp điểm yếu về học vấn. Bạn cần biết rằng, nhiều ngành như luật, tài chính, học vấn là tấm vé vào cửa, không đạt yêu cầu học vấn là không có cơ hội phỏng vấn. Tuy nhiên, do thị trường phỏng vấn ngày càng cạnh tranh, một số công ty lớn, doanh nghiệp nhà nước và viện nghiên cứu cũng bắt đầu lọc học vấn, nhiều vị trí yêu cầu 211/985, thậm chí bắt buộc phải có bằng thạc sĩ. Tóm lại, học vấn khó thay đổi, nếu trường kém thì hãy ứng tuyển vào những công ty không có yêu cầu rõ ràng về học vấn, và cố gắng nâng cao năng lực cứng ở các mặt khác.
 
-对于大部分求职者来说，实习/工作经历、项目经验、技能匹配度更重要一些。不过，不排除一些公司会因为学历卡人。
+Đối với đa số ứng viên, kinh nghiệm thực tập/làm việc, kinh nghiệm dự án và độ phù hợp kỹ năng quan trọng hơn. Tuy nhiên, không loại trừ việc một số công ty lọc người theo học vấn.
 
-详细的程序员简历编写指南可以参考这篇文章：[程序员简历编写指南(重要)](https://javaguide.cn/interview-preparation/resume-guide.html)。
+Hướng dẫn viết CV chi tiết cho lập trình viên có thể tham khảo bài viết này: [Hướng dẫn viết CV cho lập trình viên (quan trọng)](https://javaguide.cn/interview-preparation/resume-guide.html).
 
-### 准备技术面试
+### Chuẩn bị phỏng vấn kỹ thuật
 
-面试之前一定要提前准备一下常见的面试题也就是八股文：
+Trước phỏng vấn nhất định phải chuẩn bị trước các câu hỏi phỏng vấn phổ biến, tức là "bát cổ văn":
 
-- 自己面试中可能涉及哪些知识点、那些知识点是重点。
-- 面试中哪些问题会被经常问到、面试中自己该如何回答。(强烈不推荐死记硬背，第一：通过背这种方式你能记住多少？能记住多久？第二：背题的方式的学习很难坚持下去！)
+- Phỏng vấn của bạn có thể liên quan đến những kiến thức nào, kiến thức nào là trọng tâm.
+- Những câu hỏi nào thường xuyên bị hỏi trong phỏng vấn, bạn nên trả lời như thế nào trong phỏng vấn. (Rất không khuyến khích học thuộc lòng: thứ nhất, bạn có thể nhớ được bao nhiêu bằng cách học thuộc? Nhớ được bao lâu? Thứ hai, học bằng cách thuộc bài rất khó duy trì lâu dài!)
 
-不同类型的公司对于技能的要求侧重点是不同的比如腾讯、字节可能更重视计算机基础比如网络、操作系统这方面的内容。阿里、美团这种可能更重视你的项目经历、实战能力。
+Các loại công ty khác nhau có yêu cầu kỹ năng trọng tâm khác nhau. Ví dụ, Tencent, ByteDance có thể chú trọng hơn đến nền tảng máy tính như mạng, hệ điều hành. Alibaba, Meituan có thể chú trọng hơn đến kinh nghiệm dự án và năng lực thực chiến.
 
-一定不要抱着一种思想，觉得八股文或者基础问题的考查意义不大。如果你抱着这种思想复习的话，那效果可能不会太好。实际上，个人认为还是很有意义的，八股文或者基础性的知识在日常开发中也会需要经常用到。例如，线程池这块的拒绝策略、核心参数配置什么的，如果你不了解，实际项目中使用线程池可能就用的不是很明白，容易出现问题。而且，其实这种基础性的问题是最容易准备的，像各种底层原理、系统设计、场景题以及深挖你的项目这类才是最难的！
+Nhất định đừng có tư tưởng cho rằng "bát cổ văn" hay các câu hỏi cơ bản không có ý nghĩa đánh giá lớn. Nếu bạn ôn tập với tư tưởng như vậy thì hiệu quả có thể không tốt. Thực ra, cá nhân tôi vẫn cho rằng điều này rất có ý nghĩa, "bát cổ văn" hay kiến thức nền tảng cũng thường xuyên cần dùng trong công việc phát triển hàng ngày. Ví dụ, về thread pool, nếu bạn không hiểu về rejection policy, cấu hình core parameter, thì trong dự án thực tế sử dụng thread pool có thể không rõ ràng, dễ xảy ra vấn đề. Hơn nữa, những câu hỏi cơ bản này thực ra là dễ chuẩn bị nhất, những câu hỏi như nguyên lý tầng sâu, thiết kế hệ thống, câu hỏi tình huống và đào sâu dự án của bạn mới thực sự khó nhất!
 
-八股文资料首推我的 [《Java 面试指北》](https://javaguide.cn/zhuanlan/java-mian-shi-zhi-bei.html) 和 [JavaGuide](https://javaguide.cn/home.html) 。里面不仅仅是原创八股文，还有很多对实际开发有帮助的干货。除了我的资料之外，你还可以去网上找一些其他的优质的文章、视频来看。
+Tài liệu "bát cổ văn" hàng đầu tôi giới thiệu là [《Java 面试指北》](https://javaguide.cn/zhuanlan/java-mian-shi-zhi-bei.html) và [JavaGuide](https://javaguide.cn/home.html) của tôi. Trong đó không chỉ có "bát cổ văn" nguyên bản, còn có rất nhiều kiến thức hữu ích cho phát triển thực tế. Ngoài tài liệu của tôi, bạn cũng có thể tìm thêm một số bài viết, video chất lượng khác trên mạng để xem.
 
-如果你想要系统准备 Java 后端面试但又不知道如何开始的，可以参考 [Java 后端面试通关计划（后端通用）](https://javaguide.cn/interview-preparation/backend-interview-plan.html)。
+Nếu bạn muốn chuẩn bị hệ thống cho phỏng vấn Java backend nhưng chưa biết bắt đầu từ đâu, có thể tham khảo [Kế hoạch chinh phục phỏng vấn Java Backend (dùng chung cho backend)](https://javaguide.cn/interview-preparation/backend-interview-plan.html).
 
-## 实习经历在简历上一般怎么写比较出彩？
+## Kinh nghiệm thực tập trên CV thường viết như thế nào để nổi bật?
 
-实习经历的描述一定要避免空谈，尽量列举出你在实习期间取得的成就和具体贡献，使用具体的数据和指标来量化你的工作成果。
+Mô tả kinh nghiệm thực tập nhất định phải tránh nói chung chung, hãy cố gắng liệt kê những thành tựu và đóng góp cụ thể mà bạn đạt được trong thời gian thực tập, sử dụng dữ liệu và chỉ số cụ thể để định lượng kết quả công việc.
 
-示例（这里假设项目细节放在实习经历这里介绍，你也可以选择将实习经历参与的项目放到项目经历中）：
+Ví dụ (ở đây giả sử chi tiết dự án được giới thiệu trong phần kinh nghiệm thực tập, bạn cũng có thể chọn đưa dự án tham gia trong thực tập vào phần kinh nghiệm dự án):
 
-1. 负责订单模块核心流程开发，实现订单状态的精确流转，并保障与库存、支付等模块的数据一致性。
-2. 负责行为风控黑名单看板的开发，支持查看拉黑用户、批量拉黑以及取消拉黑。
-3. 基于 Redisson + AOP 封装限流组件，实现对核心接口（如付费、课程搜索）的限流，有效防止恶意请求冲击。
-4. 优化用户统计模块性能，利用 CompletableFuture 并行加载多维度数据（如用户增长、课程活跃度），，平均相应时间从 3.5s 降低到 1s。
-5. 封装通用数据脱敏组件，通过自定义 Jackson 注解实现对手机号、邮箱等敏感信息的自动、无侵入式脱敏。
-6. 优化文件上传模块，基于 MinIO 实现了文件的分片上传、断点续传以及极速秒传功能。
-7. 排查并解决扣费模块由于扣费父任务和反作弊子任务使用同一个线程池导致的死锁问题，通过线程池隔离策略根除该隐患。
-8. 实习期间独立负责 7 个功能需求与 3 个线上问题修复，代码均一次性通过评审与测试。
+1. Phụ trách phát triển quy trình cốt lõi của module đơn hàng, thực hiện chuyển đổi trạng thái đơn hàng chính xác và đảm bảo tính nhất quán dữ liệu với các module kho hàng, thanh toán.
+2. Phụ trách phát triển bảng điều khiển danh sách đen kiểm soát rủi ro hành vi, hỗ trợ xem người dùng bị chặn, chặn hàng loạt và hủy chặn.
+3. Đóng gói component giới hạn tốc độ dựa trên Redisson + AOP, thực hiện giới hạn tốc độ cho các interface cốt lõi (như thanh toán, tìm kiếm khóa học), hiệu quả ngăn chặn các request độc hại tấn công.
+4. Tối ưu hiệu suất module thống kê người dùng, sử dụng CompletableFuture tải song song dữ liệu đa chiều (như tăng trưởng người dùng, mức độ hoạt động khóa học), thời gian phản hồi trung bình giảm từ 3,5s xuống còn 1s.
+5. Đóng gói component ẩn danh dữ liệu chung, thông qua custom Jackson annotation thực hiện ẩn danh tự động, không xâm lấn cho các thông tin nhạy cảm như số điện thoại, email.
+6. Tối ưu module upload file, dựa trên MinIO thực hiện chức năng upload phân mảnh, tiếp tục từ điểm dừng và upload tức thì siêu tốc.
+7. Điều tra và giải quyết vấn đề deadlock trong module trừ phí do task cha trừ phí và task con chống gian lận sử dụng chung một thread pool, loại bỏ triệt để nguy cơ này thông qua chiến lược cách ly thread pool.
+8. Trong thời gian thực tập độc lập phụ trách 7 yêu cầu tính năng và sửa 3 sự cố trực tiếp, code đều vượt qua review và kiểm thử một lần.
 
-下面是[星球](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html)一位球友分享的实习经历介绍，整体写的还是非常不错的：
+Dưới đây là phần giới thiệu kinh nghiệm thực tập được chia sẻ bởi một thành viên của [cộng đồng](https://javaguide.cn/about-the-author/zhishixingqiu-two-years.html), nhìn chung viết rất tốt:
 
 ![实习经历模板](https://oss.javaguide.cn/github/javaguide/interview-preparation/qiuyou-shixijingli-demo.png)
 
-📌关于实习经历这块再多提一点：很多同学实习期间可能接触不到什么实际的开发任务，大部分时间可能都是在熟悉和维护项目。
+📌 Về phần kinh nghiệm thực tập, cần nói thêm một điểm: nhiều bạn trong thời gian thực tập có thể không tiếp xúc được với nhiệm vụ phát triển thực tế gì cả, phần lớn thời gian có thể là làm quen và duy trì dự án.
 
-对于这种情况，应对思路是一套组合拳：首先，你肯定是要和 mentor 沟通继续争取做一些有价值的工作，这样你的实习经历才更有价值，简历上自然就能够有东西可写。记得找一个 mentor 不那么忙的时候沟通，放低姿态，真诚一些，表明自己现有的工作已经认真完成，想要承担更多责任的意愿。其次，不管是否能够争取到这种机会，你都要自己有意识地寻找项目中适合自己研究的功能点（比如同组其他实习生干的活），进行深度挖掘。重点关注以下几个方面：
+Đối với tình huống này, cách xử lý là một bộ chiêu phối hợp: trước tiên, bạn chắc chắn phải giao tiếp với mentor để tiếp tục tranh thủ làm một số công việc có giá trị — như vậy kinh nghiệm thực tập của bạn mới có giá trị hơn và CV mới có nội dung để viết. Nhớ chọn thời điểm mentor không quá bận để giao tiếp, hạ thấp thái độ, chân thành bày tỏ nguyện vọng muốn đảm nhận thêm trách nhiệm sau khi đã hoàn thành tốt công việc hiện tại. Tiếp theo, dù có tranh thủ được cơ hội đó hay không, bạn cũng phải tự mình có ý thức tìm kiếm các điểm chức năng phù hợp để nghiên cứu trong dự án (ví dụ như những việc các thực tập sinh khác trong nhóm đang làm), và đào sâu nghiên cứu. Tập trung vào các khía cạnh sau:
 
-1. **这个功能是干嘛的？** 它解决了什么业务痛点？给哪个业务方用的？整个流程是怎样的？
-2. **它是怎么实现的？** 用了哪些关键技术、框架或者设计模式？核心代码的逻辑是怎样的？
-3. **为什么要这么设计？** 当初设计的时候有没有别的方案？现在这个方案好在哪，又有什么潜在的坑？如果让你来做，你会怎么设计？
+1. **Chức năng này làm gì?** Nó giải quyết điểm đau nghiệp vụ nào? Phục vụ đơn vị kinh doanh nào? Toàn bộ quy trình như thế nào?
+2. **Nó được triển khai như thế nào?** Sử dụng những công nghệ, framework hay design pattern chính nào? Logic code cốt lõi là gì?
+3. **Tại sao phải thiết kế như vậy?** Lúc thiết kế ban đầu có phương án nào khác không? Phương án hiện tại tốt ở điểm nào, và có những hạn chế tiềm ẩn nào? Nếu để bạn làm, bạn sẽ thiết kế như thế nào?
 
-只要你把具体的功能点彻底搞懂，那就可以在简历上合理包装成自己的成果。除了功能点开发之外，也可以包装一些合适的问题排查解决经历，这样能够体现你解决问题的能力。 面试时也不用太担心自己“露馅”，只要你选择的内容不属于那些显然不会交给实习生完成的高难度任务，并且能清晰地讲明白，就不会有问题。
+Chỉ cần bạn hiểu thấu đáo các điểm chức năng cụ thể, thì có thể đóng gói hợp lý thành thành quả của bản thân trên CV. Ngoài việc phát triển điểm chức năng, cũng có thể đóng gói thêm một số kinh nghiệm điều tra và giải quyết vấn đề phù hợp, điều này có thể thể hiện khả năng giải quyết vấn đề của bạn. Khi phỏng vấn cũng không cần lo lắng quá về việc bị "lộ hàng", chỉ cần nội dung bạn chọn không thuộc loại nhiệm vụ khó mà rõ ràng không thể giao cho thực tập sinh thực hiện, và bạn có thể trình bày rõ ràng, thì sẽ không có vấn đề gì.

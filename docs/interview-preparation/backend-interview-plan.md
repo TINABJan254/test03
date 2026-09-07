@@ -1,236 +1,236 @@
 ---
-title: 2026 最新版 Java 后端面试通关计划（涵盖后端通用体系）
-description: Java 后端面试复习计划，提供 4 周压缩版和 8 周标准版，覆盖项目与简历、Java 核心、MySQL、Redis、Spring、计算机基础、分布式、高可用与 JVM，并给出各阶段的产出和自测方法。
-category: 面试准备
+title: Kế hoạch vượt qua phỏng vấn Java Backend phiên bản mới nhất 2026 (Bao quát hệ thống kiến thức Backend tổng quát)
+description: Kế hoạch ôn tập phỏng vấn Java Backend, cung cấp phiên bản nén 4 tuần và phiên bản tiêu chuẩn 8 tuần, bao quát Dự án & CV, Java Core, MySQL, Redis, Spring, Cơ sở máy tính, Hệ thống phân tán, High Availability và JVM, đồng thời cung cấp kết quả đầu ra và phương pháp tự kiểm tra ở từng giai đoạn.
+category: Chuẩn bị phỏng vấn
 icon: mdi:star-outline
 head:
   - - meta
     - name: keywords
-      content: Java后端面试,面试准备计划,面试指南,八股文,校招,社招,项目经验,Java面试
+      content: Phỏng vấn Java Backend, Kế hoạch chuẩn bị phỏng vấn, Hướng dẫn phỏng vấn, Câu hỏi cốt lõi, Tuyển dụng sinh viên, Tuyển dụng có kinh nghiệm, Kinh nghiệm dự án, Phỏng vấn Java
 ---
 
-把 JavaGuide 里的面试题从头看到尾，只完成了资料阅读。面试官通常从简历和项目开始问，再顺着里面的 Java、MySQL、Redis、Spring 或消息队列继续追问。只按知识库目录复习，很容易看了很多文章，轮到自己回答时仍然不知道从哪里讲起。
+Đọc toàn bộ các câu hỏi phỏng vấn trong JavaGuide từ đầu đến cuối mới chỉ hoàn thành bước đọc tài liệu. Người phỏng vấn thường bắt đầu hỏi từ CV và dự án, sau đó tiếp tục đào sâu dựa trên Java, MySQL, Redis, Spring hoặc Message Queue được đề cập trong đó. Nếu chỉ ôn tập theo mục lục tài liệu, rất dễ rơi vào tình trạng đọc rất nhiều bài viết nhưng khi đến lượt mình trả lời thì vẫn không biết bắt đầu từ đâu.
 
-这份计划把项目和简历放在前面，技术知识跟着简历与目标岗位展开。计划分为 4 周压缩版和 8 周标准版，时间不够时删掉与岗位无关的扩展内容，不要把每个专题都压成走马观花。
+Kế hoạch này đặt dự án và CV lên hàng đầu, kiến thức kỹ thuật sẽ được triển khai theo CV và vị trí ứng tuyển mục tiêu. Kế hoạch được chia thành phiên bản nén 4 tuần và phiên bản tiêu chuẩn 8 tuần. Khi không đủ thời gian, hãy lược bỏ các nội dung mở rộng không liên quan đến vị trí ứng tuyển, đừng biến mỗi chuyên đề thành việc cưỡi ngựa xem hoa.
 
-## 先选 4 周还是 8 周
+## Chọn bản 4 tuần hay 8 tuần trước?
 
-| 阶段                   | 4 周压缩版                         | 8 周标准版                        |
-| ---------------------- | ---------------------------------- | --------------------------------- |
-| 前期检查               | 第 1～2 天                         | 第 1～2 天                        |
-| 项目与简历             | 第 1 周剩余时间                    | 第 1 周                           |
-| Java、MySQL、Redis     | 第 2 周                            | 第 2～4 周                        |
-| Spring 与系统设计      | 第 3 周前半段                      | 第 5 周                           |
-| 计算机基础与算法       | 每天穿插，按岗位取舍               | 第 6 周集中复习，算法每天保持练习 |
-| 分布式、JVM 与线上排查 | 第 3 周后半段至第 4 周，按简历选择 | 第 7 周                           |
-| 模拟面试与查漏补缺     | 最后 2 天                          | 第 8 周                           |
+| Giai đoạn | Phiên bản nén 4 tuần | Phiên bản tiêu chuẩn 8 tuần |
+| --- | --- | --- |
+| Kiểm tra chuẩn bị ban đầu | Ngày 1～2 | Ngày 1～2 |
+| Dự án và CV | Thời gian còn lại của Tuần 1 | Tuần 1 |
+| Java, MySQL, Redis | Tuần 2 | Tuần 2～4 |
+| Spring và Thiết kế hệ thống | Nửa đầu Tuần 3 | Tuần 5 |
+| Cơ sở máy tính và Thuật toán | Đan xen mỗi ngày, chọn lọc theo vị trí | Tuần 6 ôn tập tập trung, thuật toán luyện tập hàng ngày |
+| Hệ thống phân tán, JVM và Xử lý sự cố Online | Nửa sau Tuần 3 đến Tuần 4, chọn theo CV | Tuần 7 |
+| Mock Interview và Rà soát lỗ hổng | 2 ngày cuối | Tuần 8 |
 
-4 周版本适合学过主要知识、现在需要集中复习的人；第一次系统学习 Java 后端知识，8 周也只是一个起点。每天能稳定拿出的时间不到 2 小时，优先选 8 周版本。已经开始投递或面试临近，可以走 4 周版本，但复习范围要跟着简历收缩：简历没有写 Kafka，岗位描述也没有相关要求，就不必在消息队列实现细节上花掉两三天。
+Bản 4 tuần phù hợp với những người đã học qua các kiến thức chính, hiện tại cần ôn tập tập trung; nếu lần đầu tiên học có hệ thống kiến thức Java Backend, 8 tuần cũng chỉ là một điểm khởi đầu. Nếu mỗi ngày chỉ có thể dành ra chưa đến 2 tiếng ổn định, hãy ưu tiên chọn bản 8 tuần. Nếu đã bắt đầu nộp CV hoặc phỏng vấn sắp đến gần, có thể đi theo bản 4 tuần, nhưng phạm vi ôn tập phải thu hẹp theo CV: CV không viết Kafka, mô tả công việc (JD) cũng không có yêu cầu liên quan, thì không cần tốn hai ba ngày vào chi tiết triển khai của Message Queue.
 
-算法不要留到最后突击。有笔试或代码题要求的岗位，从第一周开始保持练习；不考算法的岗位，把这部分时间留给项目、数据库和场景题。
+Thuật toán đừng để dồn đến phút chót mới nhồi nhét. Vị trí có yêu cầu thi viết (coding test) hoặc bài tập code, hãy duy trì luyện tập từ tuần đầu tiên; vị trí không thi thuật toán, hãy dành thời gian này cho dự án, cơ sở dữ liệu và các câu hỏi tình huống (scenario-based questions).
 
-## 什么程度才算会了
+## Mức độ nào mới tính là "đã nắm vững"?
 
-“看过”和“面试时能答”差得很远。同一个问题至少要经过下面三层：
+"Đã từng đọc qua" và "trả lời được khi phỏng vấn" cách nhau rất xa. Cùng một câu hỏi ít nhất phải trải qua ba tầng dưới đây:
 
-| 层级       | 自测方式                                                       |
-| ---------- | -------------------------------------------------------------- |
-| 能回答     | 不看资料，用 30～60 秒说出结论和关键词                         |
-| 能追问     | 继续解释实现原理、适用条件、常见失败方式和替代方案             |
-| 能落到项目 | 说明项目中是否使用、为什么这样选、遇到过什么限制、如何验证结果 |
+| Tầng cấp | Phương thức tự kiểm tra |
+| --- | --- |
+| Trả lời được | Không nhìn tài liệu, dùng 30～60 giây nói ra kết luận và từ khóa chính |
+| Trả lời được câu hỏi đào sâu | Tiếp tục giải thích nguyên lý hoạt động, điều kiện áp dụng, các trường hợp lỗi thường gặp và giải pháp thay thế |
+| Áp dụng được vào dự án | Nêu rõ trong dự án có dùng hay không, tại sao chọn như vậy, từng gặp giới hạn gì và cách kiểm chứng kết quả |
 
-复习记录不必做得很复杂，保留“问题、资料链接、当前层级、没答好的点”四列即可。当天读完的内容至少做一次脱稿回答；答不上来再回原文查，不要用反复阅读代替回忆。
+Sổ ghi chép ôn tập không cần làm quá phức tạp, chỉ cần giữ lại 4 cột: "Câu hỏi, Link tài liệu, Tầng cấp hiện tại, Điểm chưa trả lời tốt". Nội dung đọc xong trong ngày ít nhất phải trả lời không nhìn tài liệu một lần; nếu không trả lời được thì tra lại bài gốc, đừng dùng việc đọc đi đọc lại để thay thế cho việc chủ động gợi nhớ.
 
-## 第 0 阶段：先把范围定下来
+## Giai đoạn 0: Xác định phạm vi trước tiên
 
-用 1～2 天完成三件事：确定目标岗位、检查简历、做一次摸底自测。
+Dùng 1～2 ngày để hoàn thành 3 việc: Xác định vị trí mục tiêu, Kiểm tra CV, Làm một bài tự đánh giá năng lực ban đầu.
 
-先找几份准备投递的岗位描述，记录反复出现的技能，再和简历逐项核对。复习范围主要来自两处：岗位明确要求什么，简历主动写了什么。简历上出现“熟悉 Redis”“负责订单模块”“使用 Kafka 处理异步任务”，后面就应该有对应问题和项目细节可以接住。
+Trước tiên hãy tìm một vài bản mô tả công việc (JD) dự định ứng tuyển, ghi lại các kỹ năng xuất hiện lặp đi lặp lại, sau đó đối chiếu từng mục với CV. Phạm vi ôn tập chủ yếu đến từ hai nguồn: Yêu cầu công việc ghi rõ điều gì, và CV chủ động viết điều gì. Trên CV xuất hiện "Thành thạo Redis", "Phụ trách module đơn hàng", "Sử dụng Kafka xử lý tác vụ bất đồng bộ", thì phía sau phải có các câu hỏi tương ứng và chi tiết dự án để đỡ được.
 
-这一阶段至少留下四份材料：
+Giai đoạn này ít nhất phải để lại 4 tài liệu:
 
-- 一份可以投递的 PDF 简历。
-- 30～60 秒的自我介绍提纲。
-- 每个项目的一张项目底稿。
-- 一份按优先级排列的待复习问题列表。
+- Một bản CV định dạng PDF sẵn sàng để ứng tuyển.
+- Dàn ý tự giới thiệu bản thân từ 30～60 giây.
+- Một bản phác thảo chi tiết cho mỗi dự án.
+- Một danh sách các câu hỏi cần ôn tập được sắp xếp theo thứ tự ưu tiên.
 
-准备方法可以参考[如何高效准备 Java 面试？](./teach-you-how-to-prepare-for-the-interview-hand-in-hand.md)和[Java 后端面试重点总结](./key-points-of-interview.md)。
+Phương pháp chuẩn bị có thể tham khảo [Làm thế nào để chuẩn bị phỏng vấn Java hiệu quả?](./teach-you-how-to-prepare-for-the-interview-hand-in-hand.md) và [Tổng hợp trọng tâm phỏng vấn Java Backend](./key-points-of-interview.md).
 
-简历还没定稿时，先看[程序员简历编写指南](./resume-guide.md)；不要一边复习一边频繁往简历里增加新技术，否则复习范围会不断扩大。
+Khi CV chưa được chốt bản cuối, hãy xem trước [Hướng dẫn viết CV cho lập trình viên](./resume-guide.md); đừng vừa ôn tập vừa liên tục thêm công nghệ mới vào CV, nếu không phạm vi ôn tập sẽ không ngừng mở rộng.
 
-## 第一阶段：项目与简历深挖
+## Giai đoạn 1: Đào sâu Dự án và CV
 
-项目通常是技术追问的入口。项目讲不清，背再多组件原理也很难把回答接回自己的经历。
+Dự án thường là cánh cửa dẫn tới các câu hỏi kỹ thuật đào sâu. Nếu dự án không trình bày rõ ràng, học thuộc bao nhiêu nguyên lý component cũng rất khó liên hệ câu trả lời về trải nghiệm thực tế của chính mình.
 
-给每个重点项目整理下面这些内容：
+Chuẩn bị các nội dung sau cho từng dự án trọng điểm:
 
-| 内容       | 要回答的问题                                       |
-| ---------- | -------------------------------------------------- |
-| 业务背景   | 项目给谁使用，解决什么问题，核心链路是什么         |
-| 个人职责   | 哪些接口、表、任务或模块由自己负责，参与到什么程度 |
-| 请求链路   | 一次请求经过哪些服务、缓存、数据库和消息队列       |
-| 技术选型   | 为什么采用当前方案，比较过什么，付出了什么代价     |
-| 难点或故障 | 现象是什么，怎样定位、修复和验证                   |
-| 项目指标   | 数据来自生产还是测试，统计口径和对照条件是什么     |
-| 职责范围   | 哪些部分由其他同事或团队负责                       |
+| Nội dung | Câu hỏi cần trả lời |
+| --- | --- |
+| Bối cảnh nghiệp vụ | Dự án phục vụ ai, giải quyết vấn đề gì, luồng xử lý cốt lõi là gì |
+| Trách nhiệm cá nhân | Những API, bảng dữ liệu, tác vụ hoặc module nào do mình phụ trách, tham gia ở mức độ nào |
+| Luồng xử lý request | Một request đi qua những service, cache, database và message queue nào |
+| Lựa chọn công nghệ (Tech Selection) | Tại sao sử dụng giải pháp hiện tại, đã so sánh với những gì, phải trả giá bằng điều gì |
+| Khó khăn hoặc Sự cố | Hiện tượng là gì, định vị, khắc phục và kiểm chứng kết quả như thế nào |
+| Chỉ số dự án | Dữ liệu đến từ production hay môi trường test, tiêu chuẩn thống kê và điều kiện đối chứng là gì |
+| Phạm vi trách nhiệm | Những phần nào do đồng nghiệp hoặc team khác phụ trách |
 
-每个项目准备 30 秒和 3 分钟两个版本。30 秒版本讲业务、职责和一个重点；3 分钟版本补上核心链路、技术选型以及一个可以继续追问的问题。不要背逐字稿，记住顺序和关键词即可。具体写法见[后端项目面试怎么讲？](./backend-project-interview-guide.md)。
+Mỗi dự án chuẩn bị 2 phiên bản: 30 giây và 3 phút. Bản 30 giây nói về nghiệp vụ, trách nhiệm và 1 điểm trọng tâm; bản 3 phút bổ sung thêm luồng xử lý cốt lõi, lựa chọn công nghệ và một vấn đề có thể tiếp tục bị hỏi sâu. Không học thuộc từng chữ, chỉ cần nhớ trình tự và các từ khóa chính. Cách viết cụ thể xem tại [Trình bày dự án Backend trong phỏng vấn như thế nào?](./backend-project-interview-guide.md).
 
-顺着项目里的每项技术继续列问题。例如使用 Redis 缓存商品信息，至少要准备 Key 设计、过期策略、缓存未命中、数据一致性和 Redis 不可用时的处理；写了线程池，就要能解释任务类型、核心参数、队列、拒绝策略以及下游承载能力。
+Dựa theo từng công nghệ trong dự án để tiếp tục liệt kê câu hỏi. Ví dụ sử dụng Redis cache thông tin sản phẩm, ít nhất phải chuẩn bị thiết kế Key, chiến lược hết hạn (expiration), cache miss, tính nhất quán dữ liệu (data consistency) và cách xử lý khi Redis không khả dụng; nếu viết có dùng Thread Pool, phải giải thích được loại tác vụ, các tham số cốt lõi, hàng đợi, rejection policy cũng như khả năng chịu tải của downstream.
 
-项目结果可以量化，但数字必须有来源。没有生产指标时，可以在测试环境补测，并注明机器配置、数据量、并发模型和测试时长。不要给练手项目编造生产 QPS，也不要把只看过的模块写成自己负责。
+Kết quả dự án có thể lượng hóa, nhưng số liệu phải có nguồn gốc rõ ràng. Khi không có chỉ số production, có thể đo kiểm bổ sung trong môi trường test, và ghi chú rõ cấu hình máy, lượng dữ liệu, mô hình concurrency và thời gian test. Đừng bịa đặt số QPS production cho các dự án luyện tập, cũng đừng viết module mình chỉ xem qua thành do mình phụ trách.
 
-没有实习或正式项目也可以准备。跟着课程完成的项目、二次开发的开源项目、课程设计和比赛项目都能写，重点是自己做过哪些改动：增加功能、调整表结构、补测试、修复缺陷或比较过不同方案。可以继续阅读[项目经验指南](./project-experience-guide.md)、[校招没有实习经历怎么办？](./internship-experience.md)和[Java 优质开源实战项目](../open-source-project/practical-project.md)。
+Nếu không có kinh nghiệm thực tập hoặc dự án chính thức vẫn có thể chuẩn bị được. Dự án làm theo khóa học, dự án open source phát triển mở rộng, đồ án môn học và dự án thi đấu đều có thể viết, trọng tâm là bản thân đã thực hiện những thay đổi gì: Thêm tính năng, điều chỉnh cấu trúc bảng, bổ sung unit test, fix bug hoặc so sánh các giải pháp khác nhau. Có thể đọc tiếp [Hướng dẫn kinh nghiệm dự án](./project-experience-guide.md), [Chưa có kinh nghiệm thực tập thì làm sao?](./internship-experience.md) và [Dự án thực chiến Java mã nguồn mở chất lượng](../open-source-project/practical-project.md).
 
-完成这一阶段后，随机挑一个项目，脱稿回答下面四个问题：
+Sau khi hoàn thành giai đoạn này, hãy chọn ngẫu nhiên một dự án và trả lời 4 câu hỏi dưới đây mà không nhìn tài liệu:
 
-1. 这个项目解决什么问题，你负责什么？
-2. 一条核心请求怎样流转？
-3. 哪个技术选择最值得解释，为什么？
-4. 遇到过什么问题，结论由什么证据支持？
+1. Dự án này giải quyết vấn đề gì, bạn phụ trách phần nào?
+2. Một request cốt lõi luân chuyển như thế nào?
+3. Lựa chọn kỹ thuật nào đáng để giải thích nhất, tại sao?
+4. Đã từng gặp vấn đề gì, kết luận được chứng minh bằng bằng chứng nào?
 
-## 第二阶段：Java、MySQL 与 Redis
+## Giai đoạn 2: Java, MySQL và Redis
 
-这三部分覆盖面很大，不适合平均分配时间。先做一轮随机抽题，哪个专题只能说出定义，就把时间补到哪里；已经能结合项目回答的内容只做复盘。
+Ba phần này có phạm vi phủ sóng rất rộng, không nên phân bổ thời gian cào bằng. Hãy làm một lượt rút câu hỏi ngẫu nhiên trước, chuyên đề nào chỉ nói được định nghĩa thì bù thời gian vào đó; nội dung đã có thể kết hợp với dự án để trả lời thì chỉ cần review lại.
 
-### Java 基础、集合与并发
+### Java cơ bản, Collections và Concurrency
 
-先看 Java 基础、集合和并发这三组文章：
+Xem trước 3 nhóm bài viết về Java cơ bản, Collections và Concurrency:
 
-- [Java 基础常见面试题（上）](../java/basis/java-basic-questions-01.md)、[（中）](../java/basis/java-basic-questions-02.md)、[（下）](../java/basis/java-basic-questions-03.md)
-- [Java 集合常见面试题（上）](../java/collection/java-collection-questions-01.md)、[（下）](../java/collection/java-collection-questions-02.md)
-- [Java 并发常见面试题（上）](../java/concurrent/java-concurrent-questions-01.md)、[（中）](../java/concurrent/java-concurrent-questions-02.md)、[（下）](../java/concurrent/java-concurrent-questions-03.md)
+- [Câu hỏi phỏng vấn thường gặp về Java cơ bản (Phần 1)](../java/basis/java-basic-questions-01.md), [(Phần 2)](../java/basis/java-basic-questions-02.md), [(Phần 3)](../java/basis/java-basic-questions-03.md)
+- [Câu hỏi phỏng vấn thường gặp về Java Collections (Phần 1)](../java/collection/java-collection-questions-01.md), [(Phần 2)](../java/collection/java-collection-questions-02.md)
+- [Câu hỏi phỏng vấn thường gặp về Java Concurrency (Phần 1)](../java/concurrent/java-concurrent-questions-01.md), [(Phần 2)](../java/concurrent/java-concurrent-questions-02.md), [(Phần 3)](../java/concurrent/java-concurrent-questions-03.md)
 
-基础部分要能解释常见概念和代码行为；集合重点放在选型、扩容、线程安全和常见误用；并发要能把线程状态、锁、JMM、ThreadLocal、线程池和异步任务串起来。简历涉及并发编程时，再深入看 [JMM](../java/concurrent/jmm.md)、[线程池详解](../java/concurrent/java-thread-pool-summary.md)、[ThreadLocal](../java/concurrent/threadlocal.md)、[AQS](../java/concurrent/aqs.md) 和 [CompletableFuture](../java/concurrent/completablefuture-intro.md)。
+Phần cơ bản phải giải thích được các khái niệm và hành vi code thường gặp; Collections tập trung vào việc lựa chọn cấu trúc, cơ chế mở rộng dung lượng (resize/grow), thread-safety và các lỗi dùng sai phổ biến; Concurrency cần xâu chuỗi được trạng thái Thread, Lock, JMM, ThreadLocal, Thread Pool và tác vụ bất đồng bộ (Async). Nếu CV có liên quan đến lập trình đa luồng, hãy xem sâu hơn [JMM](../java/concurrent/jmm.md), [Chi tiết Thread Pool](../java/concurrent/java-thread-pool-summary.md), [ThreadLocal](../java/concurrent/threadlocal.md), [AQS](../java/concurrent/aqs.md) và [CompletableFuture](../java/concurrent/completablefuture-intro.md).
 
 ### MySQL
 
-[MySQL 常见面试题总结](../database/mysql/mysql-questions-01.md)适合作为主线。读到索引、事务和锁时，再进入专题文章：
+[Tổng hợp câu hỏi phỏng vấn MySQL thường gặp](../database/mysql/mysql-questions-01.md) thích hợp làm mạch chính. Khi đọc đến Index, Transaction và Lock, hãy chuyển sang các bài viết chuyên đề:
 
-- [MySQL 索引详解](../database/mysql/mysql-index.md)
-- [MySQL 三大日志](../database/mysql/mysql-logs.md)
-- [事务隔离级别](../database/mysql/transaction-isolation-level.md)
-- [InnoDB 对 MVCC 的实现](../database/mysql/innodb-implementation-of-mvcc.md)
-- [SQL 在 MySQL 中如何执行](../database/mysql/how-sql-executed-in-mysql.md)
-- [MySQL 执行计划分析](../database/mysql/mysql-query-execution-plan.md)
+- [Chi tiết về MySQL Index](../database/mysql/mysql-index.md)
+- [Ba loại Log lớn trong MySQL (binlog, redo log, undo log)](../database/mysql/mysql-logs.md)
+- [Các mức độ cô lập Transaction](../database/mysql/transaction-isolation-level.md)
+- [Cách InnoDB triển khai MVCC](../database/mysql/innodb-implementation-of-mvcc.md)
+- [SQL được thực thi như thế nào trong MySQL](../database/mysql/how-sql-executed-in-mysql.md)
+- [Phân tích Execution Plan trong MySQL (EXPLAIN)](../database/mysql/mysql-query-execution-plan.md)
 
-索引题不要停在最左匹配和索引失效。给一条项目 SQL，说明查询条件、数据分布、执行计划、扫描行数以及最终怎样修改。事务题也要能落到代码：事务范围为什么过大、哪些调用不该放在事务里、Spring 事务在哪些情况下会失效。
+Câu hỏi về Index đừng chỉ dừng lại ở Leftmost Prefix Rule và Index Invalidation. Hãy lấy một câu SQL trong dự án, giải thích điều kiện truy vấn, phân bổ dữ liệu, execution plan, số dòng được quét (rows scanned) và cuối cùng đã sửa đổi tối ưu như thế nào. Câu hỏi về Transaction cũng phải liên hệ được với code: Tại sao phạm vi transaction quá lớn, những lời gọi nào không nên đặt trong transaction, Spring transaction bị mất tác dụng (invalid) trong những trường hợp nào.
 
 ### Redis
 
-先读[Redis 常见面试题（上）](../database/redis/redis-questions-01.md)和[（下）](../database/redis/redis-questions-02.md)，再根据项目选择专题：
+Đọc trước [Câu hỏi phỏng vấn Redis thường gặp (Phần 1)](../database/redis/redis-questions-01.md) và [(Phần 2)](../database/redis/redis-questions-02.md), sau đó chọn chuyên đề dựa theo dự án:
 
-- 数据结构：[5 种基本数据类型](../database/redis/redis-data-structures-01.md)、[3 种特殊数据类型](../database/redis/redis-data-structures-02.md)、[跳表](../database/redis/redis-skiplist.md)
-- 缓存问题：[缓存基础](../database/redis/cache-basics.md)、[常见缓存读写策略](../database/redis/3-commonly-used-cache-read-and-write-strategies.md)
-- 运行与存储：[持久化](../database/redis/redis-persistence.md)、[内存碎片](../database/redis/redis-memory-fragmentation.md)、[常见阻塞原因](../database/redis/redis-common-blocking-problems-summary.md)
-- 业务用法：[Redis 延时任务](../database/redis/redis-delayed-task.md)、[Redis Stream 做消息队列](../database/redis/redis-stream-mq.md)
+- Cấu trúc dữ liệu: [5 kiểu dữ liệu cơ bản](../database/redis/redis-data-structures-01.md), [3 kiểu dữ liệu đặc biệt](../database/redis/redis-data-structures-02.md), [Skip List](../database/redis/redis-skiplist.md)
+- Vấn đề Cache: [Cơ bản về Cache](../database/redis/cache-basics.md), [Chiến lược đọc ghi Cache phổ biến](../database/redis/3-commonly-used-cache-read-and-write-strategies.md)
+- Vận hành và Lưu trữ: [Cơ chế Persistence](../database/redis/redis-persistence.md), [Phân mảnh bộ nhớ](../database/redis/redis-memory-fragmentation.md), [Nguyên nhân Blocking phổ biến](../database/redis/redis-common-blocking-problems-summary.md)
+- Ứng dụng nghiệp vụ: [Delayed Task với Redis](../database/redis/redis-delayed-task.md), [Dùng Redis Stream làm Message Queue](../database/redis/redis-stream-mq.md)
 
-准备 Redis 时，不要只背数据类型。从项目里挑一条真实的缓存链路，试着完整讲一遍：请求如何读取缓存，未命中后从哪里查数据，查到后怎样回填，缓存多久过期，Redis 出故障时业务怎么兜底。
+Khi chuẩn bị Redis, đừng chỉ học vẹt các kiểu dữ liệu. Hãy chọn một luồng xử lý cache thực tế trong dự án và thử trình bày hoàn chỉnh: Request đọc cache như thế nào, khi miss thì truy vấn dữ liệu từ đâu, sau khi lấy được thì ghi lại cache ra sao, cache hết hạn sau bao lâu, khi Redis gặp sự cố thì nghiệp vụ phòng thủ (fallback) như thế nào.
 
-复习完后，把 Java、MySQL 和 Redis 混着抽题，每类各抽 5 道。每道题先用一两句话给出结论，然后继续追问两轮：“为什么？”“项目里怎么用？”哪道题卡住，就回到对应文章补那一个知识点，不必整章重读。
+Sau khi ôn tập xong, hãy trộn lẫn câu hỏi của Java, MySQL và Redis để bốc thăm ngẫu nhiên, mỗi loại 5 câu. Mỗi câu trước tiên dùng 1-2 câu để đưa ra kết luận, sau đó tiếp tục đào sâu 2 vòng: "Tại sao?" "Trong dự án sử dụng như thế nào?". Câu nào bị nghẽn thì quay lại bài viết tương ứng để bù đúng điểm kiến thức đó, không cần đọc lại toàn bộ chương.
 
-## 第三阶段：Spring 与系统设计
+## Giai đoạn 3: Spring và Thiết kế hệ thống
 
-### Spring、Spring Boot 和 MyBatis
+### Spring, Spring Boot và MyBatis
 
-Spring 的准备重点是项目里真实使用的功能。先看[Spring 常见面试题](../system-design/framework/spring/spring-knowledge-and-questions-summary.md)和[Spring Boot 常见面试题](../system-design/framework/spring/springboot-knowledge-and-questions-summary.md)，再补下面这些专题：
+Trọng tâm chuẩn bị Spring là các tính năng thực sự được sử dụng trong dự án. Xem trước [Câu hỏi phỏng vấn Spring thường gặp](../system-design/framework/spring/spring-knowledge-and-questions-summary.md) và [Câu hỏi phỏng vấn Spring Boot thường gặp](../system-design/framework/spring/springboot-knowledge-and-questions-summary.md), sau đó bổ sung các chuyên đề:
 
-- [IoC 与 AOP](../system-design/framework/spring/ioc-and-aop.md)
-- [Spring 事务](../system-design/framework/spring/spring-transaction.md)
-- [Spring Boot 自动装配](../system-design/framework/spring/spring-boot-auto-assembly-principles.md)
-- [Spring 中使用的设计模式](../system-design/framework/spring/spring-design-patterns-summary.md)
-- [MyBatis 常见面试题](../system-design/framework/mybatis/mybatis-interview.md)
+- [IoC và AOP](../system-design/framework/spring/ioc-and-aop.md)
+- [Spring Transaction](../system-design/framework/spring/spring-transaction.md)
+- [Nguyên lý Auto-configuration trong Spring Boot](../system-design/framework/spring/spring-boot-auto-assembly-principles.md)
+- [Các Design Patterns được sử dụng trong Spring](../system-design/framework/spring/spring-design-patterns-summary.md)
+- [Câu hỏi phỏng vấn MyBatis thường gặp](../system-design/framework/mybatis/mybatis-interview.md)
 
-自测时不要只解释注解含义。结合项目说明 Bean 怎样创建、AOP 用在哪里、事务边界如何划分、某个事务为什么会失效，以及 MyBatis 最终执行了什么 SQL。项目没有使用 Netty、响应式编程或复杂扩展点，不必为了覆盖面临时补进简历。
+Khi tự kiểm tra đừng chỉ giải thích ý nghĩa annotation. Hãy kết hợp với dự án để giải thích Bean được tạo như thế nào, AOP dùng ở đâu, ranh giới transaction được phân chia ra sao, tại sao một transaction nào đó bị mất tác dụng, và MyBatis cuối cùng đã thực thi câu lệnh SQL nào. Nếu dự án không dùng Netty, Reactive Programming hoặc Extension Points phức tạp thì không cần tạm thời nhồi nhét vào CV chỉ để tăng độ phủ.
 
-### 认证、授权与常见安全问题
+### Authentication, Authorization và Vấn đề bảo mật thường gặp
 
-简历涉及登录、权限或开放接口时，准备[认证授权基础](../system-design/security/basis-of-authority-certification.md)、[JWT](../system-design/security/jwt-intro.md)、[SSO](../system-design/security/sso-intro.md)和[权限系统设计](../system-design/security/design-of-authority-system.md)。回答时讲清认证信息放在哪里、权限在什么位置校验、Token 如何失效，以及接口怎样防止越权和重复提交。
+Khi CV có liên quan đến Đăng nhập, Phân quyền hoặc Open API, hãy chuẩn bị [Cơ bản về Authentication & Authorization](../system-design/security/basis-of-authority-certification.md), [JWT](../system-design/security/jwt-intro.md), [SSO](../system-design/security/sso-intro.md) và [Thiết kế hệ thống phân quyền](../system-design/security/design-of-authority-system.md). Khi trả lời hãy nói rõ thông tin xác thực lưu ở đâu, quyền hạn kiểm tra ở vị trí nào, Token hết hạn/hủy như thế nào, và API phòng chống vượt quyền (Privilege Escalation) cùng Submit lặp lại (Idempotency) ra sao.
 
-### 系统设计与场景题
+### Thiết kế hệ thống và Câu hỏi tình huống (System Design)
 
-系统设计题先确认需求和约束，再开始画组件。回答按这条顺序展开：
+Câu hỏi System Design cần xác nhận yêu cầu và ràng buộc trước khi bắt đầu vẽ các component. Trả lời theo trình tự sau:
 
-1. 明确用户规模、请求量、延迟、可用性和一致性要求。
-2. 找出核心业务流程、数据模型和接口。
-3. 给出能工作的基础方案。
-4. 根据瓶颈增加缓存、异步、分片、限流或降级。
-5. 说明失败场景、数据一致性、监控和容量验证。
+1. Làm rõ quy mô người dùng, lượng request, độ trễ (latency), yêu cầu về tính sẵn sàng (availability) và tính nhất quán (consistency).
+2. Tìm ra luồng nghiệp vụ cốt lõi, mô hình dữ liệu và các API.
+3. Đưa ra giải pháp cơ bản có thể hoạt động được.
+4. Dựa vào điểm nghẽn (bottleneck) để bổ sung Cache, Async, Sharding, Rate Limiting hoặc Circuit Breaking/Degradation.
+5. Giải thích các kịch bản lỗi, tính nhất quán dữ liệu, giám sát (monitoring) và kiểm chứng dung lượng.
 
-入门先看[系统设计常见面试题总结](../system-design/system-design-questions.md)、[高性能系统设计面试题](../high-performance/high-performance-system-interview-questions.md)和[高可用系统设计面试题](../high-availability/high-availability-system-interview-questions.md)。短链、秒杀、海量数据处理等完整场景可参考[后端面试高频系统设计与场景题](../zhuanlan/back-end-interview-high-frequency-system-design-and-scenario-questions.md)。
+Mới bắt đầu hãy xem [Tổng hợp câu hỏi phỏng vấn Thiết kế hệ thống thường gặp](../system-design/system-design-questions.md), [Câu hỏi phỏng vấn Thiết kế hệ thống hiệu năng cao](../high-performance/high-performance-system-interview-questions.md) và [Câu hỏi phỏng vấn Thiết kế hệ thống độ sẵn sàng cao](../high-availability/high-availability-system-interview-questions.md). Các tình huống hoàn chỉnh như Rút gọn link (Short URL), Flash Sale (Seckill), Xử lý dữ liệu lớn có thể tham khảo [Các câu hỏi tình huống và Thiết kế hệ thống tần suất cao trong phỏng vấn Backend](../zhuanlan/back-end-interview-high-frequency-system-design-and-scenario-questions.md).
 
-完成后选择两个题目口述，不看现成架构图。第一次先给基础方案，面试官增加流量、故障或一致性要求后再调整，重点讲清方案为什么变化。
+Sau khi hoàn thành, hãy chọn 2 đề bài để trình bày miệng mà không nhìn vào sơ đồ kiến trúc có sẵn. Lần đầu đưa ra giải pháp cơ bản, sau khi người phỏng vấn tăng lưu lượng, sự cố hoặc yêu cầu về tính nhất quán thì điều chỉnh tiếp, tập trung giải thích tại sao phương án lại thay đổi.
 
-## 第四阶段：计算机基础与算法
+## Giai đoạn 4: Cơ sở máy tính và Thuật toán
 
-计算机基础的复习深度由岗位和面试流程决定。有笔试、算法面或手写代码环节，算法需要从第一周持续练习；岗位更关注业务开发，仍要保证网络、操作系统和常见数据结构能够回答。
+Độ sâu ôn tập cơ sở máy tính do vị trí ứng tuyển và quy trình phỏng vấn quyết định. Nếu có vòng thi viết, phỏng vấn thuật toán hoặc live coding, thuật toán cần được luyện tập liên tục từ tuần đầu tiên; nếu vị trí chú trọng hơn vào phát triển nghiệp vụ, vẫn cần đảm bảo trả lời được các câu hỏi về Mạng, Hệ điều hành và Cấu trúc dữ liệu phổ biến.
 
-### 算法与数据结构
+### Thuật toán và Cấu trúc dữ liệu
 
-先用[算法专题](../cs-basics/algorithms/)确定范围，再练习[二分查找](../cs-basics/algorithms/binary-search.md)、[双指针与滑动窗口](../cs-basics/algorithms/two-pointers-and-sliding-window.md)、[DFS/BFS](../cs-basics/algorithms/dfs-bfs.md)、[回溯](../cs-basics/algorithms/backtracking.md)、[动态规划](../cs-basics/algorithms/dynamic-programming.md)和 [Top K](../cs-basics/algorithms/top-k.md)。
+Trước tiên dùng [Chuyên đề thuật toán](../cs-basics/algorithms/) để xác định phạm vi, sau đó luyện tập [Tìm kiếm nhị phân (Binary Search)](../cs-basics/algorithms/binary-search.md), [Two Pointers & Sliding Window](../cs-basics/algorithms/two-pointers-and-sliding-window.md), [DFS/BFS](../cs-basics/algorithms/dfs-bfs.md), [Quay lui (Backtracking)](../cs-basics/algorithms/backtracking.md), [Quy hoạch động (Dynamic Programming)](../cs-basics/algorithms/dynamic-programming.md) và [Top K](../cs-basics/algorithms/top-k.md).
 
-刷题时保留错题和边界条件，不追求只记模板。至少能解释时间复杂度，手写常见链表、树遍历、二分、哈希和堆相关题；简历写了某种数据结构，还要能说明它为什么适合当前场景。
+Khi cày bài tập hãy lưu lại các bài làm sai và các điều kiện biên, không nên chỉ chạy theo việc nhớ mẫu (template). Ít nhất phải giải thích được Time Complexity, tự tay code được các bài liên quan đến Linked List, Tree Traversal, Binary Search, Hash Table và Heap; nếu CV có ghi cấu trúc dữ liệu nào, còn phải giải thích được tại sao nó phù hợp với ngữ cảnh hiện tại.
 
-### 计算机网络和操作系统
+### Mạng máy tính và Hệ điều hành
 
-网络先过[计算机网络常见面试题（上）](../cs-basics/network/other-network-questions.md)和[（下）](../cs-basics/network/other-network-questions2.md)，再重点看[从输入 URL 到页面展示的过程](../cs-basics/network/the-whole-process-of-accessing-web-pages.md)、[HTTP 与 HTTPS](../cs-basics/network/http-vs-https.md)、[TCP 三次握手和四次挥手](../cs-basics/network/tcp-connection-and-disconnection.md)以及[TCP 如何保证可靠传输](../cs-basics/network/tcp-reliability-guarantee.md)。
+Phần Mạng máy tính hãy xem qua [Câu hỏi phỏng vấn Mạng máy tính thường gặp (Phần 1)](../cs-basics/network/other-network-questions.md) và [(Phần 2)](../cs-basics/network/other-network-questions2.md), sau đó tập trung vào [Quy trình từ lúc nhập URL đến khi trang web hiển thị](../cs-basics/network/the-whole-process-of-accessing-web-pages.md), [HTTP và HTTPS](../cs-basics/network/http-vs-https.md), [TCP 3-way Handshake và 4-way Teardown](../cs-basics/network/tcp-connection-and-disconnection.md) cùng [Cách TCP đảm bảo truyền tải tin cậy](../cs-basics/network/tcp-reliability-guarantee.md).
 
-操作系统以[操作系统常见面试题（上）](../cs-basics/operating-system/operating-system-basic-questions-01.md)和[（下）](../cs-basics/operating-system/operating-system-basic-questions-02.md)为主，重点检查进程与线程、虚拟内存、I/O、死锁和系统调用。不要只背定义，尝试把它们和 Java 线程、文件 I/O、网络请求、OOM 以及上下文切换联系起来。
+Hệ điều hành lấy [Câu hỏi phỏng vấn Hệ điều hành thường gặp (Phần 1)](../cs-basics/operating-system/operating-system-basic-questions-01.md) và [(Phần 2)](../cs-basics/operating-system/operating-system-basic-questions-02.md) làm chủ đạo, tập trung kiểm tra Process vs Thread, Virtual Memory, I/O, Deadlock và System Call. Đừng chỉ học vẹt định nghĩa, hãy thử liên hệ chúng với Java Thread, File I/O, Network Request, OOM và Context Switch.
 
-## 第五阶段：分布式、高性能与高可用
+## Giai đoạn 5: Hệ thống phân tán, Hiệu năng cao và Độ sẵn sàng cao
 
-这一阶段跟着简历和岗位走。项目是单体应用，岗位也没有分布式要求，掌握常见问题即可；简历写了微服务、消息队列、分布式锁或分库分表，对应专题就要能扛住追问。
+Giai đoạn này đi theo CV và vị trí ứng tuyển. Nếu dự án là ứng dụng monolithic, vị trí tuyển dụng cũng không có yêu cầu về hệ thống phân tán, chỉ cần nắm các câu hỏi phổ biến là đủ; nếu CV có viết Microservices, Message Queue, Distributed Lock hoặc Phân cơ sở dữ liệu & bảng (Database Sharding & Partitioning), chuyên đề tương ứng phải chịu được các câu hỏi đào sâu.
 
-| 简历或岗位出现的内容 | 复习入口                                                                                                                                                                                                                       | 至少准备到什么程度                             |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| 微服务、RPC          | [微服务面试题](../distributed-system/microservices-interview-questions.md)、[RPC 基础](../distributed-system/rpc/rpc-intro.md)                                                                                                 | 服务如何拆分，调用怎样超时和重试，故障如何隔离 |
-| 网关、配置中心       | [API 网关](../distributed-system/api-gateway.md)、[分布式配置中心](../distributed-system/distributed-configuration-center.md)                                                                                                  | 请求路由、鉴权、限流、配置推送与故障处理       |
-| 分布式 ID、锁、事务  | [分布式 ID](../distributed-system/distributed-id.md)、[分布式锁](../distributed-system/distributed-lock-implementations.md)、[分布式事务](../distributed-system/distributed-transaction.md)                                    | 选型条件、正确性风险、超时与失败恢复           |
-| 消息队列             | [消息队列面试题](../high-performance/message-queue/message-queue-interview-questions.md)                                                                                                                                       | 发送失败、重复消费、顺序、积压和下游容量       |
-| 高并发与数据库优化   | [高性能系统设计](../high-performance/high-performance-system-interview-questions.md)、[SQL 优化](../high-performance/sql-optimization.md)                                                                                      | 瓶颈位置、容量上限、缓存与异步带来的代价       |
-| 稳定性建设           | [高可用系统设计](../high-availability/high-availability-system-design.md)、[超时和重试](../high-availability/timeout-and-retry.md)、[限流](../high-availability/limit-request.md)、[幂等](../high-availability/idempotency.md) | 故障怎样传播，怎样止损，临时措施有什么副作用   |
+| Nội dung xuất hiện trong CV hoặc JD | Lối vào ôn tập | Ít nhất phải chuẩn bị đến mức độ nào |
+| --- | --- | --- |
+| Microservices, RPC | [Câu hỏi phỏng vấn Microservices](../distributed-system/microservices-interview-questions.md), [Cơ bản về RPC](../distributed-system/rpc/rpc-intro.md) | Service được chia tách thế nào, lời gọi xử lý timeout và retry ra sao, cô lập sự cố thế nào |
+| API Gateway, Configuration Center | [API Gateway](../distributed-system/api-gateway.md), [Distributed Configuration Center](../distributed-system/distributed-configuration-center.md) | Request routing, authentication, rate limiting, push cấu hình và xử lý sự cố |
+| Distributed ID, Lock, Transaction | [Distributed ID](../distributed-system/distributed-id.md), [Distributed Lock](../distributed-system/distributed-lock-implementations.md), [Distributed Transaction](../distributed-system/distributed-transaction.md) | Điều kiện chọn giải pháp, rủi ro về tính chính xác, timeout và phục hồi sau lỗi |
+| Message Queue | [Câu hỏi phỏng vấn Message Queue](../high-performance/message-queue/message-queue-interview-questions.md) | Gửi lỗi, tiêu thụ lặp lại (duplicate consumption), thứ tự tin nhắn, tích tụ tin nhắn (backlog) và dung lượng downstream |
+| High Concurrency & Tối ưu Database | [Thiết kế hệ thống hiệu năng cao](../high-performance/high-performance-system-interview-questions.md), [Tối ưu SQL](../high-performance/sql-optimization.md) | Vị trí điểm nghẽn, giới hạn dung lượng, cái giá phải trả của Cache và Asynchronous |
+| Xây dựng tính ổn định | [Thiết kế hệ thống độ sẵn sàng cao](../high-availability/high-availability-system-design.md), [Timeout và Retry](../high-availability/timeout-and-retry.md), [Rate Limiting](../high-availability/limit-request.md), [Idempotency](../high-availability/idempotency.md) | Sự cố lan truyền thế nào, cách cắt lỗ (stop loss), biện pháp tạm thời có tác dụng phụ gì |
 
-CAP、BASE、一致性哈希、Raft 等理论用来解释具体设计，不必脱离项目背成长篇定义。从项目中挑一个分布式方案，回答为什么需要、为什么这样选、失败时会怎样，以及怎样证明它真的生效。
+Các lý thuyết như CAP, BASE, Consistent Hashing, Raft dùng để giải thích thiết kế cụ thể, không cần học thuộc lòng định nghĩa dài dòng tách rời khỏi dự án. Hãy chọn một giải pháp phân tán trong dự án, trả lời tại sao cần, tại sao lại chọn giải pháp đó, khi thất bại sẽ ra sao và làm thế nào để chứng minh nó thực sự có hiệu quả.
 
-## 第六阶段：JVM 与线上问题排查
+## Giai đoạn 6: JVM và Xử lý sự cố Online
 
-简历写了 JVM 调优、GC 优化、OOM 排查，或者岗位强调生产问题处理，这一阶段应提前到 Java 并发之后。缺少线上经验的校招生，至少要掌握内存区域、对象回收、类加载和常见诊断思路。
+Nếu CV có ghi JVM Tuning, GC Optimization, Điều tra OOM, hoặc vị trí ứng tuyển nhấn mạnh vào việc xử lý sự cố production, giai đoạn này nên được đẩy lên trước sau phần Java Concurrency. Đối với sinh viên mới ra trường còn thiếu kinh nghiệm thực tế, ít nhất phải nắm vững Memory Regions, Object Garbage Collection, Class Loading và tư duy chẩn đoán lỗi thường gặp.
 
-先用 [JVM 常见面试题总结](../java/jvm/jvm-interview-questions.md)列出需要回答的问题，再补下面这些专题：
+Trước tiên dùng [Tổng hợp câu hỏi phỏng vấn JVM thường gặp](../java/jvm/jvm-interview-questions.md) để liệt kê các câu hỏi cần trả lời, sau đó bổ sung các chuyên đề:
 
-- [Java 内存区域](../java/jvm/memory-area.md)
-- [JVM 垃圾回收](../java/jvm/jvm-garbage-collection.md)
-- [类加载过程](../java/jvm/class-loading-process.md)和[类加载器](../java/jvm/classloader.md)
-- [JDK 监控和故障处理工具](../java/jvm/jdk-monitoring-and-troubleshooting-tools.md)
-- [Java 后端线上问题排查](../java/jvm/jvm-in-action.md)
+- [Vùng nhớ trong Java (JVM Memory Area)](../java/jvm/memory-area.md)
+- [JVM Garbage Collection](../java/jvm/jvm-garbage-collection.md)
+- [Quy trình Class Loading](../java/jvm/class-loading-process.md) và [ClassLoader](../java/jvm/classloader.md)
+- [Công cụ giám sát và xử lý sự cố JDK (jstat, jmap, jstack, etc.)](../java/jvm/jdk-monitoring-and-troubleshooting-tools.md)
+- [Xử lý sự cố Online trong Java Backend](../java/jvm/jvm-in-action.md)
 
-自测不要停在“堆里放对象、栈里放局部变量”。给自己一个具体告警，例如 CPU 飙高、Full GC 频繁或 OOM，说明先确认哪些指标、怎样保留现场、使用什么工具缩小范围、哪些操作可能扩大故障，以及修复后如何验证。
+Tự kiểm tra đừng chỉ dừng lại ở mức "Heap chứa Object, Stack chứa biến cục bộ". Hãy tự đặt cho mình một cảnh báo cụ thể, ví dụ CPU tăng vọt, Full GC liên tục hoặc OOM, trình bày rõ cần xác nhận các chỉ số nào trước, lưu lại hiện trường ra sao, dùng công cụ gì để thu hẹp phạm vi, thao tác nào có thể làm sự cố lan rộng, và sau khi sửa xong thì kiểm chứng như thế nào.
 
-## 一周内怎样安排复习
+## Sắp xếp ôn tập trong một tuần như thế nào?
 
-每天的时间大致分成三块：一半用来阅读和理解，四分之一脱稿回答，剩余时间练项目表达或算法。当天读了多少页不重要，至少留下一个能复述的问题和一个仍然答不好的点。
+Thời gian mỗi ngày chia thành 3 phần: Một nửa dùng để đọc và hiểu, một phần tư dùng để trả lời không nhìn tài liệu, thời gian còn lại luyện diễn đạt dự án hoặc thuật toán. Ngày hôm đó đọc được bao nhiêu trang không quan trọng, ít nhất phải đọng lại một câu hỏi có thể diễn đạt trôi chảy và một điểm vẫn chưa trả lời tốt.
 
-每周安排一次 30～60 分钟的模拟面试。让对方从简历开始问，项目追问后再进入 Java、数据库和场景题。没有同伴时可以录音，也可以使用 AI 模拟追问，但回答结束后仍要回到文章、代码或官方文档核对事实。
+Mỗi tuần sắp xếp một buổi phỏng vấn thử (Mock Interview) từ 30～60 phút. Nhờ đối phương hỏi bắt đầu từ CV, sau khi đào sâu dự án thì chuyển sang Java, Database và câu hỏi tình huống. Khi không có bạn cùng học, có thể tự ghi âm, hoặc dùng AI để mô phỏng hỏi dồn, nhưng sau khi trả lời xong vẫn phải đối chiếu lại thực tế với bài viết, code hoặc tài liệu chính thức.
 
-复习过程中不断增加新资料，很容易让计划失控。一个专题保留一份主线资料和少量专题文章即可；同一道题看了三份答案仍然说不出来，应该开始脱稿回答，而不是继续收藏第四份。
+Trong quá trình ôn tập, việc liên tục thêm tài liệu mới rất dễ khiến kế hoạch mất kiểm soát. Một chuyên đề chỉ cần giữ lại một tài liệu mạch chính và một số ít bài viết chuyên đề; cùng một câu hỏi đã đọc 3 bản câu trả lời mà vẫn không nói ra được thì nên bắt đầu luyện nói không nhìn tài liệu, chứ không phải tiếp tục lưu lại bản thứ 4.
 
-## 面试前 1～2 天做什么
+## 1～2 ngày trước khi phỏng vấn nên làm gì?
 
-临近面试不要再开新专题，按简历和错题收口：
+Cận kề ngày phỏng vấn không nên mở thêm chuyên đề mới, hãy chốt lại theo CV và các câu làm sai:
 
-| 事项       | 怎么做                                                       |
-| ---------- | ------------------------------------------------------------ |
-| 自我介绍   | 讲一遍 30～60 秒版本，确认经历、技术栈和求职方向一致         |
-| 项目       | 每个重点项目讲一遍 30 秒和 3 分钟版本，卡住的位置立即补材料  |
-| 简历技术栈 | 抽查写了“熟悉”或“掌握”的技术，确认能回答原理、限制和项目用法 |
-| 高频错题   | 只复盘自己的错题和薄弱点，不重新刷完整题库                   |
-| 代码与设备 | 线上面试提前检查网络、摄像头、麦克风、共享屏幕和编程环境     |
-| 岗位信息   | 再看一次岗位描述，准备与岗位最相关的项目和问题               |
+| Hạng mục | Cách thực hiện |
+| --- | --- |
+| Tự giới thiệu | Trình bày thử bản 30～60 giây, xác nhận kinh nghiệm, tech stack và định hướng tìm việc đồng nhất |
+| Dự án | Mỗi dự án trọng điểm nói thử bản 30 giây và 3 phút, chỗ nào bị vấp phải lập tức bổ sung tư liệu |
+| Tech stack trong CV | Rà soát ngẫu nhiên các công nghệ ghi "thành thạo" hoặc "nắm vững", xác nhận có thể trả lời được nguyên lý, giới hạn và cách dùng trong dự án |
+| Lỗi sai tần suất cao | Chỉ review lại các câu làm sai và điểm yếu của chính mình, không cày lại toàn bộ kho đề |
+| Code và Thiết bị | Phỏng vấn online cần kiểm tra trước mạng, camera, micro, chia sẻ màn hình và môi trường lập trình |
+| Thông tin vị trí | Xem lại bản mô tả công việc (JD) một lần nữa, chuẩn bị các dự án và câu hỏi liên quan nhất đến vị trí |
 
-紧张会影响发挥时，可以参考[面试太紧张怎么办？](./how-to-handle-interview-nerves.md)。
+Nếu sự hồi hộp ảnh hưởng đến phong độ, có thể tham khảo [Phải làm gì khi quá hồi hộp trong phỏng vấn?](./how-to-handle-interview-nerves.md).
 
-## 面试结束后怎么复盘
+## Sau khi kết thúc phỏng vấn nên review rút kinh nghiệm như thế nào?
 
-面试结束后尽快记下问题，不必追求完整还原。每道没答好的题记录五项：题目、当时怎么答、缺了什么、正确依据在哪里、下次怎样回答。项目追问卡住时，还要回到项目底稿补职责、代码位置、指标口径或方案限制。
+Sau khi phỏng vấn kết thúc, hãy nhanh chóng ghi lại các câu hỏi, không cần cầu toàn nhớ chính xác 100%. Mỗi câu trả lời chưa tốt ghi lại 5 mục: Đề bài, Lúc đó trả lời thế nào, Còn thiếu cái gì, Căn cứ chính xác ở đâu, Lần sau trả lời như thế nào. Khi câu hỏi đào sâu về dự án bị tắc, còn phải quay lại bản phác thảo dự án để bổ sung trách nhiệm, vị trí code, tiêu chuẩn chỉ số hoặc giới hạn của phương án.
 
-下一场面试前只看这份复盘和原来的高优先级问题。连续几场都没有被问到、简历和岗位也没有出现的扩展内容，可以降级；反复出现的问题则进入主清单。复习范围会随着真实面试逐渐收敛。
+Trước buổi phỏng vấn tiếp theo chỉ xem bản review này và các câu hỏi ưu tiên cao ban đầu. Các nội dung mở rộng qua nhiều buổi liên tiếp không được hỏi đến, CV và JD cũng không xuất hiện, có thể hạ cấp ưu tiên; các câu hỏi xuất hiện lặp lại sẽ đưa vào danh sách chính. Phạm vi ôn tập sẽ dần dần thu hẹp theo các buổi phỏng vấn thực tế.

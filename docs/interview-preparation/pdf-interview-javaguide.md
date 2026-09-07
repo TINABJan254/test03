@@ -1,7 +1,7 @@
 ---
-title: 2026最新Java面试+后端面试PDF资料
-description: 2026 版后端面试 PDF 资料整理（JavaGuide）：梳理校招/社招高频考点与复习优先级，覆盖 Java 基础、集合、并发、MySQL、Redis、Spring/Spring Boot、JVM、系统设计与项目经验准备，帮你抓重点高效备战。
-category: 面试准备
+title: Tài liệu PDF phỏng vấn Java + backend mới nhất 2026
+description: Tổng hợp tài liệu PDF phỏng vấn backend phiên bản 2026 (JavaGuide)：tóm tắt các điểm kiến thức hay gặp trong campus/xã hội recruit và độ ưu tiên ôn tập, bao gồm Java cơ bản, Collections, Concurrency, MySQL, Redis, Spring/Spring Boot, JVM, thiết kế hệ thống và chuẩn bị kinh nghiệm dự án, giúp bạn nắm trọng tâm và ôn thi hiệu quả.
+category: Chuẩn bị phỏng vấn
 icon: mdi:file-pdf-box
 head:
   - - meta
@@ -9,37 +9,37 @@ head:
       content: 后端面试PDF,Java面试PDF,PDF面试资料,Java八股文PDF,面试突击PDF,校招社招,Java后端面试,Java基础,Java集合,Java并发,JVM,MySQL,Redis,Spring Boot,系统设计,项目经验
 ---
 
-大家好，我是 Guide。
+Xin chào mọi người, tôi là Guide.
 
-**2026 版后端 PDF 面试资料终于搞定了！这次的更新量大得惊人，熬了几个通宵，总算能拿出来见人了。**
+**Tài liệu PDF phỏng vấn backend phiên bản 2026 cuối cùng cũng xong rồi! Lần cập nhật này có khối lượng khổng lồ, thức mấy đêm liên tiếp mới ra được thành phẩm xứng đáng.**
 
-在上一版的基础上，我把内容又往深里挖了挖。目前这份资料已经涵盖了 **Java 核心、计算机基础、数据库、缓存、分布式、设计模式、智力题、学习路线、面经**等全方位内容。毫不夸张地说，你备战后端面试需要的硬核干货，这一份全包了！
+Dựa trên phiên bản trước, tôi đã đào sâu thêm nội dung. Hiện tại tài liệu này đã bao gồm đầy đủ **Java core, nền tảng máy tính, database, cache, distributed, design patterns, câu hỏi IQ, lộ trình học, kinh nghiệm phỏng vấn** và nhiều nội dung toàn diện khác. Nói không ngoa, tất cả những kiến thức cốt lõi bạn cần để chuẩn bị phỏng vấn backend đều có trong bộ tài liệu này!
 
-为了让大家看得更爽，我对其中大部分 PDF 进行了“推倒重来式”的优化：
+Để mọi người đọc thoải mái hơn, tôi đã "làm lại từ đầu" phần lớn các file PDF:
 
-- **重构面试突击系列**：将原先臃肿的内容拆分成多篇，逻辑更清晰。
-- **重写设计模式总结**：新增多道高频设计模式面试题，优化内容表达。
-- **全方位细节完善**：每一个知识点都反复推敲，确保没有逻辑断层。
+- **Tái cấu trúc series Phỏng vấn Đột phá**: Chia nhỏ nội dung cồng kềnh trước đó thành nhiều bài, logic rõ ràng hơn.
+- **Viết lại tổng kết Design Patterns**: Bổ sung thêm nhiều câu hỏi phỏng vấn design patterns hay gặp, tối ưu cách diễn đạt nội dung.
+- **Hoàn thiện chi tiết toàn diện**: Từng điểm kiến thức đều được cân nhắc kỹ lưỡng, đảm bảo không có lỗ hổng logic.
 
 ![](https://oss.javaguide.cn/github/javaguide/intro/pdf-interview-javaguide.png)
 
-这些 PDF 面试资料的质量都非常高，绝大部分都是 Guide 的原创，也会有一些其他优质技术博主分享的原创资料。
+Các tài liệu PDF phỏng vấn này đều có chất lượng rất cao, phần lớn là bài gốc của Guide, cũng có một số tài liệu gốc do các kỹ thuật blogger chất lượng khác chia sẻ.
 
-之所以一直坚持出 PDF 版，是因为有一些朋友比较喜欢看 PDF 资料，甚至把 PDF 资料打印出来学习。
+Lý do tôi vẫn kiên trì ra phiên bản PDF là vì có một số bạn thích đọc tài liệu PDF, thậm chí in PDF ra để học.
 
 ![](https://oss.javaguide.cn/github/javaguide/intro/pdf-interview-javaguide-chat.png)
 
-截止到目前，这套资料在各个渠道的汇总下载量已经突破了 **35w+** 。 说实话，这个数字对我来说不只是流量，更是沉甸甸的信任和责任。
+Tính đến nay, tổng lượt tải của bộ tài liệu này trên các kênh khác nhau đã vượt **35w+**. Thật lòng mà nói, con số này với tôi không chỉ là traffic, mà còn là sự tin tưởng và trách nhiệm nặng nề.
 
-老规矩，没有任何花里胡哨的套路，直接**白嫖**： 在 **JavaGuide** 公众号后台回复 **PDF** 即可获取。
+Như thường lệ, không có trò gì phức tạp, lấy **miễn phí** luôn: Trả lời **PDF** ở phần backend của tài khoản công khai **JavaGuide** là nhận được ngay.
 
 <img src="https://oss.javaguide.cn/github/javaguide/gongzhonghao-javaguide.png" alt="JavaGuide 公众号"  style="zoom: 43%; display: block; margin: 0 auto;" />
 
-由于 PDF 的时效性问题，如果想要更完美的体验，个人其实还是更建议大家去 [JavaGuide](https://javaguide.cn/) 网站上在线阅读，内容更新，一直在持续完善。
+Do vấn đề tính cập nhật của PDF, nếu muốn trải nghiệm hoàn hảo hơn, cá nhân tôi vẫn khuyến khích mọi người đọc online trên trang web [JavaGuide](https://javaguide.cn/), nội dung luôn được cập nhật và liên tục hoàn thiện.
 
-## 部分内容概览
+## Tổng quan một phần nội dung
 
-**《JavaGuide 面试突击》— Java 集合**：
+**《JavaGuide 面试突击》— Java Collections**：
 
 ![《JavaGuide 面试突击》— Java 集合面试题总结](https://oss.javaguide.cn/github/javaguide/intro/javaguide-mianshituji-java-collection.png)
 
@@ -47,16 +47,16 @@ head:
 
 ![《JavaGuide 面试突击》— JVM面试题总结](https://oss.javaguide.cn/github/javaguide/intro/javaguide-mianshituji-jvm.png)
 
-**《JavaGuide 面试突击》—设计模式**：
+**《JavaGuide 面试突击》— Design Patterns**：
 
 ![《JavaGuide 面试突击》—设计模式面试题总结](https://oss.javaguide.cn/github/javaguide/intro/javaguide-mianshituji-design-pattern.png)
 
-**Java 学习路线**：
+**Lộ trình học Java**：
 
 ![Java 学习路线 PDF 概览 - 亮色板](https://oss.javaguide.cn/github/javaguide/interview-preparation/java-road-map-pdf.png)
 
-## 如何获取？
+## Cách lấy?
 
-老规矩，没有任何花里胡哨的套路，直接**白嫖**： 在 **JavaGuide** 公众号后台回复 **PDF** 即可获取。
+Như thường lệ, không có trò gì phức tạp, lấy **miễn phí** luôn: Trả lời **PDF** ở phần backend của tài khoản công khai **JavaGuide** là nhận được ngay.
 
 <img src="https://oss.javaguide.cn/github/javaguide/gongzhonghao-javaguide.png" alt="JavaGuide 公众号"  style="zoom: 43%; display: block; margin: 0 auto;" />

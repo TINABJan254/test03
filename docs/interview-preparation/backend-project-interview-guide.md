@@ -1,270 +1,270 @@
 ---
-title: 后端项目面试怎么讲？从项目介绍到技术难点和故障复盘
-description: Java 后端项目面试准备指南，讲清项目介绍、个人职责、核心链路、技术选型、性能优化、线上故障、量化指标和常见追问的准备方法。
-category: 面试准备
+title: Trình bày dự án Backend trong phỏng vấn như thế nào? Từ giới thiệu dự án đến điểm khó kỹ thuật và review sự cố
+description: Hướng dẫn chuẩn bị phỏng vấn dự án Java Backend, làm rõ phương pháp chuẩn bị giới thiệu dự án, trách nhiệm cá nhân, luồng xử lý cốt lõi, lựa chọn công nghệ, tối ưu hiệu năng, sự cố online, chỉ số định lượng và các câu hỏi đào sâu thường gặp.
+category: Chuẩn bị phỏng vấn
 tag:
-  - Java面试
-  - 后端面试
-  - 项目经验
-  - 项目深挖
+  - Phỏng vấn Java
+  - Phỏng vấn Backend
+  - Kinh nghiệm dự án
+  - Đào sâu dự án
 sitemap:
   changefreq: monthly
   priority: 0.9
 head:
   - - meta
     - name: keywords
-      content: 后端项目面试,Java项目面试,项目介绍,项目深挖,技术选型,项目难点,线上故障,性能优化,Java面试
+      content: Phỏng vấn dự án backend, Phỏng vấn dự án Java, Giới thiệu dự án, Đào sâu dự án, Lựa chọn công nghệ, Khó khăn dự án, Sự cố online, Tối ưu hiệu năng, Phỏng vấn Java
 ---
 
-“介绍一下你做的项目。”
+"Hãy giới thiệu về dự án bạn đã từng làm."
 
-“这是一个基于 Spring Boot 开发的微服务项目，使用了 MySQL、Redis、Kafka、Elasticsearch……”
+"Đây là một dự án microservices phát triển dựa trên Spring Boot, sử dụng MySQL, Redis, Kafka, Elasticsearch……"
 
-很多项目介绍到这里就说不下去了。面试官再问一句“为什么要用 Kafka”，回答很容易卡住。Java、MySQL、Redis 的常见面试题可以提前背熟，项目追问却会一直落到真实的业务约束、代码实现和验证结果，背一段固定稿子只能应付开场。
+Rất nhiều phần giới thiệu dự án đến đây là không thể nói tiếp được nữa. Người phỏng vấn chỉ cần hỏi thêm một câu: "Tại sao lại dùng Kafka?", câu trả lời rất dễ bị nghẽn. Các câu hỏi phỏng vấn thường gặp về Java, MySQL, Redis có thể học thuộc trước, nhưng việc hỏi sâu về dự án sẽ luôn bám sát vào ràng buộc nghiệp vụ thực tế, triển khai code và kết quả kiểm chứng, học thuộc một đoạn văn mẫu cố định chỉ có thể đối phó được phần mở đầu.
 
-## 面试官想从项目里了解什么？
+## Người phỏng vấn muốn tìm hiểu điều gì từ dự án?
 
-面试官会从项目里确认几件事：你是否理解项目服务的业务，一条请求如何流转；你具体负责哪些代码、数据和上下游；遇到问题时怎样定位原因、比较方案并验证结果；简历里的技术和指标能不能经得起追问。
+Người phỏng vấn sẽ xác nhận một vài điều qua dự án: Bạn có hiểu nghiệp vụ mà dự án phục vụ hay không, một request luân chuyển như thế nào; Bạn trực tiếp phụ trách những phần code, dữ liệu và upstream/downstream nào; Khi gặp vấn đề bạn định vị nguyên nhân, so sánh phương án và kiểm chứng kết quả ra sao; Công nghệ và các chỉ số trong CV có chịu được việc hỏi sâu hay không.
 
-校招面试不会要求每个项目都达到大型生产系统的复杂度。一个自己做过、能够讲透的单体项目，通常比照着教程搭出的微服务项目更稳。社招会继续追问流量、容量、故障、灰度、回滚以及团队协作，回答时需要提供更多生产证据。
+Phỏng vấn tuyển dụng sinh viên (Campus recruitment) sẽ không yêu cầu mỗi dự án đều phải đạt tới độ phức tạp của hệ thống production quy mô lớn. Một dự án monolithic do chính bạn tự làm và có thể trình bày thấu đáo, thường vững vàng hơn một dự án microservices dựng lên bằng cách làm theo hướng dẫn. Phỏng vấn tuyển dụng người có kinh nghiệm (Social recruitment) sẽ tiếp tục hỏi sâu về lưu lượng, dung lượng, sự cố, canary release (phát hành xám), rollback cũng như sự phối hợp trong team, khi trả lời cần cung cấp nhiều bằng chứng thực tế ở môi trường production hơn.
 
-## 面试前先整理一张项目底稿
+## Trước khi phỏng vấn hãy tổng hợp một bản phác thảo dự án
 
-给简历上的每个重点项目单独整理一份底稿，不必写成文章，自己能看懂、面试前能快速回忆即可。
+Đối với mỗi dự án trọng điểm trong CV, hãy chuẩn bị riêng một bản phác thảo dự án, không cần viết thành bài văn dài, chỉ cần bản thân hiểu được và trước khi phỏng vấn có thể nhanh chóng nhớ lại.
 
-| 要整理的内容 | 需要回答的问题                                                 |
-| ------------ | -------------------------------------------------------------- |
-| 业务背景     | 项目给谁用？解决什么问题？最重要的业务链路是什么？             |
-| 系统范围     | 有哪些模块？依赖哪些外部系统？数据从哪里来、到哪里去？         |
-| 个人职责     | 哪些需求、接口或模块由你负责？参与到什么程度？                 |
-| 核心链路     | 一次请求会经过哪些服务、缓存、数据库和消息队列？               |
-| 技术选型     | 为什么使用当前方案？比较过哪些方案？付出了什么代价？           |
-| 难点与故障   | 遇到过什么具体问题？怎么定位、修复和验证？                     |
-| 项目指标     | 流量、延迟、错误率、数据量、资源消耗和优化结果有哪些可靠记录？ |
+| Nội dung cần tổng hợp | Câu hỏi cần trả lời |
+| --- | --- |
+| Bối cảnh nghiệp vụ | Dự án phục vụ ai? Giải quyết vấn đề gì? Luồng nghiệp vụ quan trọng nhất là gì? |
+| Phạm vi hệ thống | Gồm những module nào? Phụ thuộc hệ thống bên ngoài nào? Dữ liệu từ đâu đến, đi về đâu? |
+| Trách nhiệm cá nhân | Những requirement, API hoặc module nào do bạn phụ trách? Tham gia ở mức độ nào? |
+| Luồng xử lý cốt lõi | Một request sẽ đi qua những service, cache, database và message queue nào? |
+| Lựa chọn công nghệ (Tech Selection) | Tại sao sử dụng giải pháp hiện tại? Đã so sánh những giải pháp nào? Trả giá bằng điều gì? |
+| Khó khăn và Sự cố | Đã gặp vấn đề cụ thể gì? Định vị, khắc phục và kiểm chứng ra sao? |
+| Chỉ số dự án | Lưu lượng, độ trễ, tỷ lệ lỗi, lượng dữ liệu, tiêu hao tài nguyên và kết quả tối ưu có ghi chép đáng tin cậy nào? |
 
-底稿最后留一栏，专门写自己没有参与的部分。例如数据库表由你设计，部署和容量规划由基础架构团队负责，就按实际情况回答。面试官通常能接受职责范围有限，编造参与经历的风险反而更大。
+Cột cuối cùng của bản phác thảo hãy dành riêng để ghi những phần mình không tham gia. Ví dụ bảng database do bạn thiết kế, nhưng việc deploy và capacity planning do team hạ tầng phụ trách, thì hãy trả lời đúng thực tế. Người phỏng vấn thường chấp nhận phạm vi trách nhiệm có giới hạn, việc bịa đặt trải nghiệm tham gia rủi ro sẽ lớn hơn nhiều.
 
-## 项目介绍应该怎么讲？
+## Giới thiệu dự án nên trình bày như thế nào?
 
-30 秒和 3 分钟两个版本都要准备。面试官只想快速了解时使用短版本；对方让你详细介绍时，再补充架构、职责和重点工作。
+Cần chuẩn bị cả 2 phiên bản: 30 giây và 3 phút. Khi người phỏng vấn chỉ muốn nắm nhanh thì dùng bản ngắn; khi đối phương yêu cầu bạn giới thiệu chi tiết, hãy bổ sung kiến trúc, trách nhiệm và các công việc trọng tâm.
 
-### 30 秒版本
+### Phiên bản 30 giây
 
-30 秒版本只保留四项内容：项目解决的问题、主要用户或业务、你的职责、一项准备深入讲的工作。
+Bản 30 giây chỉ giữ lại 4 nội dung: Vấn đề dự án giải quyết, Người dùng hoặc nghiệp vụ chính, Trách nhiệm của bạn, Một công việc dự định trình bày sâu.
 
-例如：
+Ví dụ:
 
-> 这是一个面向企业内部采购人员的订单系统，主要覆盖商品查询、下单、审批和订单履约。我在项目中负责订单创建和超时关闭两条链路，包括表结构设计、接口开发、幂等处理和监控接入。项目里投入时间最多的是订单创建链路的性能优化，后面我可以详细介绍当时如何定位慢请求。
+> Đây là hệ thống đơn hàng dành cho nhân viên thu mua nội bộ doanh nghiệp, chủ yếu bao gồm tra cứu hàng hóa, đặt hàng, phê duyệt và thực hiện đơn hàng. Trong dự án, tôi phụ trách 2 luồng tạo đơn hàng và tự động đóng đơn hàng khi quá hạn, bao gồm thiết kế cấu trúc bảng, phát triển API, xử lý Idempotency và tích hợp giám sát. Phần tôi dành nhiều thời gian nhất trong dự án là tối ưu hóa hiệu năng của luồng tạo đơn hàng, lát nữa tôi có thể giới thiệu chi tiết về cách định vị các request chậm lúc đó.
 
-这段话没有罗列所有中间件，但给面试官留下了几个可以继续问的点：订单状态、幂等、超时关闭和性能优化。
+Đoạn này không liệt kê tất cả các middleware, nhưng đã để lại cho người phỏng vấn một vài điểm có thể hỏi tiếp: Trạng thái đơn hàng, Idempotency, Đóng đơn hàng timeout và Tối ưu hiệu năng.
 
-### 3 分钟版本
+### Phiên bản 3 phút
 
-3 分钟版本按下面的顺序展开：
+Bản 3 phút triển khai theo thứ tự sau:
 
-1. 项目的业务背景和用户。
-2. 系统包含哪些主要模块，核心请求如何流转。
-3. 自己负责的模块和职责范围。
-4. 一两个有证据的难点或结果。
+1. Bối cảnh nghiệp vụ và người dùng của dự án.
+2. Hệ thống gồm các module chính nào, luồng request cốt lõi di chuyển ra sao.
+3. Module bản thân phụ trách và phạm vi trách nhiệm.
+4. Một hoặc hai điểm khó hoặc kết quả có bằng chứng chứng minh.
 
-仍然以订单系统为例：
+Vẫn lấy ví dụ hệ thống đơn hàng:
 
-> 系统主要给采购和财务人员使用，负责商品查询、订单创建、审批、支付状态同步和履约查询。后端按订单、库存和审批模块拆分，订单创建时会先校验请求和价格，再创建订单并预占库存；成功后发送消息，由下游完成审批通知等异步任务。
+> Hệ thống chủ yếu phục vụ nhân viên thu mua và kế toán, chịu trách nhiệm tra cứu sản phẩm, tạo đơn hàng, phê duyệt, đồng bộ trạng thái thanh toán và tra cứu thực hiện đơn. Backend được chia tách theo các module Đơn hàng, Tồn kho và Phê duyệt. Khi tạo đơn hàng, trước tiên sẽ validate request và giá cả, sau đó tạo đơn và giữ trước (pre-occupy) tồn kho; sau khi thành công sẽ gửi message để downstream hoàn thành các tác vụ async như thông báo phê duyệt.
 >
-> 我负责订单创建和超时关闭。订单创建需要处理重复提交、库存不足以及消息发送失败；超时关闭需要避免关闭已经支付的订单。我主要完成了接口、状态流转、幂等和补偿任务，并接入了相关监控。后来一次版本上线后，订单查询接口的长尾延迟上升，我参与了问题定位和优化。我们根据 Trace 和慢 SQL 找到查询条件与联合索引不匹配的问题，调整索引后又做了相同数据量下的对比压测。
+> Tôi phụ trách việc tạo đơn hàng và đóng đơn hàng khi timeout. Tạo đơn hàng cần xử lý submit lặp lại, tồn kho không đủ và gửi message thất bại; đóng đơn timeout cần tránh việc đóng nhầm các đơn hàng đã thanh toán. Tôi chủ yếu hoàn thành API, luồng chuyển trạng thái (State Machine), Idempotency và các tác vụ bù đắp (compensation tasks), đồng thời tích hợp monitoring liên quan. Sau này trong một lần release phiên bản mới, độ trễ đuôi (long-tail latency) của API tra cứu đơn hàng tăng cao, tôi đã tham gia định vị và tối ưu hóa vấn đề. Chúng tôi dựa vào Trace và Slow SQL để tìm ra vấn đề điều kiện truy vấn không khớp với Composite Index, sau khi điều chỉnh index đã tiến hành stress test so sánh dưới cùng một lượng dữ liệu.
 
-这是一个示例，不要直接把里面的职责和故障换个项目名放进简历。自己的项目没有消息队列，就讲同步调用；没有真实压测数据，也可以说明测试环境和验证方法，不要临时编一个 QPS。
+Đây là một ví dụ minh họa, đừng bê nguyên trách nhiệm và sự cố trong này đổi tên dự án rồi nhét vào CV. Dự án của bạn không có Message Queue thì nói về gọi đồng bộ (Sync call); không có số liệu stress test thực tế cũng có thể giải thích môi trường test và phương pháp kiểm chứng, đừng bịa tạm một con số QPS.
 
-## 架构图怎么讲？
+## Trình bày sơ đồ kiến trúc như thế nào?
 
-项目架构图适合按一次真实请求来讲。用户请求从网关进入，经过哪个服务，读取哪些缓存和数据库，什么任务进入消息队列，失败后怎么处理。讲完主链路，再补一条异常链路。
+Sơ đồ kiến trúc dự án thích hợp trình bày theo một request thực tế: Request của người dùng đi vào từ API Gateway, qua service nào, đọc những cache và database nào, tác vụ nào đi vào Message Queue, sau khi lỗi xử lý ra sao. Nói xong luồng chính (Happy Path), bổ sung thêm một luồng ngoại lệ (Exception Path).
 
-架构里每出现一个组件，最好都能回答三个问题：
+Mỗi component xuất hiện trong kiến trúc, tốt nhất đều trả lời được 3 câu hỏi:
 
-- 它在这条链路里承担什么工作？
-- 去掉它会发生什么？
-- 它不可用时，系统怎样处理？
+- Nó đảm nhận công việc gì trong luồng này?
+- Nếu bỏ nó đi thì điều gì sẽ xảy ra?
+- Khi nó không khả dụng, hệ thống xử lý thế nào?
 
-如果项目使用 Redis 缓存商品信息，还要准备缓存未命中后的数据库查询、缓存过期策略、热点数据、数据一致性以及 Redis 故障时的降级方式。只回答“Redis 性能高，所以用 Redis”，通常很快就会进入知识盲区。
+Nếu dự án dùng Redis cache thông tin sản phẩm, còn phải chuẩn bị việc query database khi cache miss, chiến lược cache expiration, Hotspot data, Data consistency và phương án fallback khi Redis gặp sự cố. Nếu chỉ trả lời "Redis hiệu năng cao nên dùng Redis", thường sẽ rất nhanh rơi vào điểm mù kiến thức.
 
-架构图也不要画得太大。一张图塞进网关、注册中心、配置中心、十几个微服务和所有中间件，介绍时很难找到重点。面试用架构图保留项目范围和一条核心链路就够了，复杂项目可以再准备一张模块图或时序图。
+Sơ đồ kiến trúc cũng đừng vẽ quá đồ sộ. Nhồi nhét vào một hình cả API Gateway, Registry Center, Config Center, hàng chục Microservices và tất cả các Middleware, khi giới thiệu sẽ rất khó tìm thấy trọng tâm. Sơ đồ kiến trúc dùng phỏng vấn chỉ cần giữ lại phạm vi dự án và một luồng cốt lõi là đủ, dự án phức tạp có thể chuẩn bị thêm một sơ đồ module hoặc Sequence Diagram.
 
-## 怎么说明自己的职责？
+## Làm sao để làm rõ trách nhiệm của bản thân?
 
-“负责订单模块开发”提供的信息很少。继续说清需求范围、代码范围和协作范围：
+"Phụ trách phát triển module đơn hàng" cung cấp rất ít thông tin. Hãy nói rõ tiếp phạm vi requirement, phạm vi code và phạm vi phối hợp:
 
-- 需求范围：订单创建、取消、超时关闭，还是整个订单域。
-- 代码范围：接口、表结构、状态机、定时任务、消息消费分别参与到什么程度。
-- 协作范围：是否参与方案评审，和库存、支付、测试、运维如何配合。
-- 结果范围：上线、灰度、监控和后续维护是否由自己跟进。
+- Phạm vi requirement: Tạo đơn, hủy đơn, đóng đơn timeout hay toàn bộ nghiệp vụ đơn hàng.
+- Phạm vi code: API, cấu trúc bảng, State Machine, Scheduled Task, Message Consumption lần lượt tham gia ở mức độ nào.
+- Phạm vi phối hợp: Có tham gia review giải pháp không, phối hợp với các bên Tồn kho, Thanh toán, Test, DevOps như thế nào.
+- Phạm vi kết quả: Release, Canary rollout, Monitoring và bảo trì về sau có do mình theo sát hay không.
 
-校招项目就直接说明这是个人项目或课程项目，以及哪些部分参考了教程。自己在教程基础上增加过功能、补过测试、改过表结构，就重点讲这些改动。面试官关注的是你有没有真正动手和思考，不需要把个人项目包装成大厂生产系统。
+Dự án tuyển dụng sinh viên thì hãy nói thẳng đây là dự án cá nhân hoặc đồ án môn học, và những phần nào tham khảo từ hướng dẫn. Những phần bản thân tự thêm tính năng, bổ sung test, sửa cấu trúc bảng dựa trên hướng dẫn thì tập trung nói về những thay đổi đó. Người phỏng vấn quan tâm đến việc bạn có thực sự bắt tay vào làm và suy nghĩ hay không, không cần phải đóng gói dự án cá nhân thành hệ thống production của các tập đoàn lớn.
 
-## 技术选型怎么回答？
+## Trả lời về Lựa chọn công nghệ (Tech Selection) như thế nào?
 
-回答技术选型时，把问题、约束、候选方案和验证结果说全。
+Khi trả lời về lựa chọn công nghệ, hãy trình bày đầy đủ: Vấn đề, Ràng buộc, Các phương án ứng viên và Kết quả kiểm chứng.
 
-假设面试官问：“订单超时关闭为什么使用延迟消息？”
+Giả sử người phỏng vấn hỏi: "Tại sao việc đóng đơn hàng timeout lại sử dụng Delayed Message?"
 
-回答时需要交代：
+Khi trả lời cần nêu rõ:
 
-1. 订单创建后需要在指定时间检查支付状态，任务量和延迟精度有什么要求。
-2. 定时扫描数据库、Redis 过期通知、时间轮和延迟消息分别有什么限制。
-3. 当前项目为什么选择延迟消息，现有基础设施、运维成本和团队经验是否影响决策。
-4. 消息重复、延迟、丢失或者消费者故障时如何处理。
+1. Đơn hàng sau khi tạo cần kiểm tra trạng thái thanh toán sau khoảng thời gian chỉ định, lượng tác vụ và độ chính xác về độ trễ có yêu cầu gì.
+2. Việc định kỳ quét database, thông báo hết hạn của Redis, Hashed Wheel Timer và Delayed Message lần lượt có những hạn chế gì.
+3. Tại sao dự án hiện tại chọn Delayed Message, hạ tầng sẵn có, chi phí vận hành bảo trì và kinh nghiệm của team có ảnh hưởng đến quyết định hay không.
+4. Xử lý như thế nào khi Message bị lặp lại, bị trễ, bị mất hoặc Consumer gặp sự cố.
 
-离开项目条件，选型没有标准答案。小型项目用定时任务扫描待支付订单，配合合适的索引和分片处理，可能已经够用；团队已有成熟的消息队列，订单量又比较大时，可以考虑延迟消息。面试回答应说明当前条件下为什么这样选，同时承认方案的限制。
+Rời khỏi điều kiện cụ thể của dự án, lựa chọn công nghệ không có câu trả lời chuẩn duy nhất. Dự án nhỏ dùng Scheduled Task quét các đơn hàng chờ thanh toán, kết hợp với index và sharding phù hợp có thể đã đủ dùng; khi team đã có sẵn Message Queue hoàn thiện và lượng đơn hàng tương đối lớn, có thể cân nhắc Delayed Message. Câu trả lời phỏng vấn nên giải thích tại sao lại chọn như vậy trong điều kiện hiện tại, đồng thời thừa nhận những hạn chế của giải pháp.
 
-引入 Redis、Kafka 或 Elasticsearch 只能说明项目使用了这些组件。能够解释下面这些问题，才说明你掌握了这部分工作：
+Việc đưa Redis, Kafka hoặc Elasticsearch vào chỉ chứng minh dự án có sử dụng các component này. Giải thích được các vấn đề dưới đây mới chứng minh bạn đã làm chủ phần công việc này:
 
-- Redis 缓存的是哪些数据，Key 怎么设计，过期时间怎么定。
-- Kafka 的 Topic 和分区怎么设计，生产失败和重复消费怎么处理。
-- Elasticsearch 里的文档如何建模，索引如何更新，查询结果为什么可信。
-- 分库分表以后如何选择分片键，扩容和跨分片查询怎么处理。
+- Redis cache những dữ liệu nào, Key thiết kế ra sao, thời gian hết hạn đặt thế nào.
+- Topic và Partition của Kafka thiết kế ra sao, gửi thất bại và tiêu thụ lặp lại xử lý thế nào.
+- Document trong Elasticsearch được mô hình hóa như thế nào, Index cập nhật ra sao, kết quả truy vấn tại sao đáng tin cậy.
+- Sau khi phân cơ sở dữ liệu và bảng (Sharding) thì chọn Sharding Key thế nào, mở rộng dung lượng và truy vấn cross-shard xử lý ra sao.
 
-项目没有达到相应规模时，可以把某项技术作为学习和实验说明，不要声称它解决了并不存在的生产瓶颈。
+Khi dự án chưa đạt đến quy mô tương ứng, có thể giải thích một công nghệ nào đó dưới dạng học tập và thử nghiệm, đừng tuyên bố nó đã giải quyết điểm nghẽn production vốn không hề tồn tại.
 
-## 项目难点怎么讲？
+## Trình bày điểm khó của dự án như thế nào?
 
-“时间比较紧”“需求经常变”确实会增加工作难度，但技术面试通常希望听到一个能够继续追问的工程问题。
+"Thời gian tương đối gấp", "Requirement thay đổi liên tục" quả thực làm tăng độ khó công việc, nhưng phỏng vấn kỹ thuật thường muốn nghe một vấn đề kỹ thuật (engineering problem) có thể tiếp tục hỏi sâu.
 
-从自己确实做过的事情里找材料，常见的有：
+Tìm tư liệu từ những việc mình thực sự đã từng làm, phổ biến gồm có:
 
-- 正确性问题：重复下单、库存超卖、状态错乱、金额精度、数据不一致。
-- 性能问题：慢 SQL、缓存命中率下降、锁竞争、线程池堆积、GC 停顿。
-- 稳定性问题：依赖超时、消息积压、连接池耗尽、发布故障、流量突增。
-- 工程问题：历史代码改造、灰度迁移、兼容旧数据、跨团队接口变更。
+- Vấn đề tính chính xác: Đặt trùng đơn, bán vượt tồn kho (overselling), trạng thái hỗn loạn, độ chính xác tiền tệ, dữ liệu không nhất quán.
+- Vấn đề hiệu năng: Slow SQL, Cache hit rate giảm, tranh chấp Lock (Lock contention), ứ đọng Thread Pool, GC Pause.
+- Vấn đề tính ổn định: Dependency timeout, tích tụ message, cạn kiệt Connection Pool, lỗi khi release, lưu lượng tăng đột biến.
+- Vấn đề kỹ thuật: Refactor code cũ, migration dạng canary, tương thích dữ liệu cũ, thay đổi API liên team.
 
-一个难点至少应该讲清下面这条过程：
+Một điểm khó ít nhất phải trình bày rõ quy trình sau:
 
 ```text
-现象和影响 → 已知约束 → 排查或分析 → 方案比较
-→ 实施过程 → 验证结果 → 遗留问题
+Hiện tượng & Ảnh hưởng → Ràng buộc đã biết → Điều tra hoặc Phân tích → So sánh phương án
+→ Quá trình thực hiện → Kết quả kiểm chứng → Vấn đề tồn đọng
 ```
 
-例如“查询接口很慢”还不是完整难点。继续说明哪些请求慢、从什么时候开始、P95/P99 如何变化、数据库扫描了多少行、最终改了索引还是查询逻辑、相同数据和流量下如何验证。没有留存当时的数字，就说明观察过哪些指标以及结论来自什么证据。
+Ví dụ "API tra cứu rất chậm" vẫn chưa phải là điểm khó hoàn chỉnh. Hãy nói rõ tiếp những request nào chậm, bắt đầu từ khi nào, P95/P99 biến đổi ra sao, database đã quét bao nhiêu dòng, cuối cùng sửa index hay sửa logic truy vấn, kiểm chứng thế nào dưới cùng lượng dữ liệu và lưu lượng. Nếu không lưu lại con số lúc đó, hãy giải thích đã quan sát những chỉ số nào và kết luận đến từ bằng chứng gì.
 
-## 性能优化怎么讲？
+## Trình bày tối ưu hiệu năng như thế nào?
 
-项目中的性能优化很容易被追问，因为“接口耗时从 2 秒降到 200 ms”后面还跟着很多问题：
+Việc tối ưu hiệu năng trong dự án rất dễ bị hỏi dồn, vì phía sau câu "Thời gian phản hồi của API giảm từ 2 giây xuống 200 ms" còn rất nhiều câu hỏi:
 
-- 2 秒和 200 ms 分别在哪里测量？
-- 数据量、并发数和机器配置是否相同？
-- 看的是平均耗时还是 P95/P99？
-- 瓶颈究竟在应用、数据库、缓存还是下游服务？
-- 优化以后有没有增加数据一致性风险和维护成本？
+- 2 giây và 200 ms được đo ở vị trí nào?
+- Lượng dữ liệu, số lượng concurrency và cấu hình máy có giống nhau không?
+- Đang xem thời gian phản hồi trung bình hay P95/P99?
+- Điểm nghẽn rốt cuộc nằm ở Application, Database, Cache hay Downstream service?
+- Sau khi tối ưu có làm tăng rủi ro không nhất quán dữ liệu và chi phí bảo trì hay không?
 
-准备性能优化案例时，保留一组可核对的材料：优化前后的 Trace、执行计划、GC 日志、压测配置、监控截图或者测试报告。公司材料不方便带走，可以记录经过脱敏的结论和排查过程。
+Khi chuẩn bị case tối ưu hiệu năng, hãy giữ lại một bộ tài liệu có thể đối chiếu: Trace trước và sau tối ưu, Execution Plan, GC Log, cấu hình stress test, ảnh chụp màn hình monitoring hoặc báo cáo test. Nếu tài liệu công ty không tiện mang đi, có thể ghi lại kết luận và quá trình điều tra đã được ẩn danh dữ liệu nhạy cảm (desensitized).
 
-回答时把这些信息连起来：
+Khi trả lời hãy kết nối các thông tin này lại:
 
-> 某接口在什么流量和数据量下出现什么问题；我根据哪些指标把问题缩小到哪个环节；比较过哪些方案，最后改了什么；使用什么环境和指标验证；上线后继续观察了什么；这个改动带来了哪些成本。
+> Một API nào đó dưới lưu lượng và lượng dữ liệu bao nhiêu xuất hiện vấn đề gì; Tôi dựa vào những chỉ số nào để thu hẹp vấn đề vào khâu nào; Đã so sánh những giải pháp nào, cuối cùng sửa cái gì; Sử dụng môi trường và chỉ số nào để kiểm chứng; Sau khi release tiếp tục quan sát điều gì; Thay đổi này mang lại những chi phí/đánh đổi nào.
 
-缓存、异步和并行处理经常能改善响应时间，也会引入缓存一致性、消息可靠性、线程安全和下游压力。把这些代价说出来，比单独强调性能数字更可信。
+Cache, Asynchronous và Parallel processing thường có thể cải thiện thời gian phản hồi, nhưng cũng sẽ đưa vào các vấn đề về Cache consistency, Message reliability, Thread safety và áp lực lên downstream. Nói ra được những cái giá phải trả này sẽ đáng tin cậy hơn nhiều so với việc chỉ nhấn mạnh vào con số hiệu năng.
 
-## 线上故障怎么讲？
+## Trình bày sự cố Online như thế nào?
 
-一次故障按时间顺序回答：
+Một sự cố trả lời theo trình tự thời gian:
 
-1. **发现问题**：告警、用户反馈或者发布观察发现了什么。
-2. **确认影响**：哪些接口、用户和实例受到影响，错误率和延迟如何变化。
-3. **紧急止血**：回滚、摘除实例、限流、降级或关闭功能。
-4. **保留证据**：日志、Trace、线程栈、Heap Dump、GC 日志以及变更记录。
-5. **定位根因**：提出过哪些假设，怎么排除错误方向，最后用什么证据确认。
-6. **修复验证**：代码或配置改了什么，怎样测试、灰度和观察。
-7. **避免复发**：补了哪些监控、测试、容量限制或发布检查。
+1. **Phát hiện vấn đề**: Cảnh báo (Alert), phản hồi của user hoặc quan sát khi release phát hiện ra điều gì.
+2. **Xác nhận ảnh hưởng**: Những API, user và instance nào bị ảnh hưởng, tỷ lệ lỗi và độ trễ biến đổi ra sao.
+3. **Cầm máu khẩn cấp (Emergency Mitigation)**: Rollback, cô lập instance, Rate limit, Circuit break/Degrade hoặc tắt tính năng.
+4. **Lưu giữ bằng chứng**: Log, Trace, Thread dump, Heap dump, GC log và lịch sử thay đổi.
+5. **Định vị nguyên nhân gốc rễ (Root Cause)**: Đã đưa ra những giả thuyết nào, loại trừ các hướng sai ra sao, cuối cùng dùng bằng chứng gì để xác nhận.
+6. **Sửa đổi & Kiểm chứng**: Code hoặc cấu hình đã sửa những gì, test, release canary và quan sát ra sao.
+7. **Tránh tái phát**: Bổ sung những monitoring, unit test, giới hạn dung lượng hoặc checklist khi release nào.
 
-排障时采取过临时措施，也要说明它的副作用。例如重启实例能够暂时恢复服务，但会丢失现场；盲目扩容可能把压力继续传给数据库。完整的排查方法可以参考：[Java 后端线上问题排查](../java/jvm/jvm-in-action.md)。
+Khi khắc phục sự cố có áp dụng biện pháp tạm thời thì cũng phải nêu rõ tác dụng phụ của nó. Ví dụ restart instance có thể tạm thời hồi phục service, nhưng sẽ làm mất hiện trường lỗi; scale out mù quáng có thể tiếp tục truyền áp lực xuống database. Phương pháp điều tra hoàn chỉnh có thể tham khảo: [Xử lý sự cố Online trong Java Backend](../java/jvm/jvm-in-action.md).
 
-## 项目指标怎么准备？
+## Chuẩn bị chỉ số dự án như thế nào?
 
-指标要能说明项目规模、问题影响或改动结果，不需要为了显得项目大而堆数字。
+Chỉ số phải chứng minh được quy mô dự án, ảnh hưởng của vấn đề hoặc kết quả thay đổi, không cần nhồi nhét số liệu chỉ để làm cho dự án có vẻ to tát.
 
-| 指标                 | 适合说明什么         | 常见误区                           |
-| -------------------- | -------------------- | ---------------------------------- |
-| QPS/TPS              | 流量和系统吞吐       | 只报峰值，不说明统计位置和时间范围 |
-| P95/P99              | 长尾请求体验         | 只看平均响应时间                   |
-| 错误率               | 请求失败情况         | 把业务拒绝和系统错误混在一起       |
-| 数据量               | 查询、存储和迁移规模 | 只说总量，不说明增长速度和冷热分布 |
-| CPU、内存、GC        | 应用资源与 JVM 状态  | 只报优化后的数字，没有对照条件     |
-| 队列积压、连接池等待 | 系统内部排队         | 只扩容，不确认下游处理能力         |
+| Chỉ số | Thích hợp để nói lên điều gì | Sai lầm thường gặp |
+| --- | --- | --- |
+| QPS/TPS | Lưu lượng và thông lượng hệ thống | Chỉ báo con số đỉnh (peak), không nói vị trí thống kê và khoảng thời gian |
+| P95/P99 | Trải nghiệm của các request đuôi dài (long-tail) | Chỉ nhìn vào thời gian phản hồi trung bình (average latency) |
+| Tỷ lệ lỗi (Error Rate) | Tình trạng request thất bại | Gộp chung lỗi nghiệp vụ từ chối (business rejection) và lỗi hệ thống |
+| Lượng dữ liệu | Quy mô truy vấn, lưu trữ và migration | Chỉ nói tổng lượng, không nói tốc độ tăng trưởng và phân bổ nóng/lạnh |
+| CPU, Memory, GC | Tài nguyên ứng dụng và trạng thái JVM | Chỉ báo con số sau tối ưu, không có điều kiện đối chứng |
+| Tích tụ hàng đợi, Chờ Connection Pool | Xếp hàng bên trong hệ thống | Chỉ mở rộng dung lượng, không xác nhận khả năng xử lý của downstream |
 
-真实项目没有现成指标时，可以在测试环境补测，但要明确说明数据来自测试环境。机器配置、数据量、并发模型和测试时长也要一起记录，测试数字不能冒充生产数据。
+Dự án thực tế không có sẵn chỉ số thì có thể đo kiểm bổ sung trong môi trường test, nhưng phải nêu rõ dữ liệu đến từ môi trường test. Cấu hình máy, lượng dữ liệu, mô hình concurrency và thời gian test cũng phải ghi lại cùng, số liệu test không thể mạo danh dữ liệu production.
 
-## 常见项目追问怎么准备？
+## Chuẩn bị các câu hỏi đào sâu thường gặp như thế nào?
 
-把简历放在面前，沿着里面的技术栈逐项追问。下面这组问题适合多数 Java 后端项目：
+Đặt CV trước mặt, tự hỏi dồn theo từng công nghệ trong tech stack. Bộ câu hỏi dưới đây phù hợp với đa số dự án Java Backend:
 
-### 业务和架构
+### Nghiệp vụ và Kiến trúc
 
-- 项目最重要的业务链路是什么？
-- 系统里哪个环节最容易出问题？
-- 如果流量增加到当前的几倍，最先出现瓶颈的可能在哪里？
-- 单体和微服务是如何选择的？拆分服务以后增加了哪些成本？
+- Luồng nghiệp vụ quan trọng nhất của dự án là gì?
+- Khâu nào trong hệ thống dễ xảy ra vấn đề nhất?
+- Nếu lưu lượng tăng gấp nhiều lần hiện tại, điểm nghẽn có khả năng xuất hiện đầu tiên ở đâu?
+- Monolithic và Microservices được lựa chọn như thế nào? Sau khi chia tách service đã làm tăng những chi phí nào?
 
-### 数据库和缓存
+### Database và Cache
 
-- 核心表如何设计？为什么选择这个主键和索引？
-- 慢 SQL 是怎么发现的？执行计划里看了哪些字段？
-- 哪些数据放入缓存？缓存失效后如何处理？
-- 缓存和数据库不一致时，业务可以接受多长时间？
+- Các bảng cốt lõi thiết kế ra sao? Tại sao chọn Primary Key và Index này?
+- Slow SQL được phát hiện như thế nào? Trong Execution Plan đã xem những trường nào?
+- Những dữ liệu nào được đưa vào cache? Sau khi cache mất hiệu lực xử lý thế nào?
+- Khi Cache và Database không nhất quán, nghiệp vụ có thể chấp nhận trong bao lâu?
 
-### 消息和一致性
+### Message và Tính nhất quán
 
-- 为什么要发送这条消息，同步调用是否可行？
-- 生产者发送失败、消费者重复处理和消息积压分别怎么办？
-- 本地事务提交成功但消息发送失败如何处理？
-- 接口幂等依赖什么业务唯一标识？
+- Tại sao phải gửi message này, gọi đồng bộ (Sync call) có khả thi không?
+- Producer gửi thất bại, Consumer xử lý lặp lại và tích tụ message lần lượt xử lý ra sao?
+- Local transaction commit thành công nhưng gửi message thất bại thì xử lý thế nào?
+- Tính Idempotency của API dựa vào định danh duy nhất (Unique Identifier) nào của nghiệp vụ?
 
-### 并发和稳定性
+### Concurrency và Tính ổn định
 
-- 线程池参数根据什么设置？队列满了会发生什么？
-- 下游接口变慢时，超时、重试、限流和熔断怎么配合？
-- Redis、数据库或消息队列不可用时，项目还能提供哪些能力？
-- 发布出现问题时，如何回滚并确认数据没有损坏？
+- Các tham số của Thread Pool được thiết lập dựa trên cơ sở nào? Khi hàng đợi đầy điều gì sẽ xảy ra?
+- Khi downstream API bị chậm, Timeout, Retry, Rate Limiting và Circuit Breaker phối hợp với nhau ra sao?
+- Khi Redis, Database hoặc Message Queue không khả dụng, dự án còn có thể cung cấp những năng lực nào?
+- Khi release xảy ra sự cố, làm thế nào để rollback và xác nhận dữ liệu không bị hư hại?
 
-不必为每个问题准备一段标准答案。把问题对应到自己的代码、表结构、配置和监控，回答时会自然很多。
+Không cần chuẩn bị một đoạn câu trả lời mẫu cho từng câu hỏi. Hãy liên hệ câu hỏi với code, cấu trúc bảng, cấu hình và monitoring của chính mình, khi trả lời sẽ tự nhiên hơn rất nhiều.
 
-## 校招和社招的准备重点有什么不同？
+## Trọng tâm chuẩn bị cho Campus và Social recruitment khác nhau thế nào?
 
-校招项目通常继续追问基础知识和实现细节。例如使用了 HashMap、线程池、Redis，面试官可能从项目切到数据结构、并发和缓存问题。准备时要保证简历上出现的技术都掌握基本原理，并且能找到对应代码。
+Dự án tuyển dụng sinh viên (Campus) thường tiếp tục hỏi sâu về kiến thức nền tảng và chi tiết triển khai. Ví dụ sử dụng HashMap, Thread Pool, Redis, người phỏng vấn có thể từ dự án chuyển sang cấu trúc dữ liệu, concurrency và các vấn đề cache. Khi chuẩn bị phải đảm bảo các công nghệ xuất hiện trong CV đều nắm vững nguyên lý cơ bản và có thể tìm thấy code tương ứng.
 
-社招会关心项目规模和工程取舍：需求由谁提出，方案如何评审，上线如何灰度，故障如何处理，指标是否改善，和其他团队如何协作。只讲代码实现往往不够，还要补齐方案和上线后的部分。
+Tuyển dụng người có kinh nghiệm (Social) sẽ quan tâm đến quy mô dự án và sự đánh đổi kỹ thuật (engineering trade-offs): Requirement do ai đề xuất, giải pháp review ra sao, release canary thế nào, sự cố xử lý ra sao, chỉ số có được cải thiện không, phối hợp với các team khác như thế nào. Chỉ nói về việc viết code thường là không đủ, còn phải bổ sung phần giải pháp và giai đoạn sau khi go-live.
 
-工作年限越长，面试官越可能追问“为什么当时没有选择另一种方案”和“如果重新做会怎么改”。这类问题可以诚实回答历史条件，当时的时间、团队能力、基础设施和业务规模都可能影响选择。
+Số năm kinh nghiệm càng nhiều, người phỏng vấn càng dễ hỏi sâu: "Tại sao lúc đó không chọn phương án khác?" và "Nếu làm lại từ đầu bạn sẽ thay đổi như thế nào?". Loại câu hỏi này có thể trả lời thành thật về bối cảnh lịch sử, thời gian, năng lực của team, hạ tầng và quy mô nghiệp vụ lúc đó đều có thể ảnh hưởng đến sự lựa chọn.
 
-## 如何避免项目过度包装？
+## Làm sao để tránh việc "đóng gói" dự án quá đà?
 
-下面这些描述很容易招来超出准备范围的追问：
+Những mô tả dưới đây rất dễ dẫn đến các câu hỏi đào sâu vượt quá phạm vi chuẩn bị:
 
-- 把团队项目写成独立负责。
-- 把阅读过方案写成已经在线上落地。
-- 把单机测试结果写成生产 QPS。
-- 为了显得复杂，给项目加上实际没有使用的中间件。
-- 只记住教程给出的结论，没有看过项目代码和配置。
+- Viết dự án của team thành do cá nhân độc lập phụ trách.
+- Viết việc mới đọc qua giải pháp thành đã triển khai thực tế trên production.
+- Viết kết quả test trên máy đơn thành QPS của production.
+- Thêm vào các middleware thực tế không hề sử dụng chỉ để làm cho dự án có vẻ phức tạp.
+- Chỉ nhớ kết luận trong video hướng dẫn, chưa từng xem code và cấu hình của dự án.
 
-项目可以优化表达，职责和结果不能虚构。某个方案只是做过调研或 Demo，就直接说明：“线上最后没有采用，我负责过方案验证，得到的结论是……”。这样的回答也经得起后续追问。
+Dự án có thể tối ưu cách diễn đạt, nhưng trách nhiệm và kết quả không được hư cấu. Một giải pháp nào đó chỉ mới làm nghiên cứu (research) hoặc Demo, hãy nói thẳng: "Trên production cuối cùng không áp dụng, tôi từng phụ trách kiểm chứng giải pháp, kết luận thu được là……". Câu trả lời như vậy cũng hoàn toàn chịu được việc hỏi sâu tiếp theo.
 
-## 面试前自查
+## Tự kiểm tra trước khi phỏng vấn
 
-面试前找一张白纸，在不看资料的情况下完成下面这些事情：
+Trước khi phỏng vấn hãy lấy một tờ giấy trắng, hoàn thành những việc dưới đây trong tình trạng không nhìn tài liệu:
 
-- 用 30 秒和 3 分钟分别介绍项目。
-- 画出一条核心请求链路和一条失败链路。
-- 说清三个本人负责的功能以及对应代码位置。
-- 准备一个技术选型、一个性能问题和一次故障或缺陷修复。
-- 给简历上的每个数字补充统计口径和验证材料。
-- 针对每个中间件回答“为什么使用、如何失败、怎样观测”。
+- Dùng 30 giây và 3 phút lần lượt giới thiệu về dự án.
+- Vẽ một luồng request cốt lõi và một luồng xử lý thất bại.
+- Trình bày rõ 3 tính năng do bản thân phụ trách và vị trí code tương ứng.
+- Chuẩn bị một lựa chọn công nghệ, một vấn đề hiệu năng và một lần fix sự cố/bug.
+- Bổ sung tiêu chuẩn thống kê và tài liệu kiểm chứng cho từng con số trong CV.
+- Trả lời "Tại sao sử dụng, Thất bại ra sao, Giám sát thế nào" cho từng middleware.
 
-如果某个问题只能回答组件定义，回到项目代码或文档再查一遍。项目介绍不需要讲得很炫，能让面试官沿着你的回答继续问，而你手里又有真实细节可以接住，基本就够用了。
+Nếu câu hỏi nào chỉ trả lời được định nghĩa của component, hãy quay lại code hoặc tài liệu dự án tra cứu lại một lần nữa. Giới thiệu dự án không cần phải nói quá hoa mỹ, chỉ cần làm cho người phỏng vấn có thể tiếp tục hỏi dựa trên câu trả lời của bạn, mà trong tay bạn lại có chi tiết thực tế để tiếp nhận câu hỏi, về cơ bản là đã đủ dùng.
 
-## 相关阅读
+## Đọc thêm
 
-- [项目经验指南](./project-experience-guide.md)
-- [程序员简历编写指南](./resume-guide.md)
-- [Java 后端线上问题排查](../java/jvm/jvm-in-action.md)
-- [高性能系统设计面试题](../high-performance/high-performance-system-interview-questions.md)
-- [高可用系统设计面试题](../high-availability/high-availability-system-interview-questions.md)
-- [性能测试和压力测试入门](../high-availability/performance-test.md)
+- [Hướng dẫn kinh nghiệm dự án](./project-experience-guide.md)
+- [Hướng dẫn viết CV cho lập trình viên](./resume-guide.md)
+- [Xử lý sự cố Online trong Java Backend](../java/jvm/jvm-in-action.md)
+- [Câu hỏi phỏng vấn Thiết kế hệ thống hiệu năng cao](../high-performance/high-performance-system-interview-questions.md)
+- [Câu hỏi phỏng vấn Thiết kế hệ thống độ sẵn sàng cao](../high-availability/high-availability-system-interview-questions.md)
+- [Nhập môn Performance Testing và Stress Testing](../high-availability/performance-test.md)
 
 <!-- @include: @article-footer.snippet.md -->
