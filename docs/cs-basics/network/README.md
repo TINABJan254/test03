@@ -1,9 +1,9 @@
 ---
-title: 计算机网络专题：分层模型、HTTP、HTTPS、DNS、TCP、UDP、ARP 与 NAT
-description: 计算机网络面试与学习路线，涵盖 OSI/TCP-IP 分层模型、HTTP、HTTPS、DNS、TCP、UDP、ARP、NAT、网络安全和常见面试题。
-category: 计算机基础
+title: Chuyên đề Mạng máy tính: Mô hình phân tầng, HTTP, HTTPS, DNS, TCP, UDP, ARP và NAT
+description: Lộ trình học tập và phỏng vấn Mạng máy tính, bao gồm mô hình phân tầng OSI / TCP-IP, HTTP, HTTPS, DNS, TCP, UDP, ARP, NAT, an toàn mạng và các câu hỏi phỏng vấn thường gặp.
+category: Cơ sở máy tính
 tag:
-  - 计算机网络
+  - Mạng máy tính
   - TCP/IP
   - HTTP
 sidebar: false
@@ -13,81 +13,81 @@ sitemap:
 head:
   - - meta
     - name: keywords
-      content: 计算机网络,计算机网络面试题,OSI七层模型,TCP/IP,HTTP,HTTPS,DNS,TCP,UDP,ARP,NAT,后端面试
+      content: Mạng máy tính, Câu hỏi phỏng vấn Mạng máy tính, Mô hình 7 tầng OSI, TCP/IP, HTTP, HTTPS, DNS, TCP, UDP, ARP, NAT, Phỏng vấn Backend
 ---
 
-这份 **计算机网络专题** 面向后端学习和面试复习，按“分层模型 -> 应用层 -> 传输层 -> 网络层 -> 安全”的顺序整理本站网络相关文章。
+**Chuyên đề Mạng máy tính** này hướng tới việc học tập và ôn tập phỏng vấn Backend, được sắp xếp theo trình tự: "Mô hình phân tầng -> Tầng ứng dụng -> Tầng giao vận -> Tầng mạng -> Bảo mật".
 
-## 适合谁看
+## Phù hợp với ai
 
-- 正在系统学习计算机网络的后端开发者。
-- 准备校招、社招、中大厂网络面试题的同学。
-- 对 HTTP、HTTPS、TCP、DNS、Socket 等知识点只会零散背诵的读者。
-- 想把网络知识和 RPC、网关、负载均衡、系统设计联系起来的工程师。
+- Các lập trình viên Backend đang học Mạng máy tính một cách có hệ thống.
+- Các bạn đang chuẩn bị cho các kỳ phỏng vấn mạng của đợt tuyển dụng sinh viên (Campus), người có kinh nghiệm (Social), các công ty vừa và lớn.
+- Những độc giả chỉ học vẹt rời rạc các điểm kiến thức về HTTP, HTTPS, TCP, DNS, Socket.
+- Các kỹ sư muốn kết nối kiến thức mạng với RPC, API Gateway, Load Balancing và System Design.
 
-## 学习重点
+## Trọng tâm học tập
 
-- 网络分层的核心价值是拆分复杂通信问题，每一层只解决自己的职责。
-- HTTP、HTTPS、DNS 是后端开发最常用的应用层知识。
-- TCP 高频考点集中在连接管理、可靠传输、拥塞控制、TIME_WAIT 和 Keepalive。
-- ARP、NAT 等网络层知识能帮助理解局域网通信、内外网访问和排障。
-- 面试中要能结合一次完整请求，把协议、连接、加密、解析和传输串起来。
+- Giá trị cốt lõi của phân tầng mạng là chia nhỏ bài toán giao tiếp phức tạp, mỗi tầng chỉ giải quyết trách nhiệm của riêng mình.
+- HTTP, HTTPS, DNS là các kiến thức tầng ứng dụng được sử dụng thường xuyên nhất trong lập trình Backend.
+- Các điểm thi tần suất cao của TCP tập trung vào Quản lý kết nối, Truyền tải tin cậy, Kiểm soát tắc nghẽn (Congestion Control), TIME_WAIT và Keepalive.
+- Kiến thức tầng mạng như ARP, NAT giúp hiểu rõ giao tiếp trong mạng cục bộ (LAN), truy cập mạng nội bộ/mạng ngoài và xử lý sự cố (troubleshooting).
+- Trong phỏng vấn, cần có khả năng xâu chuỗi một request hoàn chỉnh qua các khâu: giao thức, kết nối, mã hóa, phân giải tên miền và truyền tải.
 
-## 建议阅读顺序
+## Thứ tự đọc khuyến nghị
 
-1. [计算机网络常见面试题总结（上）](./other-network-questions.md) 和 [计算机网络常见面试题总结（下）](./other-network-questions2.md)：先建立高频问题清单。
-2. [OSI 七层模型与 TCP/IP 四层模型详解](./osi-and-tcp-ip-model.md)：理解网络分层和各层职责。
-3. [从输入 URL 到页面展示到底发生了什么？](./the-whole-process-of-accessing-web-pages.md)：用完整链路串联 DNS、TCP、HTTP 和浏览器处理。
-4. [HTTP vs HTTPS](./http-vs-https.md)、[HTTPS 握手里的 RSA 和 ECDHE](./https-rsa-vs-ecdhe.md)、[HTTP 常见状态码总结](./http-status-codes.md)：补齐应用层高频问题。
-5. [TCP 三次握手和四次挥手](./tcp-connection-and-disconnection.md)、[TCP 传输可靠性保障](./tcp-reliability-guarantee.md)、[TCP TIME_WAIT 详解](./tcp-time-wait.md)：重点攻克 TCP。
+1. [Tổng hợp câu hỏi phỏng vấn Mạng máy tính thường gặp (Phần 1)](./other-network-questions.md) và [Tổng hợp câu hỏi phỏng vấn Mạng máy tính thường gặp (Phần 2)](./other-network-questions2.md): Thiết lập danh sách câu hỏi tần suất cao trước.
+2. [Chi tiết Mô hình 7 tầng OSI và Mô hình 4 tầng TCP/IP](./osi-and-tcp-ip-model.md): Hiểu về phân tầng mạng và trách nhiệm từng tầng.
+3. [Từ lúc nhập URL đến khi trang web hiển thị thực sự đã xảy ra những gì?](./the-whole-process-of-accessing-web-pages.md): Dùng chuỗi hoàn chỉnh để xâu chuỗi DNS, TCP, HTTP và xử lý của trình duyệt.
+4. [HTTP vs HTTPS](./http-vs-https.md), [RSA và ECDHE trong bắt tay HTTPS](./https-rsa-vs-ecdhe.md), [Tổng hợp HTTP Status Code thường gặp](./http-status-codes.md): Bổ sung các câu hỏi tần suất cao ở tầng ứng dụng.
+5. [Bắt tay 3 bước và Bắt tay 4 bước của TCP (3-way Handshake & 4-way Teardown)](./tcp-connection-and-disconnection.md), [Đảm bảo độ tin cậy truyền tải của TCP](./tcp-reliability-guarantee.md), [Chi tiết TCP TIME_WAIT](./tcp-time-wait.md): Trọng tâm chinh phục TCP.
 
-## 核心文章
+## Các bài viết cốt lõi
 
-### 总览与基础
+### Tổng quan & Nền tảng
 
-- [计算机网络常见面试题总结（上）](./other-network-questions.md)：覆盖网络模型、HTTP、HTTPS、DNS 等基础问题。
-- [计算机网络常见面试题总结（下）](./other-network-questions2.md)：继续整理 TCP、UDP、Socket、网络安全等高频问题。
-- [OSI 七层模型与 TCP/IP 四层模型详解](./osi-and-tcp-ip-model.md)：理解网络模型、协议分层和数据封装过程。
-- [从输入 URL 到页面展示到底发生了什么？](./the-whole-process-of-accessing-web-pages.md)：用一次请求串联常见网络知识点。
+- [Tổng hợp câu hỏi phỏng vấn Mạng máy tính thường gặp (Phần 1)](./other-network-questions.md): Bao quát mô hình mạng, HTTP, HTTPS, DNS và các câu hỏi cơ bản.
+- [Tổng hợp câu hỏi phỏng vấn Mạng máy tính thường gặp (Phần 2)](./other-network-questions2.md): Tiếp tục tổng hợp TCP, UDP, Socket, an toàn mạng và các câu hỏi tần suất cao.
+- [Chi tiết Mô hình 7 tầng OSI và Mô hình 4 tầng TCP/IP](./osi-and-tcp-ip-model.md): Hiểu mô hình mạng, phân tầng giao thức và quy trình đóng gói dữ liệu (encapsulation).
+- [Từ lúc nhập URL đến khi trang web hiển thị thực sự đã xảy ra những gì?](./the-whole-process-of-accessing-web-pages.md): Dùng một request để xâu chuỗi các điểm kiến thức mạng phổ biến.
 
-### 应用层
+### Tầng ứng dụng (Application Layer)
 
-- [常见应用层协议总结](./application-layer-protocol.md)：梳理 HTTP、WebSocket、SMTP、FTP、SSH、DNS 等协议。
-- [HTTP vs HTTPS](./http-vs-https.md)：理解 HTTPS 加密、证书、身份认证和完整性保护。
-- [HTTPS 握手里的 RSA 和 ECDHE](./https-rsa-vs-ecdhe.md)：区分不同密钥交换方式和前向安全性。
-- [HTTP 1.0 vs HTTP 1.1](./http1.0-vs-http1.1.md)：理解长连接、缓存、Host 头等差异。
-- [HTTP 常见状态码总结](./http-status-codes.md)：掌握 1xx 到 5xx 状态码语义和使用场景。
-- [DNS 域名系统详解](./dns.md)：理解域名解析、递归查询、迭代查询和缓存。
-- [有了 HTTP，为什么还要 RPC？](./http-vs-rpc.md)：厘清 HTTP 和 RPC 的层次关系。
+- [Tổng hợp các giao thức tầng ứng dụng thường gặp](./application-layer-protocol.md): Tổng hợp các giao thức HTTP, WebSocket, SMTP, FTP, SSH, DNS, v.v.
+- [HTTP vs HTTPS](./http-vs-https.md): Hiểu mã hóa HTTPS, chứng chỉ (certificate), xác thực danh tính và bảo toàn tính toàn vẹn dữ liệu.
+- [RSA và ECDHE trong bắt tay HTTPS](./https-rsa-vs-ecdhe.md): Phân biệt các phương thức trao đổi khóa khác nhau và Forward Secrecy (Tính bảo mật chuyển tiếp).
+- [HTTP 1.0 vs HTTP 1.1](./http1.0-vs-http1.1.md): Hiểu sự khác biệt về Persistent Connection, Cache, Host header, v.v.
+- [Tổng hợp HTTP Status Code thường gặp](./http-status-codes.md): Nắm vững ngữ nghĩa và kịch bản sử dụng các mã trạng thái từ 1xx đến 5xx.
+- [Chi tiết Hệ thống tên miền DNS](./dns.md): Hiểu phân giải tên miền, Recursive Query, Iterative Query và Caching.
+- [Đã có HTTP, tại sao còn cần RPC?](./http-vs-rpc.md): Làm rõ mối quan hệ tầng thứ giữa HTTP và RPC.
 
-### 传输层、网络层与安全
+### Tầng giao vận, Tầng mạng & Bảo mật
 
-- [TCP 三次握手和四次挥手](./tcp-connection-and-disconnection.md)：掌握连接建立、断开和关键状态。
-- [TCP 传输可靠性保障](./tcp-reliability-guarantee.md)：理解序列号、确认应答、重传、流量控制和拥塞控制。
-- [TCP TIME_WAIT 详解](./tcp-time-wait.md)：理解 TIME_WAIT 的作用、影响和优化边界。
-- [TCP Keepalive 和 HTTP Keep-Alive 有什么区别？](./tcp-keepalive-vs-http-keepalive.md)：区分传输层保活和应用层长连接。
-- [为什么 TCP 是面向字节流，UDP 是面向报文？](./tcp-byte-stream-udp-datagram.md)：理解 TCP/UDP 数据边界差异。
-- [ARP 协议详解](./arp.md)、[NAT 协议详解](./nat.md)、[网络攻击常见手段总结](./network-attack-means.md)：补齐网络层和安全常识。
+- [Bắt tay 3 bước và Bắt tay 4 bước của TCP](./tcp-connection-and-disconnection.md): Nắm vững thiết lập, ngắt kết nối và các trạng thái then chốt.
+- [Đảm bảo độ tin cậy truyền tải của TCP](./tcp-reliability-guarantee.md): Hiểu số thứ tự (Sequence Number), ACK, Retransmission, Flow Control và Congestion Control.
+- [Chi tiết TCP TIME_WAIT](./tcp-time-wait.md): Hiểu tác dụng, ảnh hưởng và ranh giới tối ưu hóa của trạng thái TIME_WAIT.
+- [Sự khác biệt giữa TCP Keepalive và HTTP Keep-Alive là gì?](./tcp-keepalive-vs-http-keepalive.md): Phân biệt cơ chế duy trì kết nối ở tầng giao vận và kết nối dài ở tầng ứng dụng.
+- [Tại sao TCP là hướng luồng byte (Byte Stream), còn UDP là hướng gói tin (Datagram)?](./tcp-byte-stream-udp-datagram.md): Hiểu ranh giới dữ liệu giữa TCP và UDP.
+- [Chi tiết giao thức ARP](./arp.md), [Chi tiết giao thức NAT](./nat.md), [Tổng hợp các thủ đoạn tấn công mạng thường gặp](./network-attack-means.md): Bổ sung kiến thức tầng mạng và kiến thức an toàn bảo mật.
 
-## 高频问题
+## Câu hỏi tần suất cao
 
-- OSI 七层模型和 TCP/IP 四层模型有什么区别？
-- 从输入 URL 到页面展示，网络部分发生了什么？
-- HTTP 和 HTTPS 有什么区别？HTTPS 握手过程是怎样的？
-- HTTP 1.0、1.1、2.0 的核心差异是什么？
-- 常见 HTTP 状态码分别表示什么？
-- TCP 三次握手、四次挥手为什么不能少？
-- TCP 如何保证可靠传输？拥塞控制和流量控制有什么区别？
-- TIME_WAIT 为什么存在？大量 TIME_WAIT 如何排查？
-- TCP Keepalive 和 HTTP Keep-Alive 有什么区别？
-- DNS、ARP、NAT 分别解决什么问题？
+- Mô hình 7 tầng OSI và mô hình 4 tầng TCP/IP khác nhau như thế nào?
+- Từ lúc nhập URL đến khi trang web hiển thị, phần mạng đã diễn ra những gì?
+- HTTP và HTTPS khác nhau như thế nào? Quy trình bắt tay HTTPS diễn ra ra sao?
+- Khác biệt cốt lõi giữa HTTP 1.0, 1.1 và 2.0 là gì?
+- Các mã trạng thái HTTP (Status Code) phổ biến đại diện cho điều gì?
+- Tại sao bắt tay 3 bước (3-way Handshake) và bắt tay 4 bước (4-way Teardown) của TCP không thể bớt đi bước nào?
+- TCP đảm bảo truyền tải tin cậy bằng cách nào? Phân biệt Flow Control và Congestion Control?
+- Tại sao trạng thái TIME_WAIT lại tồn tại? Khi xuất hiện lượng lớn TIME_WAIT thì điều tra và xử lý thế nào?
+- TCP Keepalive và HTTP Keep-Alive khác nhau như thế nào?
+- DNS, ARP, NAT lần lượt giải quyết những vấn đề gì?
 
-## 相关专题
+## Chuyên đề liên quan
 
-- [计算机基础知识体系](../)
-- [操作系统专题](../operating-system/)
-- [分布式系统知识体系](../../distributed-system/)
-- [RPC 专题](../../distributed-system/rpc/)
-- [高性能系统知识体系](../../high-performance/)
+- [Hệ thống kiến thức Cơ sở máy tính](../)
+- [Chuyên đề Hệ điều hành](../operating-system/)
+- [Hệ thống kiến thức Hệ thống phân tán](../../distributed-system/)
+- [Chuyên đề RPC](../../distributed-system/rpc/)
+- [Hệ thống kiến thức Hệ thống hiệu năng cao](../../high-performance/)
 
 <!-- @include: @article-footer.snippet.md -->

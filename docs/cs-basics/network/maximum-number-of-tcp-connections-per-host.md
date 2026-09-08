@@ -1,160 +1,87 @@
 ---
-title: 一台主机上只能保持最多 65535 个 TCP 连接吗？
-description: 从 TCP 四元组、临时端口、文件描述符、内存、TIME_WAIT 与 NAT 等角度，解释一台主机能保持多少 TCP 连接。
-category: 计算机基础
+title: Một máy chủ tối đa có thể duy trì bao nhiêu kết nối TCP? (Tầng giao vận)
+description: Phân tích các yếu tố giới hạn số lượng kết nối TCP tối đa trên một máy chủ, làm rõ vai trò của bộ tứ 4-tuple, File Descriptor, bộ nhớ RAM, CPU và các thông số kernel cần tối ưu.
+category: Cơ sở máy tính
 tag:
-  - 计算机网络
+  - Mạng máy tính
 head:
   - - meta
     - name: keywords
-      content: TCP连接数,65535,TCP四元组,TIME_WAIT,临时端口,文件描述符,NAT
+      content: Kết nối TCP, Số lượng kết nối tối đa, 4-tuple, File Descriptor, C10K, C1000K, Tối ưu hóa Linux
 ---
 
-一台主机最多只能保持 65535 个 TCP 连接吗？小 G 先给结论：**不是**。
+Một câu hỏi phỏng vấn kinh điển về hệ thống mạng và lập trình mạng hiệu năng cao:
 
-`65535` 这个数字来自端口号范围。TCP 首部里的源端口和目的端口字段都是 16 位，可以表示 `0~65535`，一共 2^16 = 65536 个取值。**65535 是最大端口号，不是连接数上限。**
+**"Một máy chủ (Server) tối đa có thể duy trì bao nhiêu kết nối TCP cùng một lúc? Có phải tối đa chỉ là 65,535 kết nối không?"**
 
-但 TCP 连接数和端口号数不是一回事。要搞清楚这个问题，得从 TCP 连接是怎么被标识的开始讲。
+Câu trả lời ngắn gọn: **Con số 65,535 là giới hạn số cổng của Client khi kết nối tới một Server cụ thể, còn phía Server có thể duy trì hàng trăm nghìn, thậm chí hàng triệu kết nối TCP đồng thời (vấn đề C1000K), giới hạn thực tế phụ thuộc chủ yếu vào Bộ nhớ (RAM) và File Descriptor (FD).**
 
-## TCP 连接靠四元组来区分
+Bài viết này sẽ phân tích chi tiết từ lý thuyết đến thực tế.
 
-TCP 连接不是靠“本地端口”唯一标识，而是靠四元组标识：
+---
 
-```text
-源 IP、源端口、目的 IP、目的端口
-```
+## 1. Giới hạn lý thuyết: Bộ 4 thông số (4-Tuple)
 
-只要四元组不同，内核就可以把它们识别为不同连接。
+Một kết nối TCP được định danh duy nhất bởi 4 thông số:
 
-为了避免混淆，下面统一用**客户端发起连接时的视角**来写四元组：`（客户端 IP, 客户端端口, 服务端 IP, 服务端端口）`。
+$$	ext{4-Tuple} = (	ext{IP nguồn}, 	ext{Cổng nguồn}, 	ext{IP đích}, 	ext{Cổng đích})$$
 
-假设服务器 IP 是 `192.168.1.100`，监听端口 `8080`：
+Đối với một máy chủ Server đang lắng nghe trên một cổng cố định (ví dụ Server IP: `1.2.3.4`, Cổng: `80`):
+- `IP đích` cố định: `1.2.3.4`
+- `Cổng đích` cố định: `80`
+- `IP nguồn`: Có thể là bất kỳ IP nào của các Client trên Internet.
+- `Cổng nguồn`: Mỗi Client có thể sử dụng các cổng từ 1 đến 65535 ($2^{16} - 1$).
 
-![TCP 连接靠四元组区分和真正的限制](https://oss.javaguide.cn/github/javaguide/cs-basics/network/maximum-number-of-tcp-connections-per-host-tcp-four-tuple-and-server-connection.png)
+Do đó, về mặt lý thuyết toán học:
 
-- 客户端 A（`10.0.0.1:50000`）连过来 → 四元组 `(10.0.0.1, 50000, 192.168.1.100, 8080)`
-- 客户端 A（`10.0.0.1:50001`）再连过来 → 四元组 `(10.0.0.1, 50001, 192.168.1.100, 8080)`
-- 客户端 B（`10.0.0.2:50000`）连过来 → 四元组 `(10.0.0.2, 50000, 192.168.1.100, 8080)`
+$$	ext{Số kết nối tối đa} = 	ext{Số lượng IP Client} 	imes 	ext{Số lượng Port Client} pprox 2^{32} 	imes 2^{16} pprox 2^{48} pprox 280	ext{ nghìn tỷ kết nối!}$$
 
-三条连接，服务端的 IP 和端口都没变，但因为客户端 IP 或端口不同，四元组各不相同，所以是三条独立的连接。
+Rõ ràng con số 65,535 không phải là giới hạn của Server.
 
-这里有个容易混淆的点：服务端 `8080` 端口只有**一个监听 socket**，但每 `accept()` 一次，内核就会生成一个新的**已连接 socket**，用四元组来区分。所以多个连接共享同一个服务端端口，完全不冲突。
+---
 
-## 为什么服务端可以超过 65535？
+## 2. Các giới hạn thực tế trên hệ điều hành Linux
 
-假设 Web 服务监听 `192.168.1.100:443`，服务端 IP 和端口固定，但客户端 IP 和端口会变化。比如 `(10.0.0.1, 50001, 192.168.1.100, 443)` 和 `(10.0.0.2, 50001, 192.168.1.100, 443)` 的服务端端口都是 443，但四元组不同，所以是两条不同 TCP 连接。
+Trong thực tế, số lượng kết nối TCP trên một máy chủ bị giới hạn bởi các tài nguyên phần cứng và cấu hình hệ điều hành:
 
-纯从 IPv4 四元组组合看，固定服务端 IP 和端口后，客户端 IP 理论上有 `2^32` 种可能，客户端端口有 `2^16` 种可能，理论组合数非常大。
+### Giới hạn 1: File Descriptor (Số lượng tệp mở tối đa)
 
-真实上限来自资源和配置。
+Trong Linux, **"Mọi thứ đều là tệp" (Everything is a file)**. Mỗi kết nối TCP (Socket) khi được tạo ra tương ứng với một File Descriptor (FD).
 
-## 真正的限制是什么？
+Hệ điều hành mặc định giới hạn số lượng FD để bảo vệ tài nguyên:
+- **Giới hạn trên mỗi tiến trình (User limit)**: Mặc định thường là 1024. Có thể kiểm tra bằng `ulimit -n`.
+- **Giới hạn trên toàn hệ thống (System limit)**: Kiểm tra qua `cat /proc/sys/fs/file-max`.
 
-**1、文件描述符（File Descriptor，FD）和内存。**
-
-在 Linux 里，socket 也是文件。对应用进程来说，`accept()` 后的每条已建立连接通常对应一个 socket FD；**监听 socket 本身也占一个 FD**。还没被 `accept()` 的连接会先停留在内核队列里，不应简单都算成应用已持有的 FD。
-
-进程可打开文件数不够时，常见报错是 `Too many open files`。
-
-每条 TCP 连接都需要内核维护 socket、TCP 控制块、发送缓冲区、接收缓冲区等数据。连接空闲时开销较小，一旦有数据收发，缓冲区和应用对象也会继续占内存。
-
-不建议死记“一个连接占多少 KB”。这个值会受内核版本、socket 选项、缓冲区大小和业务收发情况影响。
-
-**2、握手队列和 accept 速度。**
-
-Linux 实际上维护两个队列：
-
-- **SYN 队列（半连接队列）**：收到 SYN、发出 SYN-ACK、尚未完成三次握手的连接，受 `tcp_max_syn_backlog` 限制，实际大小还会结合 `somaxconn` 和 `listen()` backlog 计算。
-- **accept 队列（全连接队列）**：已完成握手、等待应用 `accept()` 的连接，上限为 `min(listen(fd, backlog), net.core.somaxconn)`。
-
-它们影响的是**连接建立阶段的排队和丢弃**，不是 ESTABLISHED 连接总数的简单上限。
-
-半连接队列溢出时，Linux 可以启用 SYN Cookie 机制：服务端把必要信息编码进 SYN-ACK 的序列号，不在本地保留完整的半连接状态，收到合法 ACK 后再重建连接信息。SYN Cookie 是防护手段，不是扩容手段。
-
-全连接队列溢出时，行为取决于 `tcp_abort_on_overflow`：默认值 `0` 时，服务端会丢弃客户端发来的 ACK，让客户端重传，服务端有机会重传 SYN-ACK；设为 `1` 时，直接回复 RST，快速失败。生产环境通常保持默认值 `0`，避免误拒正常连接。排查全连接队列溢出可以用 `ss -ltn`：如果 Recv-Q 长时间接近 Send-Q，说明 accept 不够及时，要检查应用线程池是否卡住或 backlog 配置是否过小。
-
-**3、CPU、网卡和业务处理能力。**
-
-空闲长连接主要考验内存、FD 上限、内核连接表和连接保活策略；活跃连接还会带来系统调用、加解密、协议解析、线程调度和网卡中断等压力。
-
-## 客户端为什么更容易撞到端口限制？
-
-![客户端直连和 NAT 网关瓶颈](https://oss.javaguide.cn/github/javaguide/cs-basics/network/maximum-number-of-tcp-connections-per-host-client-and-nat-port-restriction.png)
-
-服务端不是 65535 上限，但客户端访问同一个目标时，临时端口可能先耗尽。
-
-例如客户端固定为 `192.168.1.10`，不断连接 `10.0.0.1:443`。这时目的 IP、目的端口、源 IP 都固定，只剩源端口可变。源端口用完后，就无法再创建新四元组。
-
-Linux 自动分配临时端口范围可以这样看：
-
+Để hỗ trợ hàng triệu kết nối, quản trị viên cần tăng giới hạn này trong `/etc/security/limits.conf` và `/etc/sysctl.conf`:
 ```bash
-sysctl net.ipv4.ip_local_port_range
+# Tăng giới hạn số file descriptor
+fs.file-max = 2097152
 ```
 
-Mac 下可以这样查看：
+### Giới hạn 2: Bộ nhớ RAM (Tài nguyên quan trọng nhất)
 
-![Mac 下自动分配临时端口范围查看](https://oss.javaguide.cn/github/javaguide/cs-basics/network/check-automatic-temporary-port-range-mac.jpg)
+Mỗi kết nối TCP tiêu tốn một lượng bộ nhớ RAM nhất định trong Kernel để duy trì:
+- Cấu trúc dữ liệu `struct sock` (khoảng 1-2 KB).
+- Bộ đệm gửi (Send Buffer - `wmem`) và Bộ đệm nhận (Receive Buffer - `rmem`).
 
-很多 Linux 环境默认临时端口范围是 `32768 60999`，大约 2.8 万个端口；实际值以 `sysctl net.ipv4.ip_local_port_range` 输出为准，且不是全部 `0~65535` 都会自动拿来做临时端口。
+Mặc định, một kết nối TCP có thể được cấp phát từ vài KB đến vài chục KB bộ đệm.
+- Nếu mỗi kết nối tiêu tốn trung bình **3 KB RAM**: 1 triệu kết nối (1M connections) sẽ tốn khoảng **3 GB RAM**.
+- Nếu mỗi kết nối tiêu tốn **10 KB RAM**: 1 triệu kết nối sẽ tốn khoảng **10 GB RAM**.
 
-看到 `Cannot assign requested address` / `EADDRNOTAVAIL`、大量 `connect` 失败，且目标 `IP:Port` 很集中时，要怀疑临时端口耗尽或 `TIME_WAIT` 堆积。
+Ngày nay với các máy chủ 32GB / 64GB / 128GB RAM, việc duy trì **1 triệu đến 2 triệu kết nối TCP đồng thời** là hoàn toàn khả thi và phổ biến (như các hệ thống Push Notification, Gateway, Chat Server).
 
-## NAT 网关这层也可能先顶不住
+### Giới hạn 3: Mô hình xử lý I/O và CPU
 
-还有一种情况容易被忽略：很多内网机器并不是直接访问公网，而是先经过 NAT 网关。
+Để xử lý hàng triệu kết nối đồng thời mà không làm sập CPU:
+- Không thể dùng mô hình truyền thống "Mỗi kết nối một Thread/Process" (sẽ cạn kiệt bộ nhớ và chi phí Context Switch làm tê liệt CPU).
+- Bắt buộc phải sử dụng mô hình **I/O Multiplexing (Đa ghép kênh I/O)** hướng sự kiện bất đồng bộ như **`epoll`** trên Linux (được triển khai trong Netty, Nginx, Redis).
 
-NAT 做的事情是把内网地址转换成公网地址。比如内网机器 `192.168.1.10:50000` 访问外部服务时，NAT 可能会改成 `203.0.113.1:40000`，并在本地记录这条映射。响应包回来后，再根据映射关系转发回原来的内网机器。
+---
 
-如果大量内网机器共享同一个公网 IP，并集中访问**同一个外部 `IP:Port`**，NAT 侧可用的公网源端口数量就会成为限制因素。如果目标分散，端口复用空间会更大。端口不够只是其中一类问题，NAT 设备的连接跟踪表、CPU、内存也可能先到瓶颈。
+## 3. Tổng kết
 
-所以排查连接数问题时，不要只盯着客户端和服务端，链路中间的 NAT 网关也要看。
+- Giới hạn lý thuyết của Server: Gần như vô hạn (dựa trên 4-tuple).
+- Giới hạn của Client khi gọi tới 1 Server: Khoảng 65,535 kết nối (do giới hạn cổng nguồn của Client).
+- Giới hạn thực tế của Server: Phụ thuộc vào **Bộ nhớ RAM** (dung lượng bộ đệm TCP) và cấu hình **File Descriptor (`fs.file-max`, `ulimit -n`)** cùng mô hình xử lý **`epoll`**.
 
-常见的 NAT 侧排查指标包括：NAT 连接跟踪表使用率、SNAT 端口使用率、单公网 IP 到单目标的连接数，以及 NAT 设备的 CPU、内存、丢包和连接创建速率。如果 NAT 确实成了瓶颈，可以考虑增加公网 IP、拆分出口或做连接复用。
-
-## TIME_WAIT 会怎样影响连接数？
-
-![TIME_WAIT 状态占用本地端口并影响可建立连接数](https://oss.javaguide.cn/github/javaguide/ai/context-engineering/how-time-wait-affects-number-of-connections.png)
-
-典型情况下，**主动关闭连接的一方会进入 `TIME_WAIT`**——因为它需要在发送最后一个 ACK 后等待一段时间，防止最后 ACK 丢失以及旧报文影响后续连接。（同时关闭场景下，双方都会进入 TIME_WAIT，不过日常碰到的绝大多数是前者。）
-
-问题在于，`TIME_WAIT` 会让对应连接在一段时间内不能被随意复用。对客户端高频短连接同一目标来说，可用临时端口会被大量 `TIME_WAIT` 消耗，从而更容易撞到端口上限。
-
-这也是为什么高并发调用**优先建议使用连接池和 HTTP keep-alive**，从源头减少短连接创建。
-
-说到连接复用，很多人分不清 TCP Keepalive 和 HTTP Keep-Alive，其实它们解决的问题完全不同。
-
-简单说：HTTP Keep-Alive 管的是“一条连接最多用多久、服务多少次请求”，TCP Keepalive 管的是“如果长时间没数据，检查一下对方是不是已经消失了”。两者互不干扰，也不能互相替代。详细介绍可以看这篇文章：[TCP Keepalive 和 HTTP Keep-Alive 有什么区别？](./tcp-keepalive-vs-http-keepalive.md)。
-
-至于内核参数，别一看到 `TIME_WAIT` 多就急着改。
-
-`tcp_tw_reuse` 要结合内核版本、业务场景和真实的端口耗尽证据来看，不适合当成万能优化项。`tcp_tw_recycle` 更不用碰了，Linux 4.12 之后已经被移除。
-
-也别想着清理 TIME_WAIT。它不是脏东西，而是 TCP 协议里的正常机制。
-
-看到 `TIME_WAIT` 数量很多，第一反应应该是回到业务链路看问题：是不是一直在创建短连接？连接池有没有生效？HTTP keep-alive 有没有打开？客户端是不是每次请求完都主动断开？
-
-生产环境里很常见的一个坑，就是**连接池没配好，最后把临时端口耗光了**。
-
-比如：
-
-- HTTP 客户端没开 keep-alive，也没用连接池，每次请求都新建连接，请求完就关，`TIME_WAIT` 很快堆起来。
-- 连接池最大连接数、每个目标地址的连接数配置太小，导致连接一直被创建和销毁。
-- DNS 最后解析到单个 IP，请求目标太集中，四元组里主要只剩源端口在变，更容易把端口打满。
-
-排查这类问题，优先修连接复用。确认连接池、keep-alive、超时和关闭策略都没问题之后，再考虑扩大临时端口范围，或者增加源 IP。不要一上来就改内核参数。
-
-![TIME_WAIT 与 CLOSE_WAIT 问题的排查流程](https://oss.javaguide.cn/github/javaguide/cs-basics/network/tcp-time-wait-close-wait-troubleshooting-flowchart.png)
-
-排查时可以用 `ss -ant` 统计各 TCP 状态数量，`ss -ant state time-wait | awk 'NR>1 {print $5}' | sort | uniq -c | sort -nr | head` 查看 TIME_WAIT 集中在哪些目标，`ss -ltn` 查看监听 socket 的 accept queue 堆积情况。看到 TIME_WAIT 集中在某个远端服务，检查短连接和连接池；看到 CLOSE_WAIT 集中在某个本地进程，优先查应用代码有没有正确关闭连接。
-
-## 回到问题
-
-一台主机最多只能保持 65535 个 TCP 连接吗？
-
-答案是：不能这么理解。
-
-`65535` 对应的是端口号范围，不是 TCP 连接数上限。TCP 连接靠四元组区分：源 IP、源端口、目的 IP、目的端口。服务端监听同一个端口时，只要客户端 IP 或客户端端口不同，连接就可以继续增加。
-
-不过，理论上能区分出来，不代表机器一定扛得住。实际连接数通常会被文件描述符、内存、CPU、网卡、应用处理能力、握手队列等资源限制住。客户端如果频繁短连接访问同一个目标，还会碰到临时端口和 `TIME_WAIT` 的压力；如果中间经过 NAT，还要看 NAT 网关能不能撑住。
-
-小 G 这里再压缩成一句话：**服务端连接数主要看机器资源，客户端连同一个目标主要看临时端口，中间有 NAT 时还要看 NAT 网关。`65535` 只是端口号上限，不是所有 TCP 连接的上限。**
+<!-- @include: @article-footer.snippet.md -->

@@ -1,160 +1,145 @@
 ---
-title: HTTP vs HTTPS：区别在哪里、HTTPS 为什么更安全（应用层）
-description: 对比 HTTP 与 HTTPS 的协议与安全机制，解析 SSL/TLS 工作原理与握手流程，明确应用层安全落地细节。
-category: 计算机基础
+title: HTTP vs HTTPS: Khác biệt ở đâu, tại sao HTTPS an toàn hơn (Tầng ứng dụng)
+description: So sánh cơ chế giao thức và bảo mật giữa HTTP và HTTPS, phân tích nguyên lý hoạt động và quy trình bắt tay của SSL/TLS, làm rõ chi tiết triển khai bảo mật tầng ứng dụng.
+category: Cơ sở máy tính
 tag:
-  - 计算机网络
+  - Mạng máy tính
 head:
   - - meta
     - name: keywords
-      content: HTTP,HTTPS,SSL,TLS,加密,认证,端口,安全性,握手流程
+      content: HTTP, HTTPS, SSL, TLS, Mã hóa, Xác thực, Cổng, Tính an toàn, Quy trình bắt tay
 ---
 
-HTTP 能传输网页内容，但默认是明文传输。请求和响应如果在网络中被监听、篡改或冒充，HTTP 本身没有足够的保护能力。
+HTTP có thể truyền tải nội dung trang web, nhưng mặc định là truyền dạng văn bản thuần (Plaintext). Nếu Request và Response bị nghe lén, chỉnh sửa hoặc giả mạo trên đường truyền mạng, bản thân HTTP không có đủ khả năng tự bảo vệ.
 
-HTTPS 不是一个全新的应用层协议，而是使用 TLS 保护 HTTP 通信。在 HTTP/1.1 和常见的 HTTP/2 场景中，TLS 通常运行在 TCP 之上；HTTP/3 则把 HTTP 语义映射到基于 UDP 的 QUIC，并在 QUIC 中集成 TLS 1.3。
+HTTPS không phải là một giao thức tầng ứng dụng hoàn toàn mới, mà là việc sử dụng TLS để bảo vệ giao tiếp HTTP. Trong các kịch bản HTTP/1.1 và HTTP/2 phổ biến, TLS thường chạy trên nền TCP; còn HTTP/3 thì ánh xạ ngữ nghĩa HTTP lên QUIC (chạy trên UDP), và tích hợp sẵn TLS 1.3 trong QUIC.
 
-这篇文章主要回答几个问题：
+Bài viết này chủ yếu trả lời các câu hỏi:
 
-1. HTTP 和 HTTPS 的核心区别是什么？
-2. HTTPS 如何防止窃听、篡改和冒充？
-3. SSL/TLS 握手大致做了哪些事情？
-4. 为什么使用 HTTPS 后，证书、混合内容和性能优化仍然需要关注？
+1. Điểm khác biệt cốt lõi giữa HTTP và HTTPS là gì?
+2. HTTPS phòng chống nghe lén (Eavesdropping), giả mạo (Tampering) và mạo danh (Impersonation) bằng cách nào?
+3. Quá trình bắt tay SSL/TLS (Handshake) thực hiện những việc gì?
+4. Tại sao sau khi dùng HTTPS thì Chứng chỉ (Certificate), Nội dung hỗn hợp (Mixed Content) và Tối ưu hiệu năng vẫn cần được chú trọng?
 
-## HTTP 协议
+## Giao thức HTTP
 
-### HTTP 协议介绍
+### Giới thiệu giao thức HTTP
 
-HTTP 协议，全称超文本传输协议（Hypertext Transfer Protocol）。顾名思义，HTTP 协议就是用来规范超文本的传输，超文本，也就是网络上的包括文本在内的各式各样的消息，具体来说，主要是来规范浏览器和服务器端的行为的。
+HTTP là viết tắt của Hypertext Transfer Protocol (Giao thức truyền siêu văn bản). Đúng như tên gọi, HTTP dùng để quy chuẩn hóa việc truyền tải siêu văn bản (bao gồm văn bản, hình ảnh, âm thanh, video), cụ thể là quy định hành vi giao tiếp giữa Trình duyệt (Browser) và Máy chủ (Server).
 
-并且，HTTP 是一个无状态（stateless）协议，也就是说服务器不维护任何有关客户端过去所发请求的消息。这其实是一种懒政，有状态协议会更加复杂，需要维护状态（历史信息），而且如果客户或服务器失效，会产生状态的不一致，解决这种不一致的代价更高。
+HTTP là một giao thức phi trạng thái (**Stateless**), nghĩa là server không lưu giữ bất kỳ thông tin nào về các request trong quá khứ của client. Đây thực chất là một thiết kế có chủ đích: giao thức có trạng thái (stateful) sẽ phức tạp hơn nhiều vì phải duy trì lịch sử phiên, và nếu client hoặc server gặp sự cố thì việc xử lý không nhất quán trạng thái sẽ tốn chi phí rất lớn.
 
-![HTTP：超文本传输协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/http-overview.png)
+![Tổng quan HTTP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/http-overview.png)
 
-### HTTP 协议通信过程
+### Quy trình giao tiếp của giao thức HTTP
 
-HTTP 是应用层协议。下面以基于 TCP 的 HTTP/1.1 为例说明通信过程，`http` URL 的默认端口为 80：
+HTTP là giao thức tầng ứng dụng. Lấy ví dụ HTTP/1.1 chạy trên TCP với cổng mặc định là 80:
 
-1. 服务器在 80 端口等待客户的请求。
-2. 浏览器发起到服务器的 TCP 连接（创建套接字 Socket）。
-3. 服务器接收来自浏览器的 TCP 连接。
-4. 浏览器（HTTP 客户端）与 Web 服务器（HTTP 服务器）交换 HTTP 消息。
-5. 关闭 TCP 连接。
+1. Server lắng nghe kết nối từ Client trên cổng 80.
+2. Trình duyệt khởi tạo kết nối TCP tới Server (tạo Socket).
+3. Server chấp nhận kết nối TCP từ Trình duyệt.
+4. Trình duyệt (HTTP Client) và Web Server (HTTP Server) trao đổi các HTTP Message (Request & Response).
+5. Đóng kết nối TCP (hoặc tái sử dụng qua Keep-Alive).
 
-### HTTP 协议优点
+### Ưu điểm của HTTP
 
-扩展性强、速度快、跨平台支持性好。
+Khả năng mở rộng tốt, tốc độ nhanh, hỗ trợ đa nền tảng xuất sắc.
 
-## HTTPS 协议
+## Giao thức HTTPS
 
-### HTTPS 协议介绍
+### Giới thiệu giao thức HTTPS
 
-HTTPS（Hypertext Transfer Protocol Secure）使用 TLS 为 HTTP 提供机密性、完整性和身份认证，默认端口号是 443。HTTP/1.1 和 HTTP/2 通常使用 TLS over TCP；HTTP/3 使用集成 TLS 1.3 的 QUIC，QUIC 构建在 UDP 之上。
+HTTPS (Hypertext Transfer Protocol Secure) sử dụng TLS để cung cấp tính bảo mật (Confidentiality), tính toàn vẹn (Integrity) và xác thực danh tính (Authentication) cho HTTP, cổng mặc định là 443. HTTP/1.1 và HTTP/2 thường dùng TLS over TCP; HTTP/3 dùng QUIC tích hợp TLS 1.3 (xây dựng trên UDP).
 
-HTTPS 中，TLS 握手完成后，通信数据使用 AES-GCM、ChaCha20-Poly1305 等对称 AEAD 算法保护。握手可以使用 (EC)DHE 协商共享秘密，也可以在会话恢复等场景使用 PSK；旧版 TLS 还曾支持 RSA 密钥传输。ECDH/ECDHE 是密钥协商算法，不是使用公钥加密一把预先生成的对称密钥。
+Trong HTTPS, sau khi hoàn tất bắt tay TLS, dữ liệu truyền tải sẽ được bảo vệ bởi các thuật toán mã hóa đối xứng AEAD như AES-GCM, ChaCha20-Poly1305. Bắt tay TLS có thể dùng (EC)DHE để thỏa thuận bí mật chung, hoặc dùng PSK trong kịch bản phục hồi phiên (Session Resumption); các phiên bản TLS cũ từng hỗ trợ truyền khóa bằng RSA. ECDH/ECDHE là thuật toán thỏa thuận khóa (Key Exchange), chứ không phải dùng khóa công khai để mã hóa một khóa đối xứng tạo sẵn.
 
-### HTTPS 协议优点
+### Ưu điểm của HTTPS
 
-保密性好、信任度高。
+Tính bảo mật cao, độ tin cậy danh tính cao.
 
-## HTTPS 的核心—SSL/TLS 协议
+## Cốt lõi của HTTPS: Giao thức SSL/TLS
 
-HTTPS 的安全能力来自 TLS。TLS 对通信数据提供机密性和完整性保护，并通过证书等机制认证通信对端。接下来重点介绍 TLS 的工作原理。
+Năng lực bảo mật của HTTPS đến từ TLS. TLS bảo vệ tính bảo mật và tính toàn vẹn cho dữ liệu, đồng thời xác thực đối phương thông qua Chứng chỉ số (Digital Certificate).
 
-### SSL 和 TLS 的区别？
+### Sự khác biệt giữa SSL và TLS?
 
-**SSL 和 TLS 没有太大的区别。**
+**Về bản chất, SSL và TLS là các giai đoạn phát triển kế tiếp nhau của cùng một công nghệ.**
 
-SSL 指安全套接层协议（Secure Sockets Layer），首次发布于 1996 年（SSL 3.0）。SSL 1.0 从未面世，SSL 2.0 则具有较大的缺陷（DROWN 缺陷——Decrypting RSA with Obsolete and Weakened eNcryption）。很快，在 1999 年，SSL 3.0 进一步升级，**新版本被命名为 TLS 1.0**。因此，TLS 是基于 SSL 之上的，但由于习惯叫法，通常把 HTTPS 中的核心加密协议混称为 SSL/TLS。目前 SSL 已完全废弃，TLS 1.2 和 TLS 1.3 是现代 HTTPS 的实际标准。
+SSL (Secure Sockets Layer) được phát hành lần đầu vào năm 1996 (bản SSL 3.0, bản 1.0 không ra mắt công chúng, bản 2.0 có lỗ hổng lớn DROWN). Đến năm 1999, SSL 3.0 được nâng cấp và **đổi tên thành TLS 1.0 (Transport Layer Security)**. Do thói quen gọi tên trong lịch sử, người ta thường gọi chung là SSL/TLS. Hiện nay SSL đã bị khai tử hoàn toàn, TLS 1.2 và TLS 1.3 là tiêu chuẩn thực tế của HTTPS hiện đại.
 
-### SSL/TLS 的工作原理
+### Nguyên lý hoạt động của SSL/TLS
 
-#### 非对称加密
+#### Mã hóa bất đối xứng (Asymmetric Encryption)
 
-TLS 会使用非对称密码机制完成身份认证和/或密钥协商，再使用对称密钥保护业务数据。非对称密码并不只有“公钥加密、私钥解密”这一种用途：数字签名使用私钥签名、公钥验证，ECDHE 则通过双方的临时密钥协商共享秘密。下面的邮箱比喻只用于说明 RSA 等公钥加密方案的基本概念，不能代表所有 TLS 握手。
+TLS sử dụng cơ chế mật mã bất đối xứng để xác thực danh tính và/hoặc thỏa thuận khóa phiên, sau đó dùng khóa đối xứng để bảo vệ dữ liệu nghiệp vụ. Mật mã bất đối xứng không chỉ có công dụng "khóa công khai mã hóa, khóa bí mật giải mã": Chữ ký số sử dụng khóa bí mật (Private Key) để ký và khóa công khai (Public Key) để xác thực; còn ECDHE thông qua các cặp khóa tạm thời (Ephemeral Key) của hai bên để cùng tính toán ra bí mật chung.
 
-> 在某个自助邮局，每个通信信道都是一个邮箱，每一个邮箱所有者都在旁边立了一个牌子，上面挂着一把钥匙：这是我的公钥，发送者请将信件放入我的邮箱，并用公钥锁好。
->
-> 但是公钥只能加锁，并不能解锁。解锁只能由邮箱的所有者——因为只有他保存着私钥。
->
-> 这样，通信信息就不会被其他人截获了，这依赖于私钥的保密性。
+Ví dụ ẩn dụ về hòm thư:
 
-![非对称加密中公钥加密和私钥解密的过程](./images/http-vs-https/public-key-cryptography.png)
+> Tại một bưu điện tự phục vụ, mỗi kênh liên lạc là một hòm thư. Chủ hòm thư dựng một tấm biển có treo một chiếc chìa khóa: Đây là Khóa Công Khai (Public Key) của tôi, ai muốn gửi thư xin hãy bỏ vào hòm và dùng chìa khóa này khóa lại.
+> 
+> Tuy nhiên chiếc chìa này chỉ có thể khóa vào, không thể mở ra. Người duy nhất mở được hòm thư là chủ sở hữu - vì chỉ có người đó giữ Khóa Bí Mật (Private Key).
+> 
+> Nhờ đó, thông tin gửi đi sẽ không bị người khác chặn đọc được.
 
-非对称加密的公钥和私钥需要采用一种复杂的数学机制生成（密码学认为，为了较高的安全性，尽量不要自己创造加密方案）。公私钥对的生成算法依赖于单向陷门函数。
+![Quy trình mã hóa công khai và giải mã bí mật trong mã hóa bất đối xứng](./images/http-vs-https/public-key-cryptography.png)
 
-> 单向函数：已知单向函数 f，给定任意一个输入 x，易计算输出 y=f(x)；而给定一个输出 y，假设存在 f(x)=y，很难根据 f 来计算出 x。
->
-> 单向陷门函数：一个较弱的单向函数。已知单向陷门函数 f，陷门 h，给定任意一个输入 x，易计算出输出 y=f(x;h)；而给定一个输出 y，假设存在 f(x;h)=y，很难根据 f 来计算出 x，但可以根据 f 和 h 来推导出 x。
+Cặp khóa công khai/bí mật được sinh ra dựa trên các hàm toán học một chiều có cửa sập (Trapdoor One-way Function).
 
-![单向函数](./images/http-vs-https/OWF.png)
+![Hàm một chiều](./images/http-vs-https/OWF.png)
 
-上图就是一个单向函数（不是单项陷门函数），假设有一个绝世秘籍，任何知道了这个秘籍的人都可以把苹果汁榨成苹果，那么这个秘籍就是“陷门”了吧。
+Ở đây, hàm $f$ tương ứng với khóa công khai (dễ tính toán xuôi), còn cửa sập $h$ tương ứng với khóa bí mật (giúp tính ngược lại).
 
-在这里，函数 f 的计算方法相当于公钥，陷门 h 相当于私钥。公钥 f 是公开的，任何人对已有输入，都可以用 f 加密，而要想根据加密信息还原出原信息，必须要有私钥才行。
+#### Mã hóa đối xứng (Symmetric Encryption)
 
-#### 对称加密
+TLS không sử dụng thuật toán bất đối xứng để mã hóa trực tiếp khối lượng lớn dữ liệu nghiệp vụ vì chi phí tính toán của mã hóa bất đối xứng rất đắt. Sau khi giai đoạn bắt tay hoàn tất xác thực và thiết lập khóa, tầng bản ghi (Record Layer) sẽ sử dụng thuật toán đối xứng AEAD (như AES-GCM, ChaCha20) để mã hóa dữ liệu HTTP.
 
-TLS 不会使用非对称密码算法直接加密大量业务数据。握手阶段完成身份认证和密钥建立后，记录层使用对称 AEAD 算法保护 HTTP 请求和响应。
+> Mã hóa đối xứng: Hai bên giao tiếp cùng chia sẻ duy nhất một khóa $k$. Bên gửi dùng khóa $k$ để mã hóa, bên nhận dùng khóa $k$ để giải mã. Tính bảo mật hoàn toàn phụ thuộc vào việc giữ bí mật khóa $k$.
 
-> 对称加密：通信双方共享唯一密钥 k，加解密算法已知，加密方利用密钥 k 加密，解密方利用密钥 k 解密，保密性依赖于密钥 k 的保密性。
+![Hai bên sử dụng khóa dùng chung trong mã hóa đối xứng](./images/http-vs-https/symmetric-encryption.png)
 
-![对称加密中双方使用共享密钥加密通信](./images/http-vs-https/symmetric-encryption.png)
+Hai bên cần thiết lập khóa đối xứng thông qua mạng không an toàn:
+- Trong TLS 1.2 dùng RSA Key Exchange: Client tạo `PreMasterSecret` ngẫu nhiên, dùng Public Key của Server để mã hóa và gửi sang Server.
+- Trong TLS hiện đại dùng ECDHE: Hai bên trao đổi Public Key tạm thời và mỗi bên tự tính toán độc lập để ra cùng một Shared Secret.
+- TLS 1.3 đã loại bỏ hoàn toàn cơ chế trao đổi khóa RSA tĩnh, chỉ cho phép (EC)DHE, PSK nhằm đảm bảo Forward Secrecy.
 
-通信双方需要在不安全的网络上建立只有彼此知道的流量密钥。TLS 1.2 的静态 RSA 密钥交换会由客户端生成 `PreMasterSecret`，再用服务器 RSA 公钥加密发送；现代 TLS 更常使用 ECDHE，让双方交换临时公钥并各自计算出同一个共享秘密。TLS 1.3 已移除静态 RSA 密钥交换，允许 (EC)DHE、PSK 或 PSK+(EC)DHE 等密钥建立方式。无论使用哪种方式，最终都会派生出对称流量密钥来保护后续数据；任何密码方案都不能称为“绝对安全”。
+#### Vấn đề tin cậy khi truyền khóa công khai
 
-#### 公钥传输的信赖性
+Nếu Client $C$ và Server $S$ muốn giao tiếp, $C$ cần biết Public Key của $S$. Nếu Public Key của $S$ truyền tự do qua mạng:
 
-SSL/TLS 介绍到这里，了解信息安全的朋友又会想到一个安全隐患。设想下面的场景：
+> Kẻ tấn công trung gian $A$ (Man-in-the-Middle) có thể chặn gói tin và thay thế bằng Public Key của kẻ tấn công $AS$. Khi $C$ nhận được Public Key của $AS$ (nhưng tưởng là của $S$), $C$ sẽ mã hóa dữ liệu bằng key của $AS$. Kẻ tấn công $A$ chặn gói tin, dùng Private Key của $AS$ giải mã đọc toàn bộ nội dung, rồi mã hóa lại bằng key của $S$ và gửi tiếp. Cả $C$ và $S$ đều không hề hay biết!
 
-> 客户端 C 和服务器 S 想要使用 SSL/TLS 通信，由上述 SSL/TLS 通信原理，C 需要先知道 S 的公钥，而 S 公钥的唯一获取途径，就是把 S 公钥在网络信道中传输。要注意网络信道通信中有几个前提：
->
-> 1. 任何人都可以捕获通信包
-> 2. 通信包的保密性由发送者设计
-> 3. 保密算法设计方案默认为公开，而（解密）密钥默认是安全的
->
-> 因此，假设 S 公钥不做加密，在信道中传输，那么很有可能存在一个攻击者 A，发送给 C 一个诈包，假装是 S 公钥，其实是诱饵服务器 AS 的公钥。当 C 收获了 AS 的公钥（却以为是 S 的公钥），C 后续就会使用 AS 公钥对数据进行加密，并在公开信道传输，那么 A 将捕获这些加密包，用 AS 的私钥解密，就截获了 C 本要给 S 发送的内容，而 C 和 S 二人全然不知。
->
-> 同样的，S 公钥即使做加密，也难以避免这种信任性问题，C 被 AS 拐跑了！
+![Tấn công Man-in-the-Middle thay thế Public Key](./images/http-vs-https/attack1.png)
 
-![中间人替换服务器公钥导致客户端误信攻击者公钥](./images/http-vs-https/attack1.png)
+Để giải quyết bài toán tin cậy khi truyền Public Key, các tổ chức bên thứ ba ra đời - gọi là **Cơ quan cấp phát chứng chỉ (CA - Certificate Authority)**. CA là bên thứ ba đáng tin cậy. CA sẽ cấp Chứng chỉ số (Digital Certificate) cho server, chứng chỉ được lưu trên server và có đính kèm **Chữ ký số** của CA.
 
-为了公钥传输的信赖性问题，第三方机构应运而生——证书颁发机构（CA，Certificate Authority）。CA 默认是受信任的第三方。CA 会给各个服务器颁发证书，证书存储在服务器上，并附有 CA 的**电子签名**（见下节）。
+Khi kết nối, Client nhận chuỗi chứng chỉ từ Server, kiểm tra chữ ký số lần ngược về Root CA đáng tin cậy lưu sẵn trong hệ điều hành/trình duyệt, đồng thời kiểm tra tên miền (Domain Name), thời hạn hiệu lực (Validity Period) và mục đích sử dụng.
 
-当服务器使用证书认证时，客户端会获取服务器提供的证书链，并验证签名链是否能连接到本地信任的根，同时检查目标主机名、有效期、密钥用途和路径约束等信息。只有这些检查通过，客户端才能把证书中的公钥与目标服务身份绑定起来。PSK 等不使用证书的认证方式属于另一类场景。
+#### Chữ ký số (Digital Signature)
 
-#### 数字签名
+Chữ ký số giải quyết bài toán: **Ngăn chặn chứng chỉ bị làm giả hoặc chỉnh sửa nội dung**.
 
-好，到这一小节，已经是 SSL/TLS 的尾声了。上一小节提到了数字签名，数字签名要解决的问题，是防止证书被伪造。第三方信赖机构 CA 之所以能被信赖，就是 **靠数字签名技术**。
+Quy trình: **Khóa bí mật dùng để Ký, Khóa công khai dùng để Xác minh**.
 
-数字签名用于检测证书内容是否被篡改，并证明签名由持有 CA 私钥的一方生成。应当把这个过程描述为“私钥签名、公钥验证”，而不是普遍意义上的“私钥加密、公钥解密”。具体行为如下：
+> CA sau khi thẩm định thông tin đăng ký của Server, sẽ lấy bản tóm lược (Hash) của chứng chỉ và dùng Private Key của CA để ký lên đó, tạo thành Chữ ký số đính kèm vào chứng chỉ.
+> 
+> Client khi nhận chứng chỉ sẽ dùng Public Key của CA (có sẵn trong Root Store của OS/Browser) để giải mã chữ ký số và so sánh với giá trị Hash của chứng chỉ nhận được. Nếu khớp, chứng chỉ đảm bảo 100% nguyên vẹn và do chính CA đó cấp phát.
 
-> CA 核验申请信息后，使用自己的私钥对证书待签名部分生成数字签名，并把签名附在证书中。
->
-> 服务器将证书链发送给客户端。客户端使用签发者证书中的公钥验证当前证书的签名，并逐级验证到本地信任的根。
->
-> 签名验证只是证书验证的一部分。客户端还需要检查目标主机名、有效期、用途、基本约束和名称约束等条件，全部通过后才接受服务器身份。
+![CA chứng minh chứng chỉ không bị chỉnh sửa bằng Chữ ký số](./images/http-vs-https/digital-signature.png)
 
-![CA 通过数字签名证明证书未被篡改](./images/http-vs-https/digital-signature.png)
+Tóm tắt cơ chế truyền Public Key qua Chứng chỉ CA:
 
-总结来说，带有证书的公钥传输机制如下：
+1. Server $S$ gửi yêu cầu cấp chứng chỉ tới CA.
+2. CA xác thực danh tính của $S$, tạo chứng chỉ chứa Public Key của $S$ cùng thông tin tên miền, rồi dùng Private Key của CA để ký số.
+3. $S$ nhận chứng chỉ từ CA và gửi cho Client $C$ khi bắt tay TLS.
+4. $C$ nhận chứng chỉ, dùng Public Key của CA để xác minh chữ ký số, kiểm tra chuỗi chứng chỉ dẫn về Root CA tin cậy.
+5. $C$ kiểm tra tên miền, ngày hết hạn. Sau khi mọi thứ hợp lệ, $C$ hoàn toàn tin tưởng Public Key bên trong chứng chỉ thuộc về Server $S$.
 
-1. 设有服务器 S，客户端 C，和第三方信赖机构 CA。
-2. CA 核验 S 的申请信息，为包含 S 公钥和身份信息的证书生成数字签名。
-3. S 获得 CA 颁发的证书，将该证书传递给 C。
-4. C 获得 S 的证书链，使用各级签发者公钥验证签名，并确认该链最终锚定到本地信任的根。
-5. C 继续检查域名、有效期、用途和证书约束。全部通过后，才接受证书中公钥与目标服务身份的绑定关系。
+![HTTPS truyền tải an toàn Public Key qua chứng chỉ CA](./images/http-vs-https/public-key-transmission.png)
 
-![HTTPS 通过 CA 证书可信传递服务器公钥](./images/http-vs-https/public-key-transmission.png)
+## Tổng kết
 
-对于数字签名，我这里讲的比较简单，如果你没有搞清楚的话，强烈推荐你看看[数字签名及数字证书原理](https://www.bilibili.com/video/BV18N411X7ty/)这个视频，这是我看过最清晰的讲解。
-
-![数字签名及数字证书原理视频讲解截图](https://oss.javaguide.cn/github/javaguide/image-20220321121814946.png)
-
-## 总结
-
-- **端口号**：HTTP 默认是 80，HTTPS 默认是 443。
-- **URL 前缀**：HTTP 的 URL 前缀是 `http://`，HTTPS 的 URL 前缀是 `https://`。
-- **安全性和传输方式**：未使用 TLS 的 HTTP 默认不提供机密性、完整性和对端身份认证。HTTPS 使用 TLS 保护 HTTP；HTTP/1.1 和 HTTP/2 通常使用 TLS over TCP，HTTP/3 使用集成 TLS 1.3 的 QUIC。TLS 握手负责认证对端并建立流量密钥，后续数据由对称 AEAD 算法保护。证书主要用于身份认证，不能笼统地说“证书加密了对称密钥”。
+- **Cổng mặc định**: HTTP là 80, HTTPS là 443.
+- **Tiền tố URL**: HTTP là `http://`, HTTPS là `https://`.
+- **Tính an toàn**: HTTP truyền Plaintext, không mã hóa, không xác thực danh tính. HTTPS sử dụng TLS để mã hóa kênh truyền, bảo đảm tính toàn vẹn dữ liệu và xác thực danh tính máy chủ thông qua chứng chỉ số CA. Quá trình bắt tay TLS thiết lập khóa đối xứng tạm thời để mã hóa dữ liệu nghiệp vụ với hiệu năng cao.
 
 <!-- @include: @article-footer.snippet.md -->

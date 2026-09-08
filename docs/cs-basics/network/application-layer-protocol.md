@@ -1,326 +1,220 @@
 ---
-title: 常见应用层协议总结：HTTP、WebSocket、SMTP、FTP、SSH、DNS 等
-description: 汇总应用层常见协议的核心概念与典型场景，重点对比 HTTP 与 WebSocket 的通信模型与能力边界。
-category: 计算机基础
+title: Tổng hợp các giao thức tầng ứng dụng thường gặp: HTTP, WebSocket, SMTP, FTP, SSH, DNS, v.v.
+description: Tổng hợp khái niệm cốt lõi và kịch bản điển hình của các giao thức tầng ứng dụng phổ biến, tập trung so sánh mô hình giao tiếp và ranh giới năng lực giữa HTTP và WebSocket.
+category: Cơ sở máy tính
 tag:
-  - 计算机网络
+  - Mạng máy tính
 head:
   - - meta
     - name: keywords
-      content: 应用层协议,HTTP,WebSocket,DNS,SMTP,FTP,特性,场景
+      content: Giao thức tầng ứng dụng, HTTP, WebSocket, DNS, SMTP, FTP, Đặc tính, Kịch bản
 ---
 
 <!-- @include: @article-header.snippet.md -->
 
-应用层协议很多，HTTP、WebSocket、SMTP、POP3/IMAP、FTP、Telnet、SSH、RTP、DNS 这些名字也经常一起出现。
+Các giao thức tầng ứng dụng rất phong phú, những cái tên như HTTP, WebSocket, SMTP, POP3/IMAP, FTP, Telnet, SSH, RTP, DNS thường xuyên xuất hiện cùng nhau.
 
-这些协议不需要每一个都学到实现细节，但如果只记协议名，很容易在“用途、底层传输协议、典型场景”这几个点上混在一起。
+Chúng ta không cần phải học chi tiết triển khai của tất cả các giao thức này, nhưng nếu chỉ nhớ tên, rất dễ bị nhầm lẫn ở các điểm: "Công dụng, Giao thức truyền tải tầng dưới (TCP hay UDP), Kịch bản sử dụng điển hình".
 
-这篇文章主要回答几个问题：
+Bài viết này chủ yếu trả lời các câu hỏi:
 
-1. HTTP、WebSocket、SMTP、FTP、SSH、DNS 等协议分别解决什么问题？
-2. 这些协议通常基于 TCP 还是 UDP，常见端口和使用场景是什么？
-3. 哪些协议最容易混淆，面试和实践中应该怎么区分？
+1. Các giao thức HTTP, WebSocket, SMTP, FTP, SSH, DNS lần lượt giải quyết vấn đề gì?
+2. Các giao thức này thường chạy trên TCP hay UDP, cổng mặc định và kịch bản sử dụng là gì?
+3. Những giao thức nào dễ bị nhầm lẫn nhất, cách phân biệt trong phỏng vấn và thực tế?
 
-## HTTP：超文本传输协议
+## HTTP: Giao thức truyền siêu văn bản (HyperText Transfer Protocol)
 
-**超文本传输协议（HTTP，HyperText Transfer Protocol）** 是一种用于传输超文本和多媒体内容的应用层协议，最常见的使用场景就是 Web 浏览器与 Web 服务器之间的通信。
+**HTTP (HyperText Transfer Protocol)** là giao thức tầng ứng dụng dùng để truyền tải siêu văn bản và nội dung đa phương tiện, kịch bản sử dụng phổ biến nhất là giao tiếp giữa Web Browser và Web Server.
 
-![HTTP：超文本传输协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/http-overview.png)
+![Tổng quan HTTP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/http-overview.png)
 
-当我们在浏览器里访问一个网页时，浏览器会向服务器发送 HTTP 请求，服务器处理后返回 HTTP 响应。页面中的 HTML、CSS、JavaScript、图片、视频等资源，很多都是通过 HTTP 加载的。
+Khi chúng ta truy cập một trang web trên trình duyệt, trình duyệt gửi HTTP Request tới máy chủ, máy chủ xử lý rồi trả về HTTP Response. Các tài nguyên HTML, CSS, JavaScript, hình ảnh, video trong trang phần lớn đều được tải qua HTTP.
 
-HTTP 使用客户端-服务器模型，客户端发送 HTTP Request（请求），服务器返回 HTTP Response（响应），整个过程如下图所示。
+HTTP sử dụng mô hình Client-Server: Client gửi HTTP Request, Server trả về HTTP Response.
 
-![HTTP 协议](https://oss.javaguide.cn/github/javaguide/450px-HTTP-Header.png)
+![Giao thức HTTP](https://oss.javaguide.cn/github/javaguide/450px-HTTP-Header.png)
 
-需要注意的是，HTTP 是应用层协议，它本身不直接负责可靠传输。不同版本的 HTTP 底层依赖也不完全一样：
+Cần lưu ý rằng HTTP là giao thức tầng ứng dụng, bản thân nó không trực tiếp chịu trách nhiệm truyền tải tin cậy. Các phiên bản HTTP khác nhau có sự phụ thuộc tầng dưới khác nhau:
 
-- **HTTP/1.1**：基于 TCP。
-- **HTTP/2**：通常也基于 TCP，但引入了多路复用、头部压缩等能力。
-- **HTTP/3**：基于 QUIC，而 QUIC 基于 UDP，主要用于降低连接建立开销，并缓解 TCP 队头阻塞带来的影响。
+- **HTTP/1.1**: Dựa trên TCP.
+- **HTTP/2**: Thường cũng dựa trên TCP, nhưng đưa vào các khả năng Multiplexing (Đa ghép kênh), Nén Header (HPACK), v.v.
+- **HTTP/3**: Dựa trên QUIC (mà QUIC chạy trên UDP), chủ yếu dùng để giảm thiểu chi phí thiết lập kết nối và giải tỏa ảnh hưởng của vấn đề Head-of-Line Blocking (Nghẽn đầu hàng) của TCP.
 
-在 HTTP/1.1 中，默认开启 Keep-Alive，也就是长连接。这样同一个 TCP 连接可以被多个 HTTP 请求复用，避免每次请求都重新建立 TCP 连接，从而减少三次握手带来的开销。
+Trong HTTP/1.1, tính năng Keep-Alive (kết nối dài) được bật mặc định. Nhờ đó, cùng một kết nối TCP có thể được tái sử dụng cho nhiều HTTP Request, tránh việc mỗi request đều phải thiết lập lại kết nối TCP, giảm thiểu chi phí bắt tay 3 bước (3-way handshake).
 
-从连接复用角度看，HTTP/1.1 的 Keep-Alive 解决的是“同一个 TCP 连接复用多个请求”的问题，但同一连接上的请求处理仍然可能受到队头阻塞影响。
+Dưới góc độ tái sử dụng kết nối:
+- Keep-Alive của HTTP/1.1 giải quyết việc "tái sử dụng 1 kết nối TCP cho nhiều request", nhưng các request trên cùng kết nối vẫn có thể chịu ảnh hưởng nghẽn đầu hàng ở tầng HTTP (xử lý tuần tự).
+- HTTP/2 đưa vào Multiplexing trên 1 kết nối TCP, có thể truyền song song nhiều request và response dạng nhị phân (Binary Frames), loại bỏ nghẽn đầu hàng ở tầng HTTP. Tuy nhiên vì tầng dưới vẫn là TCP, nếu một gói TCP bị mất, toàn bộ dữ liệu trên kết nối đó vẫn bị tạm dừng chờ retransmit.
+- HTTP/3 dựa trên QUIC (chạy trên UDP), QUIC tự triển khai cơ chế truyền tin cậy và đa luồng độc lập trên từng Stream, giải quyết triệt để vấn đề nghẽn đầu hàng ở tầng TCP.
 
-HTTP/2 在一个 TCP 连接上引入多路复用，可以并行传输多个请求和响应，减少了 HTTP 层面的队头阻塞。但由于底层仍然是 TCP，一旦某个 TCP 包丢失，整个连接上的数据仍然会受影响。
+Ngoài ra, HTTP là một **giao thức phi trạng thái (Stateless Protocol)**. Server về bản chất không tự động ghi nhớ "request trước đó do ai gửi, đang ở trạng thái nào". Vì vậy trong phát triển Web thực tế, chúng ta thường phải dựa vào Cookie, Session, Token (bao gồm JWT) để duy trì trạng thái đăng nhập và phiên làm việc (Session) của người dùng.
 
-HTTP/3 基于 QUIC，QUIC 在 UDP 之上实现多路复用和可靠传输。不同流之间相互独立，可以缓解 TCP 层队头阻塞问题。
+## WebSocket: Giao thức giao tiếp song công toàn phần (Full-Duplex)
 
-另外，HTTP 是一种**无状态协议**。服务端不会天然记住“上一次请求是谁发的、处于什么状态”。因此，在实际 Web 开发中，通常需要借助 Cookie、Session、Token（包括 JWT）等机制来维护用户登录态和会话状态。
+**WebSocket** là giao thức giao tiếp Full-Duplex dựa trên kết nối TCP, cho phép Client và Server gửi và nhận dữ liệu đồng thời trên cùng một kết nối duy nhất.
 
-## WebSocket：全双工通信协议
+![Tổng quan WebSocket](https://oss.javaguide.cn/github/javaguide/cs-basics/network/websocket-overview.png)
 
-**WebSocket** 是一种基于 TCP 连接的全双工通信协议，客户端和服务器可以在同一条连接上同时发送和接收数据。
+Đặc điểm điển hình của nó là: **Sau khi kết nối được thiết lập, Server cũng có thể chủ động đẩy tin nhắn (Push Message) tới Client**. Điều này bù đắp hoàn hảo cho sự thiếu hụt của mô hình Request-Response truyền thống của HTTP trong các kịch bản thời gian thực (Real-time).
 
-![WebSocket：全双工通信协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/websocket-overview.png)
+Giao thức WebSocket ra đời năm 2008, trở thành tiêu chuẩn quốc tế năm 2011, các trình duyệt hiện đại đều đã hỗ trợ. Không chỉ trên trình duyệt, rất nhiều ngôn ngữ lập trình, framework và máy chủ backend đều hỗ trợ WebSocket.
 
-它的典型特点是：**连接建立后，服务端也可以主动向客户端推送消息**。这正好弥补了传统 HTTP 请求-响应模型在实时通信场景下的不足。
+Bản chất WebSocket vẫn là giao thức tầng ứng dụng. Nó thường khởi đầu bằng một HTTP Request để yêu cầu nâng cấp giao thức (Protocol Upgrade), sau khi nâng cấp thành công (HTTP 101), giữa Client và Server sẽ duy trì một kết nối bền vững để truyền dữ liệu hai chiều.
 
-WebSocket 协议在 2008 年诞生，2011 年成为国际标准，现代主流浏览器基本都已经支持。WebSocket 不只用于浏览器场景，很多编程语言、框架和服务器也都提供了对应支持。
+![Sơ đồ WebSocket](https://oss.javaguide.cn/github/javaguide/system-design/web-real-time-message-push/1460000042192394.png)
 
-WebSocket 本质上仍然是应用层协议。它通常先通过一次 HTTP 请求发起协议升级，升级成功后，客户端和服务端之间会建立一条持久连接，后续就可以进行双向数据传输。
+Các kịch bản ứng dụng phổ biến của WebSocket:
+- Bình luận / Danmaku video trực tiếp
+- Đẩy thông báo thời gian thực (Real-time Notification)
+- Game online đối kháng thời gian thực
+- Chỉnh sửa tài liệu cộng tác nhiều người (Collaborative Editing)
+- Chăm sóc khách hàng trực tuyến / Chat, nhắn tin trực tiếp
+- Cập nhật giá chứng khoán, tỷ số thể thao trực tiếp
 
-![WebSocket 示意图](https://oss.javaguide.cn/github/javaguide/system-design/web-real-time-message-push/1460000042192394.png)
+Quy trình hoạt động của WebSocket gồm các bước:
+1. Client gửi một HTTP Request tới Server, header chứa `Upgrade: websocket`, `Connection: Upgrade`, `Sec-WebSocket-Key`, thể hiện mong muốn nâng cấp kết nối sang WebSocket.
+2. Server nhận được request, nếu hỗ trợ WebSocket sẽ phản hồi mã `101 Switching Protocols` với header `Upgrade: websocket`, `Connection: Upgrade`, `Sec-WebSocket-Accept`, xác nhận nâng cấp thành công.
+3. Sau khi nâng cấp, kết nối WebSocket được thiết lập, hai bên có thể truyền dữ liệu hai chiều.
+4. Dữ liệu WebSocket được truyền dưới dạng các Khung (Frame). Một thông điệp hoàn chỉnh có thể được chia thành nhiều Frame để gửi, bên nhận sẽ lắp ráp lại.
+5. Client hoặc Server đều có thể chủ động gửi Close Frame để đóng kết nối TCP.
 
-WebSocket 的常见应用场景包括：
+Ngoài ra, WebSocket thường kết hợp với **cơ chế Heartbeat** (Ping/Pong frame hoặc heartbeat ở tầng ứng dụng) để kiểm tra kết nối còn sống hay không, tránh tình trạng kết nối "chết giả" (Dead connection).
 
-- 视频弹幕
-- 实时消息推送，详见[Web 实时消息推送详解](https://javaguide.cn/system-design/web-real-time-message-push.html)
-- 实时游戏对战
-- 多用户协同编辑
-- 在线客服 / 社交聊天
-- 股票行情、体育比分等实时数据更新
+## SMTP: Giao thức truyền thư đơn giản (Simple Mail Transfer Protocol)
 
-WebSocket 的工作过程可以简单分为下面几步：
+**SMTP (Simple Mail Transfer Protocol)** là giao thức tầng ứng dụng chạy trên TCP, chủ yếu dùng để **gửi và chuyển tiếp email**.
 
-1. 客户端向服务器发送一个 HTTP 请求，请求头中包含 `Upgrade: websocket`、`Connection: Upgrade`、`Sec-WebSocket-Key` 等字段，表示希望把当前连接升级为 WebSocket。
-2. 服务器收到请求后，如果支持 WebSocket，会返回 HTTP `101 Switching Protocols` 状态码，响应头中包含 `Upgrade: websocket`、`Connection: Upgrade`、`Sec-WebSocket-Accept` 等字段，表示协议升级成功。
-3. 协议升级后，客户端和服务器之间就建立了一条 WebSocket 连接，双方可以进行双向通信。
-4. WebSocket 数据以帧（Frame）的形式传输。一条完整消息可能会被拆分成多个帧发送，接收端再重新组装成完整消息。
-5. 客户端或服务器都可以主动发送关闭帧，另一方收到后也会回复关闭帧，然后双方关闭 TCP 连接。
+![Tổng quan SMTP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/smtp-overview.png)
 
-另外，WebSocket 连接通常会配合**心跳机制**使用。比如定期发送 Ping/Pong 帧，或者在业务层发送心跳包，用来检测连接是否仍然可用，避免连接假死。
+Lưu ý điểm dễ nhầm lẫn:
+**SMTP phụ trách gửi email và chuyển tiếp giữa các Mail Server; POP3 / IMAP phụ trách việc người dùng nhận email từ Mail Server về thiết bị.**
 
-## SMTP：简单邮件传输协议
+Tức là: email từ server của bạn chuyển tới server của người nhận dùng SMTP; còn người nhận dùng phần mềm (Outlook, Thunderbird, Mail app) để xem thư trong hộp thư thì dùng POP3 hoặc IMAP.
 
-**简单邮件传输协议（SMTP，Simple Mail Transfer Protocol）** 是一种基于 TCP 的应用层协议，主要用于**发送和转发电子邮件**。
+![Giao thức SMTP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/what-is-smtp.png)
 
-![SMTP：简单邮件传输协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/smtp-overview.png)
+Các cổng phổ biến của SMTP:
 
-这里要注意一个容易混淆的点：
+| Cổng | Công dụng phổ biến | Giải thích |
+| --- | --- | --- |
+| 25 | Chuyển tiếp email giữa các Mail Server | Dùng cho chuyển tiếp MTA tới MTA, nhiều nhà cung cấp Cloud/ISP chặn cổng 25 chiều out để chống Spam |
+| 587 | Client gửi (submit) email | Cổng Message Submission chuẩn, thường kết hợp STARTTLS và xác thực tài khoản |
+| 465 | Gửi email với TLS ngầm định (Implicit TLS) | Kết nối client trực tiếp thiết lập kênh mã hóa TLS |
 
-**SMTP 负责邮件发送和邮件服务器之间的转发；POP3/IMAP 负责用户从邮箱服务器收取邮件。**
+### Quy trình gửi Email
 
-也就是说，邮件从你的邮箱服务器发送到对方邮箱服务器，这个过程通常还是 SMTP；而用户使用客户端查看邮箱里的邮件，通常使用 POP3 或 IMAP。
+Ví dụ email của tôi là `<dabai@cszhinan.com>`, tôi muốn gửi thư tới `<xiaoma@qq.com>`:
+1. Tôi soạn thư qua Mail Client hoặc Webmail.
+2. Mail Client thông qua giao thức SMTP gửi thư lên Mail Server phụ trách tên miền `cszhinan.com`.
+3. Mail Server gửi tra cứu bản ghi MX của tên miền `qq.com` để tìm địa chỉ Mail Server của QQ.
+4. Mail Server gửi dùng SMTP chuyển tiếp thư sang QQ Mail Server.
+5. QQ Mail Server nhận thư và lưu vào hộp thư người nhận.
+6. Người dùng `<xiaoma@qq.com>` thông qua giao thức POP3 hoặc IMAP tải/đọc thư từ QQ Mail Server về máy.
 
-![SMTP 协议](https://oss.javaguide.cn/github/javaguide/cs-basics/network/what-is-smtp.png)
+## POP3 / IMAP: Giao thức nhận Email
 
-常见 SMTP 相关端口有 25、465、587，三者用途不完全一样：
+**POP3 và IMAP đều là giao thức dùng để nhận email**, chạy trên nền TCP ở tầng ứng dụng.
 
-| 端口 | 常见用途               | 说明                                                                          |
-| ---- | ---------------------- | ----------------------------------------------------------------------------- |
-| 25   | 邮件服务器之间转发邮件 | 主要用于 MTA 到 MTA 的投递，很多云厂商或 ISP 会限制 25 端口出站，防止垃圾邮件 |
-| 587  | 客户端提交邮件         | 标准的 Message Submission 端口，通常配合 STARTTLS 和身份认证使用              |
-| 465  | 隐式 TLS 的邮件提交    | 客户端连接时直接建立 TLS 加密通道，很多邮件服务商仍然支持                     |
+![Tổng quan POP3/IMAP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/pop3-imap-overview.png)
 
-### 电子邮件的发送过程
+- **POP3 (Post Office Protocol 3)**: Thiết kế đơn giản, mô hình phổ biến là tải toàn bộ email từ server về lưu cục bộ trên máy. Thích hợp khi chỉ dùng 1 thiết bị duyệt mail, nhưng trải nghiệm đồng bộ trên nhiều thiết bị rất kém.
+- **IMAP (Internet Message Access Protocol)**: Hiện đại và phổ biến hơn. Nó hỗ trợ quản lý mail trực tiếp trên server, đồng bộ trạng thái (đã đọc, chưa đọc, thùng rác, thư mục, gắn cờ) trên mọi thiết bị (điện thoại, máy tính, web).
 
-比如我的邮箱是 `<dabai@cszhinan.com>`，我要向 `<xiaoma@qq.com>` 发送邮件，整个过程可以简单理解为：
+So sánh nhanh:
 
-1. 我通过邮箱客户端或网页邮箱写好邮件。
-2. 邮件客户端通过 SMTP 协议，把邮件提交给 `cszhinan.com` 对应的邮件服务器。
-3. 发送方邮件服务器根据收件人域名 `qq.com` 查询对应的邮件服务器地址。
-4. 发送方邮件服务器再通过 SMTP，把邮件投递到 QQ 邮箱服务器。
-5. QQ 邮箱服务器接收邮件并保存。
-6. 用户 `<xiaoma@qq.com>` 通过 POP3 或 IMAP 协议从 QQ 邮箱服务器读取邮件。
+| Giao thức | Công dụng chính | Đặc điểm |
+| --- | --- | --- |
+| POP3 | Nhận email | Thiên về tải về máy cục bộ, đồng bộ đa thiết bị yếu |
+| IMAP | Nhận và quản lý email | Hỗ trợ đồng bộ đa thiết bị, tìm kiếm, phân loại, gắn cờ |
+| SMTP | Gửi và chuyển tiếp email | Phụ trách toàn bộ chuỗi gửi/chuyển tiếp thư |
 
-### 如何判断邮箱是否真正存在？
+## FTP: Giao thức truyền tệp (File Transfer Protocol)
 
-一些场景下，我们可能需要判断某个邮箱地址是否真实存在。常见思路是基于 SMTP 做探测：
+**FTP (File Transfer Protocol)** là giao thức tầng ứng dụng chạy trên TCP, dùng để truyền file giữa client và server.
 
-1. 查询邮箱域名对应的 MX 记录，找到邮件服务器。
-2. 尝试连接目标邮件服务器。
-3. 使用 SMTP 命令模拟投递流程。
-4. 根据服务器返回结果判断邮箱地址是否可能存在。
+![Tổng quan FTP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/ftp-overview.png)
 
-不过，这种方式并不总是可靠。
+Điểm đặc biệt của FTP là nó thường thiết lập **hai kết nối TCP song song**:
+1. **Kết nối điều khiển (Control Connection - Cổng 21)**: Dùng để truyền lệnh và phản hồi (đăng nhập, đổi thư mục, xóa file, v.v.).
+2. **Kết nối dữ liệu (Data Connection - Cổng 20 hoặc cổng động)**: Dùng để truyền nội dung tệp tin hoặc danh sách thư mục thực sự.
 
-很多邮件服务商为了防止垃圾邮件、撞库和隐私泄露，会屏蔽邮箱存在性探测，或者统一返回模糊结果。因此，SMTP 探测只能作为参考，不能 100% 判断邮箱一定存在或不存在。
+![Quy trình hoạt động của FTP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/ftp.png)
 
-推荐几个在线邮箱有效性检测工具：
+FTP có 2 chế độ truyền dữ liệu:
+- **Chế độ chủ động (Active Mode - PORT)**: Client gửi lệnh qua kết nối điều khiển báo cho Server biết cổng mình đang lắng nghe, Server chủ động tạo kết nối tới cổng đó của Client để truyền dữ liệu. Nếu Client nằm sau NAT/Firewall, kết nối này rất dễ bị chặn và thất bại.
+- **Chế độ bị động (Passive Mode - PASV)**: Client yêu cầu Server mở một cổng dữ liệu ngẫu nhiên, sau đó Client chủ động kết nối tới cổng đó của Server. Vì chiều kết nối luôn là từ Client ra Server nên dễ dàng đi qua NAT/Firewall hơn, do đó thực tế chế độ Passive được dùng phổ biến hơn nhiều.
 
-1. <https://verify-email.org/>
-2. <http://tool.chacuo.net/mailverify>
-3. <https://www.emailcamel.com/>
+Lưu ý: FTP truyền Plaintext (không mã hóa). Khi truyền dữ liệu nhạy cảm nên dùng:
+- **SFTP (SSH File Transfer Protocol)**: Truyền file an toàn dựa trên nền SSH.
+- **FTPS (FTP over TLS/SSL)**: FTP được bọc lớp mã hóa TLS.
 
-## POP3/IMAP：邮件接收协议
+## Telnet: Giao thức đăng nhập từ xa (Plaintext)
 
-**POP3 和 IMAP 都是用于接收邮件的协议**，二者也都是基于 TCP 的应用层协议。
+**Telnet** chạy trên TCP (cổng 23), cho phép người dùng kết nối từ xa vào server qua terminal và thực thi lệnh.
 
-![POP3/IMAP：邮件接收协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/pop3-imap-overview.png)
+Nhược điểm lớn nhất: **Truyền Plaintext (không mã hóa)**. Toàn bộ tài khoản, mật khẩu và nội dung lệnh đều có thể bị bắt trọn nếu bị nghe lén (Sniffing). Vì vậy ngày nay Telnet đã bị thay thế hoàn toàn bằng SSH trong môi trường production.
 
-需要注意的是：**SMTP 主要负责邮件发送和转发，POP3/IMAP 主要负责用户从邮箱服务器读取邮件。**
+## SSH: Giao thức vỏ bảo mật (Secure Shell)
 
-POP3 的设计比较简单，常见模式是把邮件从服务器下载到本地。它适合单设备收信，但多设备同步体验较差。
-
-IMAP 是更现代、更常用的邮件接收协议。它支持在服务器端管理邮件，能够同步邮件状态，比如已读、未读、删除、归档、文件夹分类等。因此，如果你同时在手机、电脑、网页端查看同一个邮箱，IMAP 的体验通常会更好。
-
-简单对比一下：
-
-| 协议 | 主要用途       | 特点                             |
-| ---- | -------------- | -------------------------------- |
-| POP3 | 接收邮件       | 偏下载到本地，多设备同步能力弱   |
-| IMAP | 接收和管理邮件 | 支持多设备同步、搜索、标记、归档 |
-| SMTP | 发送和转发邮件 | 负责邮件投递链路                 |
-
-## FTP：文件传输协议
-
-**FTP（File Transfer Protocol，文件传输协议）** 是一种基于 TCP 的应用层协议，用于在客户端和服务器之间传输文件。
-
-![FTP：文件传输协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/ftp-overview.png)
-
-FTP 采用客户端-服务器模型。它比较特殊的一点是：FTP 通常会建立两条 TCP 连接。
-
-> FTP 与很多应用层协议不同，它在客户端和服务器之间使用两条连接：
->
-> 1. **控制连接**：用于传输命令和响应，例如登录、切换目录、删除文件等。
-> 2. **数据连接**：用于真正传输文件内容或目录列表。
-
-这种将命令和数据分开传输的设计，能够让控制命令和文件数据互不干扰。
-
-![FTP 工作过程](https://oss.javaguide.cn/github/javaguide/cs-basics/network/ftp.png)
-
-FTP 有主动模式（PORT）和被动模式（PASV）两种数据连接方式：
-
-- **主动模式**：客户端通过控制连接告诉服务端自己监听的端口，服务端再主动连接客户端的这个端口建立数据连接。由于服务端要主动连接客户端，如果客户端在 NAT 或防火墙后面，很容易连接失败。
-- **被动模式**：客户端请求服务端开放一个数据端口，然后由客户端主动连接服务端的数据端口。因为连接方向仍然是客户端到服务端，更容易穿过 NAT 和防火墙，所以实际生产环境中更常用被动模式。
-
-注意：FTP 本身是不安全的。它默认不会加密传输内容，用户名、密码和文件数据都可能被窃听或篡改。
-
-因此，传输敏感文件时不建议使用普通 FTP，可以选择：
-
-- **SFTP**：基于 SSH 的安全文件传输协议。
-- **FTPS**：在 FTP 基础上增加 TLS/SSL 加密。
-
-其中，SFTP 和 FTPS 名字相似，但不是同一个协议。SFTP 基于 SSH，FTPS 是 FTP over TLS。
-
-## Telnet：远程登录协议
-
-**Telnet** 是一种基于 TCP 的远程登录协议，默认端口是 23。它允许用户通过终端远程登录到服务器，并在远程机器上执行命令。
-
-Telnet 最大的问题是：**明文传输**。
-
-![Telnet：远程登录协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/telnet-overview.png)
-
-用户名、密码、命令内容和返回结果都不会加密，攻击者如果能监听网络流量，就可能直接看到敏感信息。
-
-![Telnet：远程登录协议](https://oss.javaguide.cn/github/javaguide/cs-basics/network/Telnet_is_vulnerable_to_eavesdropping-2.png)
-
-因此，Telnet 现在已经很少用于真正的远程管理。实际生产环境中，通常使用 SSH 替代 Telnet。
-
-## SSH：安全的网络传输协议
-
-**SSH（Secure Shell）** 是一种基于 TCP 的安全网络协议，默认端口是 22。它通过加密和认证机制，为远程登录、命令执行和文件传输提供安全保障。
-
-![SSH：安全的网络传输协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/ssh-overview.png)
-
-SSH 最经典的用途是登录远程服务器：
+**SSH (Secure Shell)** chạy trên TCP (cổng 22 mặc định), cung cấp cơ chế đăng nhập từ xa, thực thi lệnh và truyền file an toàn thông qua mã hóa và xác thực.
 
 ```bash
 ssh user@server_ip
 ```
 
-除了远程登录，SSH 还支持：
+Ngoài đăng nhập từ xa, SSH còn hỗ trợ:
+- Thực thi lệnh từ xa (Remote Command Execution)
+- Chuyển tiếp cổng (Port Forwarding)
+- Tạo đường hầm mạng (SSH Tunneling / Proxy)
+- X11 Forwarding
+- Truyền file an toàn qua SFTP hoặc SCP
 
-- 远程执行命令
-- 端口转发
-- 隧道代理
-- X11 转发
-- 基于 SFTP 或 SCP 的安全文件传输
+Cơ chế xác thực phổ biến của SSH gồm mật khẩu (Password Authentication) và khóa công khai (Public Key Authentication). Môi trường production luôn khuyến nghị dùng SSH Key và tắt đăng nhập bằng mật khẩu thông thường.
 
-SSH 使用客户端-服务器模型。SSH Server 监听客户端连接请求，SSH Client 发起连接。双方会先协商加密算法，并通过密钥交换生成后续通信使用的对称加密密钥。之后的通信内容都会被加密传输。
+## RTP: Giao thức truyền tải thời gian thực (Real-time Transport Protocol)
 
-![SSH：安全的网络传输协议](https://oss.javaguide.cn/github/javaguide/cs-basics/network/ssh-client-server.png)
+**RTP (Real-time Transport Protocol)** dùng để truyền tải âm thanh, video thời gian thực, thường chạy trên nền UDP.
 
-需要注意的是，SSH 的安全性不仅来自加密传输，也来自身份认证机制。常见认证方式包括：
+![Tổng quan RTP](https://oss.javaguide.cn/github/javaguide/cs-basics/network/rtp-overview.png)
 
-- 密码认证
-- 公钥认证
-- 多因素认证
+RTP thường kết hợp cùng RTCP:
+- **RTP**: Phụ trách truyền tải gói tin media thực tế.
+- **RTCP (RTP Control Protocol)**: Phụ trách truyền thông tin thống kê kiểm soát chất lượng (tỷ lệ mất gói, độ trễ RTT, Jitter) để hai bên điều chỉnh tốc độ bit phù hợp.
 
-实际生产环境中，更推荐使用公钥认证，并关闭弱密码登录。
+Trong WebRTC, RTP/RTCP là nền tảng cốt lõi kết hợp với SRTP (mã hóa), FEC (sửa lỗi tiến), NACK (yêu cầu gửi lại gói mất) để đảm bảo chất lượng gọi video/audio thời gian thực.
 
-## RTP：实时传输协议
+## DNS: Hệ thống tên miền (Domain Name System)
 
-**RTP（Real-time Transport Protocol，实时传输协议）** 是一种用于传输音频、视频等实时数据的协议。它通常运行在 UDP 之上。在 TCP/IP 分层模型中，UDP 之上就是应用层，所以 RTP 按分层规则被归入应用层。但它承担的职责（序列号、时间戳、同步、质量反馈）更接近传输层功能，RFC 3550 也说它“通常会集成到应用处理中，而不是作为独立层实现”。
+**DNS (Domain Name System)** giải quyết việc ánh xạ giữa Tên miền (Domain Name) và Địa chỉ IP.
 
-![RTP：实时传输协议概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/rtp-overview.png)
+DNS thường chạy trên UDP (cổng 53). Ưu tiên UDP vì gói tin DNS truy vấn và phản hồi thường nhỏ, không cần tốn chi phí bắt tay 3 bước của TCP. Khi gói phản hồi vượt quá dung lượng (hoặc khi Zone Transfer), DNS sẽ chuyển sang dùng TCP.
 
-RTP 主要用在语音通话、视频会议、直播等实时场景。它本身不保证可靠传输，也不保证按时到达，而是通过序列号、时间戳等信息帮助接收端进行排序、同步和播放控制。虽然也存在 RTP over TCP 的封装方式（如 RFC 4571），但更多用于穿越防火墙或兼容特定协议栈等特殊场景，实际实时音视频场景中 RTP 仍以 UDP 为主。
+Hiện nay còn có các giải pháp DNS bảo mật như **DoH (DNS over HTTPS)** và **DoT (DNS over TLS)** để tránh bị nhà mạng hay kẻ tấn công theo dõi/giả mạo truy vấn DNS.
 
-RTP 通常会和 RTCP 配合使用：
+## Tổng kết cổng các giao thức tầng ứng dụng phổ biến
 
-- **RTP**：负责传输实时音视频数据。
-- **RTCP（RTP Control Protocol）**：负责传输控制信息和统计信息，比如丢包率、延迟、抖动等。
+| Giao thức | Cổng mặc định | Giao thức tầng giao vận | Công dụng chính |
+| --- | ---: | --- | --- |
+| HTTP | 80 | TCP | Truy cập Web |
+| HTTPS | 443 | TCP / QUIC | Truy cập Web mã hóa |
+| WebSocket | 80 / 443 | TCP | Giao tiếp hai chiều thời gian thực |
+| SMTP | 25 / 465 / 587 | TCP | Gửi và chuyển tiếp Email |
+| POP3 | 110 / 995 | TCP | Nhận Email |
+| IMAP | 143 / 993 | TCP | Nhận và đồng bộ Email |
+| FTP | 20 / 21 | TCP | Truyền tệp tin |
+| SSH | 22 | TCP | Đăng nhập từ xa và truyền file an toàn |
+| Telnet | 23 | TCP | Đăng nhập từ xa văn bản thuần |
+| DNS | 53 | UDP / TCP | Phân giải tên miền |
+| RTP | Cổng động (chẵn), RTCP dùng cổng lẻ liền kề | UDP chủ yếu | Truyền tải âm thanh/video thời gian thực |
 
-在 WebRTC 中，RTP/RTCP 是实时音视频传输的重要基础。WebRTC 还会结合 SRTP 加密、拥塞控制、抖动缓冲、NACK、FEC 等机制，提升实时通信的安全性和质量。
+## Tài liệu tham khảo
 
-需要注意的是，RTP 本身不负责资源预留，也不保证实时传输质量。它提供的是实时媒体传输的基础能力，具体的质量控制需要依赖上层机制配合完成。
-
-## DNS：域名系统
-
-**DNS（Domain Name System，域名系统）** 用于解决域名和 IP 地址之间的映射问题。
-
-![DNS：域名系统概览](https://oss.javaguide.cn/github/javaguide/cs-basics/network/dns-overview.png)
-
-我们访问网站时，通常输入的是域名，例如：
-
-```text
-www.javaguide.cn
-```
-
-但网络通信实际需要的是 IP 地址。DNS 的作用就是把域名解析成对应的 IP 地址。
-
-DNS 通常使用 UDP，默认端口是 53。之所以优先使用 UDP，是因为大多数 DNS 查询和响应都比较小，不需要 TCP 三次握手，响应更快。
-
-在早期 DNS 规范中，UDP DNS 消息大小限制为 512 字节（不包含 IP 和 UDP 头）。如果响应过大，服务器会设置截断标志，客户端再通过 TCP 重试。
-
-后来 EDNS0 扩展了 DNS over UDP 的报文大小上限，使 DNS 能承载更大的响应，比如 DNSSEC 相关数据。但如果响应超过协商的 UDP 大小，或者发生区域传送（DNS 服务器之间同步整域数据，普通域名解析几乎不会触发），仍然会使用 TCP。
-
-现代网络中还出现了更安全的 DNS 方案，比如：
-
-- **DoH（DNS over HTTPS）**
-- **DoT（DNS over TLS）**
-
-它们的目的都是减少 DNS 明文查询带来的隐私和安全问题。
-
-## 常见应用层协议端口总结
-
-| 协议      |                          默认端口 | 传输层协议 | 主要用途               |
-| --------- | --------------------------------: | ---------- | ---------------------- |
-| HTTP      |                                80 | TCP        | Web 页面访问           |
-| HTTPS     |                               443 | TCP / QUIC | 加密 Web 访问          |
-| WebSocket |                          80 / 443 | TCP        | 双向实时通信           |
-| SMTP      |                    25 / 465 / 587 | TCP        | 邮件发送和转发         |
-| POP3      |                         110 / 995 | TCP        | 邮件接收               |
-| IMAP      |                         143 / 993 | TCP        | 邮件接收和同步         |
-| FTP       |                           20 / 21 | TCP        | 文件传输               |
-| SSH       |                                22 | TCP        | 安全远程登录和文件传输 |
-| Telnet    |                                23 | TCP        | 明文远程登录           |
-| DNS       |                                53 | UDP / TCP  | 域名解析               |
-| RTP       | 动态端口（偶数），RTCP 用相邻奇数 | UDP 为主   | 实时音视频传输         |
-
-这里 HTTPS 写成 TCP / QUIC，是因为传统 HTTPS 通常基于 TLS over TCP，而 HTTP/3 场景下会基于 QUIC。
-
-## 小结
-
-这篇文章只做了常见应用层协议的快速梳理，没有展开到协议报文和具体实现细节。
-
-复习时可以重点记住几个容易混淆的点：
-
-- HTTP 是应用层协议，HTTP/1.1 和 HTTP/2 通常基于 TCP，HTTP/3 基于 QUIC。
-- HTTP/1.1 通过 Keep-Alive 复用 TCP 连接，HTTP/2 在一个 TCP 连接上做多路复用，HTTP/3 基于 QUIC 缓解 TCP 队头阻塞。
-- WebSocket 通过 HTTP 升级建立连接，之后支持双向通信。
-- SMTP 负责邮件发送和服务器间转发，POP3/IMAP 负责用户收取邮件。
-- SMTP 常见端口包括 25、587、465，分别对应服务器间转发、客户端提交和隐式 TLS 提交等场景。
-- FTP 有主动模式和被动模式，实际生产环境中被动模式更常见。
-- FTP、SFTP、FTPS 不是一回事，FTP 明文传输，SFTP 基于 SSH，FTPS 基于 TLS。
-- Telnet 明文传输，不适合生产环境远程管理，实际更常用 SSH。
-- DNS 通常基于 UDP，但响应过大、发生截断、区域传送等场景下也会使用 TCP。
-- RTP 运行在 UDP 之上，按分层规则归入应用层，但职责更接近传输层；RTP 用偶数端口，配套 RTCP 用相邻奇数端口。
-
-## 参考
-
-- 《计算机网络：自顶向下方法》（第七版）
-- RTP 协议介绍：<https://mthli.xyz/rtp-introduction/>
-- RFC 6455：The WebSocket Protocol
-- RFC 9110：HTTP Semantics
-- RFC 8446：TLS 1.3
-- RFC 9000：QUIC
-- RFC 3550：RTP: A Transport Protocol for Real-Time Applications
-- RFC 4571：Framing Real-time Transport Protocol（RTP） and RTP Control Protocol（RTCP） Packets over Connection-Oriented Transport
-- RFC 6891：Extension Mechanisms for DNS (EDNS(0))
+- 《Computer Networking: A Top-Down Approach》
+- RFC 6455: The WebSocket Protocol
+- RFC 9110: HTTP Semantics
+- RFC 8446: TLS 1.3
+- RFC 9000: QUIC
+- RFC 3550: RTP: A Transport Protocol for Real-Time Applications
+- RFC 6891: Extension Mechanisms for DNS (EDNS(0))
 
 <!-- @include: @article-footer.snippet.md -->

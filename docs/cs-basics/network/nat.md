@@ -1,76 +1,72 @@
 ---
-title: NAT 协议详解（网络层）
-description: 解析 NAT 的地址转换与端口映射机制，结合 LAN/WAN 通信与转换表，理解家庭与企业网络的实践细节。
-category: 计算机基础
+title: Chi tiết giao thức NAT (Tầng mạng)
+description: Phân tích cơ chế chuyển đổi địa chỉ và ánh xạ cổng của NAT (NAPT), kết hợp truyền thông LAN/WAN và bảng chuyển đổi NAT Table để hiểu chi tiết thực tế trong mạng gia đình và doanh nghiệp.
+category: Cơ sở máy tính
 tag:
-  - 计算机网络
+  - Mạng máy tính
 head:
   - - meta
     - name: keywords
-      content: NAT,地址转换,端口映射,LAN,WAN,连接跟踪,DHCP
+      content: NAT, NAPT, Chuyển đổi địa chỉ, Ánh xạ cổng, LAN, WAN, Connection Tracking, DHCP
 ---
 
-很多设备在家用网络、公司内网里使用的都是私有 IP 地址，比如 `192.168.x.x`、`10.x.x.x`。这些地址不能直接在公网中路由，但内网设备依然可以访问互联网。
+Rất nhiều thiết bị trong mạng gia đình, mạng công ty đều sử dụng dải địa chỉ IP Private (IP riêng tư) như `192.168.x.x`, `10.x.x.x`, `172.16.x.x` đến `172.31.x.x`. Những địa chỉ này không thể định tuyến trực tiếp trên mạng Internet công cộng, nhưng các thiết bị nội bộ vẫn có thể lướt web bình thường.
 
-这背后通常就有 NAT 在工作。NAT 会在内网地址和公网地址之间做转换，让多个内网设备共享一个或少量公网 IP 对外通信。
+Phía sau điều kỳ diệu đó chính là **NAT (Network Address Translation)**. NAT thực hiện chuyển đổi giữa địa chỉ nội bộ (Private IP) và địa chỉ công cộng (Public IP), cho phép hàng trăm thiết bị nội bộ cùng chia sẻ một hoặc một số ít Public IP để giao tiếp ra bên ngoài.
 
-这篇文章主要回答几个问题：
+Bài viết này chủ yếu trả lời các câu hỏi:
 
-1. NAT 主要解决什么问题？
-2. NAT 转换表是如何记录内外网地址和端口映射的？
-3. 内网主机访问公网时，源 IP 和端口会发生什么变化？
-4. NAT 会带来哪些限制，比如外部主动访问内网主机为什么更麻烦？
+1. NAT chủ yếu giải quyết bài toán gì?
+2. Bảng chuyển đổi NAT (NAT Translation Table) ghi lại ánh xạ địa chỉ và cổng như thế nào?
+3. Khi máy nội bộ truy cập mạng ngoài, IP nguồn và Cổng nguồn thay đổi ra sao?
+4. NAT mang lại những hạn chế gì, tại sao mạng ngoài chủ động truy cập vào máy nội bộ lại khó khăn?
 
-## 应用场景
+## Bối cảnh và Tác dụng của NAT
 
-**NAT 协议（Network Address Translation）** 的应用场景如同它的名称——网络地址转换，应用于内部网到外部网的地址转换过程中。具体地说，在一个小的子网（局域网，Local Area Network，LAN）内，各主机使用的是同一个 LAN 下的 IP 地址，但在该 LAN 以外，在广域网（Wide Area Network，WAN）中，需要一个统一的 IP 地址来标识该 LAN 在整个 Internet 上的位置。
+Không gian địa chỉ IPv4 chỉ có $2^{32}$ địa chỉ (khoảng 4.3 tỷ), không đủ để cấp cho mỗi thiết bị trên toàn cầu một IP tĩnh công cộng duy nhất.
 
-这个场景其实不难理解。随着一个个小型办公室、家庭办公室（Small Office, Home Office, SOHO）的出现，为了管理这些 SOHO，一个个子网被设计出来，从而在整个 Internet 中的主机数量将非常庞大。如果每个主机都有一个“绝对唯一”的 IP 地址，那么 IPv4 地址的表达能力可能很快达到上限（$2^{32}$）。因此，实际上，SOHO 子网中的 IP 地址是“相对的”，这在一定程度上也缓解了 IPv4 地址的分配压力。
+Để giải quyết vấn đề cạn kiệt IPv4:
+- Bên trong mạng cục bộ (LAN), các thiết bị được cấp IP Private (do DHCP Server trên Router quản lý).
+- Router đóng vai trò Gateway kết nối giữa LAN và WAN (Internet), giao diện WAN của Router được cấp một địa chỉ Public IP duy nhất từ nhà mạng ISP.
+- Khi các thiết bị LAN gửi dữ liệu ra Internet, Router NAT sẽ thay thế IP Private nguồn bằng IP Public của Router, đồng thời gán một Port mới để phân biệt.
 
-SOHO 子网的“代理人”，也就是和外界的窗口，通常由路由器扮演。路由器的 LAN 一侧管理着一个小子网，而它的 WAN 接口才是真正参与到 Internet 中的接口，也就有一个“绝对唯一的地址”。NAT 协议，正是在 LAN 中的主机在与 LAN 外界通信时，起到了地址转换的关键作用。
+![Quy trình NAT chuyển đổi địa chỉ IP Private sang IP Public](https://oss.javaguide.cn/github/javaguide/cs-basics/network/nat-demo.png)
 
-## 细节
+## Nguyên lý hoạt động chi tiết (NAPT - Network Address Port Translation)
 
-![NAT 将内网私有地址转换为公网地址的过程](https://oss.javaguide.cn/github/javaguide/cs-basics/network/nat-demo.png)
+Giả sử trong mạng LAN `10.0.0.0/24`, máy `10.0.0.1` muốn gửi HTTP Request tới Web Server `128.119.40.186:80`:
 
-假设当前场景如上图。中间是一个路由器，它的右侧组织了一个 LAN，网络号为 `10.0.0/24`。LAN 侧接口的 IP 地址为 `10.0.0.4`，并且该子网内有至少三台主机，分别是 `10.0.0.1`、`10.0.0.2` 和 `10.0.0.3`。路由器的左侧连接的是 WAN，WAN 侧接口的 IP 地址为 `138.76.29.7`。
+### Chiều gửi đi (LAN -> WAN)
 
-首先，针对以上信息，我们有如下事实需要说明：
+1. Máy `10.0.0.1` chọn cổng nguồn ngẫu nhiên `3345`, gửi gói tin với `Src: 10.0.0.1:3345 -> Dest: 128.119.40.186:80` tới Router.
+2. Router NAT nhận gói tin tại cổng LAN (`10.0.0.4`):
+   - Router chọn một cổng Public rảnh rỗi trên giao diện WAN của mình, ví dụ `5001`.
+   - Router sửa lại Header của gói tin: thay `10.0.0.1:3345` thành `138.76.29.7:5001`.
+   - Router ghi một dòng vào **Bảng chuyển đổi NAT (NAT Table)**:
+     ```text
+     WAN Side: 138.76.29.7:5001  <--->  LAN Side: 10.0.0.1:3345
+     ```
+3. Router gửi gói tin đã sửa ra Internet tới Web Server `128.119.40.186:80`.
 
-1. 路由器右侧子网的网络地址为 `10.0.0.0/24`（网络前缀 24 位，主机号占 8 位），三台主机地址以及路由器的 LAN 侧接口地址，均由 DHCP 协议规定。而且，该 DHCP 运行在路由器内部（路由器自维护一个小 DHCP 服务器），从而为子网内提供 DHCP 服务。
-2. 路由器的 WAN 侧接口地址同样由 DHCP 协议规定，但该地址是路由器从 ISP（网络服务提供商）处获得，也就是该 DHCP 通常运行在路由器所在区域的 DHCP 服务器上。
+### Chiều nhận về (WAN -> LAN)
 
-现在，路由器内部还运行着 NAT 协议，从而为 LAN-WAN 间通信提供地址转换服务。为此，一个很重要的结构是 **NAT 转换表**。为了说明 NAT 的运行细节，假设有以下请求发生：
+1. Web Server xử lý xong, gửi gói tin Response với `Src: 128.119.40.186:80 -> Dest: 138.76.29.7:5001`.
+2. Router nhận được gói tin tại cổng WAN `138.76.29.7:5001`:
+   - Router tra cứu Bảng NAT, tìm thấy ánh xạ `138.76.29.7:5001 -> 10.0.0.1:3345`.
+   - Router sửa địa chỉ đích của gói tin thành `10.0.0.1:3345`.
+3. Router chuyển tiếp gói tin vào mạng LAN tới máy `10.0.0.1`.
 
-1. 主机 `10.0.0.1` 向 IP 地址为 `128.119.40.186` 的 Web 服务器（端口 80）发送了 HTTP 请求（如请求页面）。此时，主机 `10.0.0.1` 将随机指派一个端口，如 `3345`，作为本次请求的源端口号，将该请求发送到路由器中（目的地址将是 `128.119.40.186`，但会先到达 `10.0.0.4`）。
-2. `10.0.0.4` 即路由器的 LAN 接口收到 `10.0.0.1` 的请求。路由器将为该请求指派一个新的源端口号，如 `5001`，并将请求报文发送给 WAN 接口 `138.76.29.7`。同时，在 NAT 转换表中记录一条转换记录 **138.76.29.7:5001——10.0.0.1:3345**。
-3. 请求报文到达 WAN 接口，继续向目的主机 `128.119.40.186` 发送。
+![Quy trình chuyển đổi địa chỉ hai chiều của NAT](https://oss.javaguide.cn/github/javaguide/cs-basics/network/nat-demo2.png)
 
-之后，将会有如下响应发生：
+## Đánh giá và Tổng kết
 
-1. 主机 `128.119.40.186` 收到请求，构造响应报文，并将其发送给目的地 `138.76.29.7:5001`。
-2. 响应报文到达路由器的 WAN 接口。路由器查询 NAT 转换表，发现 `138.76.29.7:5001` 在转换表中有记录，从而将其目的地址和目的端口转换成为 `10.0.0.1:3345`，再发送到 `10.0.0.4` 上。
-3. 被转换的响应报文到达路由器的 LAN 接口，继而被转发至目的地 `10.0.0.1`。
+### Ưu điểm
+- Tiết kiệm địa chỉ IPv4 công cộng một cách hiệu quả.
+- Tăng cường an ninh mạng nội bộ: Bên ngoài Internet không thể nhìn thấy cấu trúc và địa chỉ IP thực của các máy bên trong mạng LAN.
 
-![LAN-WAN 间通信提供地址转换](https://oss.javaguide.cn/github/javaguide/cs-basics/network/nat-demo2.png)
-
-🐛 修正（参见：[issue#2009](https://github.com/Snailclimb/JavaGuide/issues/2009)）：上图第四步的 Dest 值应该为 `10.0.0.1:3345` 而不是~~`138.76.29.7:5001`~~，这里笔误了。
-
-## 划重点
-
-针对以上过程，有以下几个重点需要强调：
-
-1. 端口字段为 16 位，并不能推出一个 NAT 后面最多只能有约 65500 台主机。端口空间限制的是特定外部地址、传输协议、映射行为和映射生命周期下可同时维持的转换映射数量，而不是内网主机总数。一个主机可以创建多个映射，NAT 也可以使用多个公网地址。
-2. 对于目的服务器来说，从来不知道“到底是哪个主机给我发送的请求”，它只知道是来自 `138.76.29.7:5001` 的路由器转发的请求。因此，可以说，**路由器在 WAN 和 LAN 之间起到了屏蔽作用**，所有内部主机发送到外部的报文，都具有同一个 IP 地址（不同的端口号），所有外部发送到内部的报文，也都只有一个目的地（不同端口号），是经过了 NAT 转换后，外部报文才得以正确地送达内部主机。
-3. NAT 是否复用已有映射不能只看内网 IP。映射至少需要区分传输协议、内部 IP 和内部端口；是否还与远端地址和端口相关，取决于 NAT 的具体映射行为。只有报文与已有映射匹配时，NAT 才能复用相应的外部地址和端口。
-
-总结 NAT 协议的特点，有以下几点：
-
-1. NAT 协议通过对 WAN 屏蔽 LAN，有效地缓解了 IPv4 地址分配压力。
-2. LAN 主机 IP 地址的变更，无需通告 WAN。
-3. WAN 的 ISP 变更接口地址时，无需通告 LAN 内主机。
-4. NAT 会隐藏内部地址和拓扑；许多 NAT 设备的过滤行为还会使没有既有映射的外部流量难以直接到达内部主机。不过，决定哪些入站报文可以通过的是过滤策略，而不是地址转换本身。NAT 不能替代状态防火墙、访问控制和主机安全措施。
-
-然而，NAT 协议由于其独特性，存在着一些争议。比如，可能你已经注意到了，**NAT 协议在 LAN 以外，标识一个内部主机时，使用的是端口号，因为 IP 地址都是相同的**。这种将端口号作为主机寻址的行为，可能会引发一些误会。此外，路由器作为网络层的设备，修改了传输层的分组内容（修改了源 IP 地址和端口号），同样是不规范的行为。但是，尽管如此，NAT 协议作为 IPv4 时代的产物，极大地方便了一些本来棘手的问题，一直被沿用至今。
+### Hạn chế & Tranh cãi
+- **Vi phạm nguyên tắc phân tầng mạng**: Router là thiết bị Tầng 3 (Network Layer) nhưng lại can thiệp và sửa đổi Port của Tầng 4 (Transport Layer).
+- **Khó khăn cho giao tiếp ngang hàng (P2P)**: Các ứng dụng P2P (như BitTorrent, WebRTC, Game trực tuyến) cần các thiết bị kết nối trực tiếp với nhau. Khi cả hai máy đều nằm sau NAT, việc thiết lập kết nối đòi hỏi các kỹ thuật đục lỗ NAT phức tạp (NAT Traversal / STUN / TURN / ICE).
+- **Không thay thế hoàn toàn cho Firewall**: NAT chỉ ẩn địa chỉ chứ không thay thế được các chính sách kiểm soát truy cập và tường lửa kiểm tra trạng thái (Stateful Firewall).
 
 <!-- @include: @article-footer.snippet.md -->
