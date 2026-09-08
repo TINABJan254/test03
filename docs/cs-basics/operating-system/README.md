@@ -1,9 +1,9 @@
 ---
-title: 操作系统专题：进程线程、内存管理、文件系统、I/O 多路复用、Linux 与 Shell
-description: 操作系统面试与学习路线，涵盖进程线程、进程间通信、锁与同步机制、死锁、虚拟内存、零拷贝、I/O 多路复用、文件系统、Linux 基础、Shell 编程和常见操作系统面试题。
-category: 计算机基础
+title: Chuyên đề Hệ điều hành: Tiến trình luồng, Quản lý bộ nhớ, File System, I/O Multiplexing, Linux và Shell
+description: Lộ trình học tập và phỏng vấn Hệ điều hành, bao gồm Tiến trình & Luồng, Giao tiếp liên tiến trình (IPC), Khóa & Đồng bộ, Deadlock, Bộ nhớ ảo, Zero-Copy, I/O Multiplexing (select, poll, epoll), Hệ thống tệp tin, Linux cơ bản, Lập trình Shell và các câu hỏi phỏng vấn thường gặp.
+category: Cơ sở máy tính
 tag:
-  - 操作系统
+  - Hệ điều hành
   - Linux
   - Shell
 sidebar: false
@@ -13,85 +13,84 @@ sitemap:
 head:
   - - meta
     - name: keywords
-      content: 操作系统,操作系统面试题,进程,线程,进程间通信,IPC,锁与同步,互斥锁,信号量,条件变量,futex,死锁,内存管理,虚拟内存,零拷贝,I/O多路复用,select,poll,epoll,文件系统,Linux,Shell,后端面试
+      content: Hệ điều hành, Câu hỏi phỏng vấn Hệ điều hành, Tiến trình, Luồng, IPC, Khóa và đồng bộ, Mutex, Semaphore, Condition Variable, Futex, Deadlock, Quản lý bộ nhớ, Bộ nhớ ảo, Zero-Copy, I/O Multiplexing, select, poll, epoll, File System, Linux, Shell, Phỏng vấn Backend
 ---
 
-这份 **操作系统专题** 面向后端学习和面试复习，整理操作系统基础、进程线程、进程间通信、锁与同步、内存管理、虚拟内存、零拷贝、I/O 多路复用、文件系统、Linux 和 Shell 相关内容。
+**Chuyên đề Hệ điều hành** này hướng tới việc học tập và ôn tập phỏng vấn Backend, tổng hợp toàn diện các kiến thức nền tảng: Hệ điều hành cơ bản, Tiến trình & Luồng, Giao tiếp liên tiến trình (IPC), Khóa & Đồng bộ, Quản lý bộ nhớ, Bộ nhớ ảo, Zero-Copy, I/O Multiplexing, Hệ thống tệp tin, Linux và Shell.
 
-## 适合谁看
+## Phù hợp với ai
 
-- 正在系统学习操作系统基础的后端开发者。
-- 准备校招、社招、中大厂操作系统面试题的同学。
-- 对进程线程、死锁、内存管理、Linux 命令只会零散背诵的读者。
-- 想为 Java 并发、JVM、数据库、网络编程打底的工程师。
+- Các lập trình viên Backend đang học Hệ điều hành một cách có hệ thống.
+- Các bạn đang chuẩn bị cho các kỳ phỏng vấn Hệ điều hành của đợt tuyển dụng sinh viên (Campus), người có kinh nghiệm (Social), các công ty công nghệ lớn.
+- Những độc giả chỉ học vẹt rời rạc các định nghĩa về Tiến trình, Luồng, Deadlock, Quản lý bộ nhớ, Lệnh Linux.
+- Các kỹ sư muốn xây dựng nền tảng vững chắc cho Lập trình đa luồng (Java Concurrency), JVM, Cơ sở dữ liệu và Lập trình mạng.
 
-## 学习重点
+## Trọng tâm học tập
 
-- 操作系统负责管理 CPU、内存、文件、I/O 和进程，是理解上层软件运行机制的基础。
-- 进程、线程和进程间通信是并发编程、服务端性能和问题排查的基础概念。
-- 锁与同步、死锁、上下文切换、调度是面试高频点。
-- 内存管理、虚拟内存、分页、页面置换能帮助理解 JVM、数据库和缓存。
-- 零拷贝、I/O 多路复用能帮助理解 Kafka、RocketMQ、Redis、Nginx、Netty 等高性能组件。
-- Linux 和 Shell 是后端开发、部署、排障、自动化脚本的常用能力。
+- Hệ điều hành chịu trách nhiệm quản lý CPU, Bộ nhớ, File, I/O và Tiến trình, là nền tảng cốt lõi để hiểu cách phần mềm vận hành bên dưới.
+- Tiến trình, Luồng và Giao tiếp liên tiến trình (IPC) là các khái niệm gốc rễ của lập trình bất đồng bộ, hiệu năng máy chủ và điều tra sự cố.
+- Khóa & Đồng bộ, Deadlock, Chuyển đổi ngữ cảnh (Context Switch), Lập lịch CPU là các chủ đề phỏng vấn tần suất rất cao.
+- Quản lý bộ nhớ, Bộ nhớ ảo, Phân trang (Paging), Thay thế trang (Page Replacement) giúp hiểu sâu cơ chế của JVM, Cơ sở dữ liệu và Cache.
+- Zero-Copy, I/O Multiplexing (epoll) là chìa khóa để làm chủ các thành phần hiệu năng cao như Kafka, RocketMQ, Redis, Nginx, Netty.
+- Linux và Shell là kỹ năng thực chiến không thể thiếu trong phát triển Backend, triển khai ứng dụng, xử lý sự cố và tự động hóa.
 
-## 建议阅读顺序
+## Thứ tự đọc khuyến nghị
 
-1. [操作系统常见面试题总结（上）](./operating-system-basic-questions-01.md)：先建立操作系统基础、进程线程、死锁、内存管理的高频问题清单。
-2. [操作系统常见面试题总结（下）](./operating-system-basic-questions-02.md)：继续补齐文件系统、I/O、Linux 等问题。
-3. [进程与线程详解：区别、状态、通信、上下文切换与虚拟线程](./process-and-thread.md)：系统理解进程、线程、PCB/TCB、fork/exec/wait、线程模型和上下文切换。
-4. [中断、异常与系统调用详解：从内核入口到缺页异常](./interrupt-exception-syscall.md)：以 `read()` 为线索串起硬件中断、同步异常、系统调用、信号、缺页异常和线程切换。
-5. [CPU 调度与系统负载详解](./cpu-scheduling-and-load.md)：理解调度算法、CFS/EEVDF、load average、CPU 使用率及线上排查思路。
-6. [进程间通信（IPC）详解：管道、消息队列、共享内存、Socket 与 Binder](./ipc.md)：对比管道、消息队列、共享内存、信号量、Socket、Binder 等 IPC 方案。
-7. [操作系统锁与同步机制详解：mutex、semaphore、condition variable、spinlock 与 futex](./os-lock-and-sync.md)：理解临界区、互斥锁、信号量、条件变量、自旋锁和 futex 的职责边界。
-8. [死锁详解：四个必要条件、Java 死锁排查与数据库死锁处理](./dead-lock.md)：讲清死锁等待环、四个必要条件、Java 线程死锁排查和数据库事务重试。
-9. [操作系统内存管理详解：分页、分段、页面置换、Swap 与 OOM](./memory-management.md)：理解内存分配、碎片、页表、页面回收和 OOM。
-10. [虚拟内存详解：地址转换、TLB、缺页异常与页面置换](./virtual-memory.md)：把分页、页表、TLB、缺页异常和页面置换串起来。
-11. [操作系统文件系统详解：inode、VFS、Page Cache 与日志机制](./file-system.md)：理解文件、目录、inode、VFS、Page Cache 和日志恢复。
-12. [I/O 多路复用详解：select、poll、epoll 原理与区别](./io-multiplexing.md)：理解一个线程处理海量连接背后的内核机制。
-13. [零拷贝详解：mmap、sendfile 与 splice](./zero-copy.md)：搞清传统 I/O、mmap、sendfile、splice 的拷贝路径和适用场景。
-14. [Linux 基础知识总结](./linux-intro.md)：掌握目录结构、文件权限、常用命令和基础排障能力。
-15. [Shell 编程基础知识总结](./shell-intro.md)：学习变量、条件、循环、函数和常用脚本写法。
+1. [Tổng hợp câu hỏi phỏng vấn Hệ điều hành thường gặp (Phần 1)](./operating-system-basic-questions-01.md): Thiết lập danh sách câu hỏi tần suất cao về nền tảng OS, Tiến trình, Luồng, Deadlock, Quản lý bộ nhớ.
+2. [Tổng hợp câu hỏi phỏng vấn Hệ điều hành thường gặp (Phần 2)](./operating-system-basic-questions-02.md): Tiếp tục bổ sung File System, I/O, Linux.
+3. [Chi tiết Tiến trình và Luồng: Phân biệt, Trạng thái, Giao tiếp, Context Switch và Virtual Thread](./process-and-thread.md): Hiểu có hệ thống về Process, Thread, PCB/TCB, fork/exec/wait, mô hình luồng và Context Switch.
+4. [Chi tiết Ngắt, Ngoại lệ và System Call: Từ cửa ngõ Kernel đến Page Fault](./interrupt-exception-syscall.md): Lấy `read()` làm sợi dây xâu chuỗi ngắt phần cứng, ngoại lệ đồng bộ, system call, tín hiệu, page fault và chuyển đổi luồng.
+5. [Chi tiết Lập lịch CPU và Tải hệ thống (CPU Load)](./cpu-scheduling-and-load.md): Hiểu các thuật toán lập lịch, CFS/EEVDF, load average, CPU utilization và tư duy điều tra sự cố production.
+6. [Chi tiết Giao tiếp liên tiến trình (IPC): Pipe, Message Queue, Shared Memory, Socket và Binder](./ipc.md): So sánh các phương thức IPC phổ biến.
+7. [Chi tiết Khóa và Cơ chế đồng bộ trong OS: Mutex, Semaphore, Condition Variable, Spinlock và Futex](./os-lock-and-sync.md): Hiểu ranh giới trách nhiệm của Critical Section, Mutex, Semaphore, Spinlock, Futex.
+8. [Chi tiết Deadlock: Bốn điều kiện cần, Điều tra Deadlock Java và Xử lý Deadlock Database](./dead-lock.md): Làm rõ đồ thị phân bổ tài nguyên, 4 điều kiện cần của deadlock, công cụ dò tìm deadlock trong Java và retry transaction trong Database.
+9. [Chi tiết Quản lý bộ nhớ trong OS: Phân trang, Phân đoạn, Thay thế trang, Swap và OOM](./memory-management.md): Hiểu cấp phát bộ nhớ, phân mảnh, bảng trang, thu hồi trang và cơ chế OOM.
+10. [Chi tiết Bộ nhớ ảo: Chuyển đổi địa chỉ, TLB, Page Fault và Thay thế trang](./virtual-memory.md): Xâu chuỗi địa chỉ ảo, bảng trang, TLB, page fault và thuật toán thay thế trang.
+11. [Chi tiết Hệ thống tệp tin trong OS: Inode, VFS, Page Cache và Cơ chế ghi nhật ký (Journaling)](./file-system.md): Hiểu tệp, thư mục, inode, VFS, Page Cache, fsync và phục hồi dữ liệu.
+12. [Chi tiết I/O Multiplexing: Nguyên lý và sự khác biệt giữa select, poll, epoll](./io-multiplexing.md): Hiểu cơ chế nhân kernel xử lý hàng triệu kết nối đồng thời trên một luồng duy nhất.
+13. [Chi tiết Zero-Copy: mmap, sendfile và splice](./zero-copy.md): Làm rõ các bước sao chép dữ liệu và kịch bản ứng dụng trong Java NIO, Kafka, Netty.
+14. [Tổng hợp kiến thức Linux cơ bản](./linux-intro.md): Nắm vững cấu trúc thư mục, quyền tệp, các lệnh thông dụng và kỹ năng khắc phục sự cố.
+15. [Tổng hợp kiến thức Lập trình Shell cơ bản](./shell-intro.md): Học biến, điều kiện, vòng lặp, hàm và cách viết script tự động hóa.
 
-## 核心文章
+## Các bài viết cốt lõi
 
-- [操作系统常见面试题总结（上）](./operating-system-basic-questions-01.md)：覆盖操作系统基础、进程线程、死锁、内存管理等高频问题。
-- [操作系统常见面试题总结（下）](./operating-system-basic-questions-02.md)：继续整理文件系统、I/O、多路复用、Linux 等知识点。
-- [进程与线程详解：区别、状态、通信、上下文切换与虚拟线程](./process-and-thread.md)：讲清进程和线程的资源边界、状态转换、Linux 创建机制和 Java 虚拟线程。
-- [中断、异常与系统调用详解：从内核入口到缺页异常](./interrupt-exception-syscall.md)：讲清硬件中断、同步异常、系统调用、信号和缺页异常之间的关系。
-- [CPU 调度与系统负载详解](./cpu-scheduling-and-load.md)：讲清任务调度、CFS/EEVDF、load average、CPU 使用率和常用排查命令。
-- [进程间通信（IPC）详解：管道、消息队列、共享内存、Socket 与 Binder](./ipc.md)：讲清常见 IPC 方式的原理、优缺点和选型思路。
-- [操作系统锁与同步机制详解：mutex、semaphore、condition variable、spinlock 与 futex](./os-lock-and-sync.md)：讲清临界区、互斥锁、信号量、条件变量、自旋锁、futex、内存顺序和内核锁上下文。
-- [死锁详解：四个必要条件、Java 死锁排查与数据库死锁处理](./dead-lock.md)：讲清死锁形成条件、资源分配图、Java 排查工具、数据库死锁检测和应用层重试策略。
-- [操作系统内存管理详解：分页、分段、页面置换、Swap 与 OOM](./memory-management.md)：讲清 VSZ/RSS/PSS、连续分配、内存碎片、伙伴系统、页表、TLB、缺页异常、页面回收和 OOM。
-- [虚拟内存详解：地址转换、TLB、缺页异常与页面置换](./virtual-memory.md)：讲清虚拟地址、物理地址、分页、多级页表、TLB、缺页异常和页面置换算法。
-- [操作系统文件系统详解：inode、VFS、Page Cache 与日志机制](./file-system.md)：讲清文件、目录、inode、dentry、文件描述符、VFS、Page Cache、fsync 和日志机制。
-- [I/O 多路复用详解：select、poll、epoll 原理与区别](./io-multiplexing.md)：讲清网络 I/O 的两个阶段、五种 I/O 模型，以及 select、poll、epoll 的区别。
-- [零拷贝详解：mmap、sendfile 与 splice](./zero-copy.md)：讲清零拷贝到底省掉了什么，以及 Java NIO、Kafka、RocketMQ 中的典型应用。
-- [Linux 基础知识总结](./linux-intro.md)：讲解 Linux 目录树、文件权限、常用命令、用户和进程管理。
-- [Shell 编程基础知识总结](./shell-intro.md)：讲解 Shell 变量、条件判断、循环、函数、文本处理和脚本实践。
+- [Tổng hợp câu hỏi phỏng vấn Hệ điều hành thường gặp (Phần 1)](./operating-system-basic-questions-01.md): Bao quát nền tảng OS, tiến trình, luồng, deadlock, quản lý bộ nhớ.
+- [Tổng hợp câu hỏi phỏng vấn Hệ điều hành thường gặp (Phần 2)](./operating-system-basic-questions-02.md): Bao quát hệ thống tệp tin, I/O, I/O multiplexing, Linux.
+- [Chi tiết Tiến trình và Luồng: Phân biệt, Trạng thái, Giao tiếp, Context Switch và Virtual Thread](./process-and-thread.md): Làm rõ ranh giới tài nguyên, chuyển đổi trạng thái, cơ chế tạo tiến trình trong Linux và Virtual Thread của Java.
+- [Chi tiết Ngắt, Ngoại lệ và System Call: Từ cửa ngõ Kernel đến Page Fault](./interrupt-exception-syscall.md): Làm rõ mối quan hệ giữa ngắt phần cứng, ngoại lệ đồng bộ, system call, tín hiệu và page fault.
+- [Chi tiết Lập lịch CPU và Tải hệ thống](./cpu-scheduling-and-load.md): Làm rõ lập lịch tác vụ, CFS/EEVDF, load average, CPU utilization và các lệnh điều tra sự cố.
+- [Chi tiết Giao tiếp liên tiến trình (IPC)](./ipc.md): Nguyên lý, ưu nhược điểm và tiêu chí lựa chọn các phương thức IPC.
+- [Chi tiết Khóa và Cơ chế đồng bộ trong OS](./os-lock-and-sync.md): Critical Section, Mutex, Semaphore, Condition Variable, Spinlock, Futex, Memory Ordering.
+- [Chi tiết Deadlock](./dead-lock.md): Điều kiện hình thành deadlock, đồ thị tài nguyên, công cụ phân tích trong Java, deadlock trong Database và chiến lược retry.
+- [Chi tiết Quản lý bộ nhớ trong OS](./memory-management.md): VSZ/RSS/PSS, cấp phát liên tục, phân mảnh bộ nhớ, Buddy System, bảng trang, TLB, page fault, thu hồi trang và OOM.
+- [Chi tiết Bộ nhớ ảo](./virtual-memory.md): Địa chỉ ảo, địa chỉ vật lý, phân trang, bảng trang đa cấp, TLB, page fault và thuật toán thay thế trang (LRU, FIFO, Clock).
+- [Chi tiết Hệ thống tệp tin trong OS](./file-system.md): File, thư mục, Inode, Dentry, File Descriptor, VFS, Page Cache, fsync và cơ chế Journaling.
+- [Chi tiết I/O Multiplexing: select, poll, epoll](./io-multiplexing.md): Hai giai đoạn của Network I/O, 5 mô hình I/O và sự khác biệt giữa select, poll, epoll (LT vs ET).
+- [Chi tiết Zero-Copy: mmap, sendfile và splice](./zero-copy.md): Zero-Copy tiết kiệm những thao tác sao chép nào và ứng dụng trong Java NIO, Kafka, RocketMQ.
+- [Tổng hợp kiến thức Linux cơ bản](./linux-intro.md): Cây thư mục Linux, quyền tệp (chmod/chown), các lệnh thông dụng, quản lý user và tiến trình.
+- [Tổng hợp kiến thức Lập trình Shell cơ bản](./shell-intro.md): Biến Shell, câu lệnh điều kiện, vòng lặp, hàm, xử lý văn bản (grep, sed, awk) và script thực chiến.
 
-## 高频问题
+## Câu hỏi tần suất cao
 
-- 进程和线程有什么区别？线程之间共享哪些资源？
-- 进程间通信有哪些方式？各自适合什么场景？
-- 什么是上下文切换？频繁上下文切换有什么影响？
-- mutex、semaphore、condition variable、spinlock 和 futex 分别解决什么问题？
-- 死锁产生的必要条件是什么？Java 和数据库里如何排查死锁？
-- 虚拟内存是什么？分页和分段有什么区别？
-- TLB、缺页异常和页面置换分别解决什么问题？
-- 页面置换算法有哪些？缺页异常是怎么回事？
-- 零拷贝为什么快？mmap、sendfile、splice 有什么区别？
-- 文件系统 inode、硬链接、软链接分别是什么？
-- select、poll、epoll 有什么区别？
-- Linux 文件权限如何理解？常用排障命令有哪些？
-- Shell 脚本适合解决哪些自动化问题？
+- Tiến trình và Luồng khác nhau như thế nào? Các luồng trong cùng tiến trình chia sẻ những tài nguyên gì?
+- Có những phương thức giao tiếp liên tiến trình (IPC) nào? Mỗi phương thức phù hợp với kịch bản nào?
+- Context Switch (Chuyển đổi ngữ cảnh) là gì? Context Switch quá thường xuyên gây ảnh hưởng gì?
+- Mutex, Semaphore, Condition Variable, Spinlock và Futex lần lượt giải quyết những bài toán nào?
+- 4 điều kiện cần để hình thành Deadlock là gì? Cách điều tra và xử lý Deadlock trong Java và Database?
+- Bộ nhớ ảo (Virtual Memory) là gì? Phân trang (Paging) và Phân đoạn (Segmentation) khác nhau ra sao?
+- TLB, Page Fault và Thay thế trang lần lượt giải quyết bài toán gì?
+- Zero-Copy tại sao lại nhanh? Phân biệt `mmap`, `sendfile` và `splice`?
+- Inode, Hard Link và Soft Link trong File System là gì?
+- Sự khác biệt cốt lõi giữa `select`, `poll` và `epoll` là gì? (Cơ chế `epoll` giải quyết điểm nghẽn C10K như thế nào?)
+- Hiểu thế nào về quyền tệp tin trong Linux? Các lệnh điều tra sự cố CPU/RAM/I/O thông dụng?
+- Shell Script phù hợp để giải quyết những tác vụ tự động hóa nào?
 
-## 相关专题
+## Chuyên đề liên quan
 
-- [计算机基础知识体系](../)
-- [计算机网络专题](../network/)
-- [数据结构专题](../data-structure/)
-- [Java 并发编程](../../java/concurrent/java-concurrent-questions-01.md)
-- [JVM 内存区域详解](../../java/jvm/memory-area.md)
+- [Hệ thống kiến thức Cơ sở máy tính](../)
+- [Chuyên đề Mạng máy tính](../network/)
+- [Chuyên đề Cấu trúc dữ liệu](../data-structure/)
+- [Lập trình đa luồng trong Java (Java Concurrency)](../../java/concurrent/java-concurrent-questions-01.md)
+- [Chi tiết các vùng nhớ trong JVM (JVM Memory Area)](../../java/jvm/memory-area.md)
 
 <!-- @include: @article-footer.snippet.md -->
