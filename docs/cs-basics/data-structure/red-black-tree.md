@@ -1,117 +1,93 @@
 ---
-title: 红黑树详解（性质、旋转、应用）
-description: 深入讲解红黑树的五大性质与旋转调整过程，理解自平衡机制及在标准库与索引结构中的应用。
-category: 计算机基础
+title: Chi tiết Cây đỏ đen (Red-Black Tree: Tính chất, Phép quay và Ứng dụng)
+description: Phân tích chuyên sâu về 5 tính chất cốt lõi của Cây đỏ đen (Red-Black Tree), các thao tác đổi màu, phép quay trái/quay phải, cơ chế tự cân bằng và ứng dụng trong Java Collections (TreeMap, HashMap).
+category: Cơ sở máy tính
 tag:
-  - 数据结构
+  - Cấu trúc dữ liệu
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 红黑树,自平衡,旋转,插入删除,性质,黑高,时间复杂度
+      content: Cây đỏ đen, Red-Black Tree, Tự cân bằng, Phép quay, Phép quay trái, Phép quay phải, Đổi màu, Chiều cao đen, Black Height, TreeMap, HashMap
 ---
 
-# 红黑树
+# Cây đỏ đen (Red-Black Tree)
 
-## 红黑树介绍
+## 1. Giới thiệu Cây đỏ đen
 
-红黑树（Red Black Tree）是一种自平衡二叉查找树。它是在 1972 年由 Rudolf Bayer 发明的，当时被称为平衡二叉 B 树（symmetric binary B-trees）。后来，在 1978 年被 Leo J. Guibas 和 Robert Sedgewick 修改为如今的“红黑树”。
+**Cây đỏ đen (Red-Black Tree)** là một dạng Cây tìm kiếm nhị phân tự cân bằng (Self-balancing Binary Search Tree). Cấu trúc này được phát minh vào năm 1972 bởi Rudolf Bayer (với tên gọi ban đầu là *Symmetric Binary B-Tree*), và sau đó được hoàn thiện, đặt tên là "Cây đỏ đen" vào năm 1978 bởi Leo J. Guibas và Robert Sedgewick.
 
-由于其自平衡的特性，保证了最坏情形下在 O(logn) 时间复杂度内完成查找、增加、删除等操作，性能表现稳定。
+Nhờ đặc tính tự cân bằng, Cây đỏ đen đảm bảo rằng trong trường hợp xấu nhất, các thao tác tìm kiếm, chèn và xóa đều được hoàn thành trong thời gian **$O(\log n)$**, mang lại hiệu năng vận hành vô cùng ổn định.
 
-在 JDK 中，`TreeMap`、`TreeSet` 以及 JDK1.8 的 `HashMap` 底层都用到了红黑树。
+Trong hệ sinh thái JDK, `TreeMap`, `TreeSet` và cơ chế Treeify của `HashMap` (từ JDK 1.8 trở đi) đều sử dụng Cây đỏ đen bên dưới.
 
-## 为什么需要红黑树？
+---
 
-红黑树的诞生就是为了解决二叉查找树的缺陷。
+## 2. Tại sao chúng ta cần Cây đỏ đen?
 
-二叉查找树是一种基于比较的数据结构，它的每个节点都有一个键值，而且左子节点的键值小于父节点的键值，右子节点的键值大于父节点的键值。这样的结构可以方便地进行查找、插入和删除操作，因为只需要比较节点的键值就可以确定目标节点的位置。但是，二叉查找树有一个很大的问题，就是它的形状取决于节点插入的顺序。如果节点是按照升序或降序的方式插入的，那么二叉查找树就会退化成一个线性结构，也就是一个链表。这样的情况下，二叉查找树的性能就会大大降低，时间复杂度就会从 O(logn) 变为 O(n)。
+Sự ra đời của Cây đỏ đen nhằm giải quyết triệt để khuyết tật chí mạng của **Cây tìm kiếm nhị phân thông thường (BST)**.
 
-红黑树的诞生就是为了解决二叉查找树的缺陷，因为二叉查找树在某些情况下会退化成一个线性结构。
+Trong BST thông thường, hình dạng của cây phụ thuộc hoàn toàn vào thứ tự chèn dữ liệu:
+- Nếu dữ liệu được chèn ngẫu nhiên, cây phân nhánh cân đối và đạt tốc độ $O(\log n)$.
+- Nếu dữ liệu được chèn theo thứ tự tăng dần hoặc giảm dần, cây sẽ bị **suy thoái hoàn toàn thành một danh sách liên kết đơn (Skewed Tree)**, khiến độ phức tạp của mọi thao tác tìm kiếm/chèn/xóa tụt dốc từ $O(\log n)$ xuống $O(n)$.
 
-## 红黑树特点
+Cây đỏ đen ra đời để loại bỏ khả năng suy thoái này, đảm bảo chiều cao của cây luôn được khống chế ở mức không vượt quá $2 \log_2(n + 1)$.
 
-1. 每个节点非红即黑。
-2. 根节点总是黑色的。
-3. 每个空子链接都视为黑色的 NIL 叶节点。
-4. 如果节点是红色的，则它的子节点必须是黑色的，也就是不会出现连续的红色节点。
-5. 从任意节点到其所有后代 NIL 节点的每条路径，都包含相同数量的黑色节点，即具有相同的黑高。
+---
 
-在红黑树与 2-3 树的对应关系中，一个黑节点和与其相连的红节点可以共同表示一个多键节点。这只是一种结构映射，红黑树节点本身始终至多有两个子节点。
+## 3. Năm tính chất cốt lõi của Cây đỏ đen
 
-正是这些特点才保证了红黑树的平衡，让红黑树的高度不会超过 2log(n+1)。
+Một Cây tìm kiếm nhị phân được gọi là Cây đỏ đen khi và chỉ khi nó thỏa mãn đầy đủ **5 quy tắc bất biến** sau:
 
-## 红黑树数据结构
+1. **Mọi Node đều chỉ có một trong hai màu: Đỏ (RED) hoặc Đen (BLACK).**
+2. **Node Gốc (Root) luôn luôn có màu ĐEN.**
+3. **Mọi Node lá rỗng (NIL / Null leaf) đều được coi là Node ĐEN.**
+4. **Nếu một Node có màu ĐỎ thì cả hai Node con của nó bắt buộc phải có màu ĐEN** (Nói cách khác: **Không bao giờ xuất hiện hai Node màu đỏ liền kề nhau** trên cùng một nhánh).
+5. **Với mọi Node bất kỳ, mọi đường đi đơn từ Node đó xuống các Node lá NIL hậu duệ đều chứa số lượng Node ĐEN bằng nhau** (Tính chất này gọi là **Chiều cao đen đồng nhất - Black Height**).
 
-AVL 树和红黑树都是自平衡二叉搜索树，2-3 树则是多路搜索树。红黑树可以与 2-3 树或 2-3-4 树建立结构对应，但它们不能统称为 B 树。相比 AVL 树，红黑树的平衡条件更宽松，它通过颜色规则和黑高约束限制树高。
+Chính sự kết hợp của Tính chất 4 (không có 2 đỏ liên tiếp) và Tính chất 5 (chiều cao đen bằng nhau) đã ép cho đường đi dài nhất từ gốc đến lá không bao giờ dài quá gấp đôi đường đi ngắn nhất, giữ cho cây luôn đạt trạng thái **Cân bằng gần đúng**.
 
-## 红黑树结构实现
+---
+
+## 4. Cấu trúc dữ liệu và Triển khai Node
 
 ```java
 public class Node {
-
-    public Class<?> clazz;
     public Integer value;
     public Node parent;
     public Node left;
     public Node right;
 
-    // AVL 树所需属性
-    public int height;
-    // 红黑树所需属性
-    public Color color = Color.RED;
-
+    // Thuộc tính màu sắc của Cây đỏ đen
+    public Color color = Color.RED; // Node mới chèn vào mặc định là màu ĐỎ
 }
 ```
 
-### 1. 左倾染色
+---
 
-![红黑树左倾染色示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/red-black-tree-1.png)
+## 5. Các thao tác tự cân bằng: Đổi màu và Phép quay
 
-- 染色时根据当前节点的爷爷节点，找到当前节点的叔叔节点。
-- 再把父节点染黑、叔叔节点染黑，爷爷节点染红。但爷爷节点染红是临时的，当平衡树高操作后会把根节点染黑。
+Khi chèn hoặc xóa node, các quy tắc trên có thể bị vi phạm. Cây đỏ đen tự khôi phục lại trạng thái cân bằng thông qua 2 thao tác:
 
-### 2. 右倾染色
+### 1. Đổi màu (Coloring / Recoloring)
+Đổi màu các node liên quan (Đỏ $\leftrightarrow$ Đen) để phân phối lại chiều cao đen mà không làm thay đổi cấu trúc hình học của cây.
 
-![红黑树右倾染色示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/red-black-tree-2.png)
+### 2. Phép quay (Rotations)
+Thay đổi cấu trúc liên kết con trỏ giữa các node để giảm bớt chiều cao của nhánh bị lệch:
+- **Quay trái (Left Rotation)**: Nâng node con bên phải lên làm cha, hạ node hiện tại xuống làm con bên trái.
+- **Quay phải (Right Rotation)**: Nâng node con bên trái lên làm cha, hạ node hiện tại xuống làm con bên phải.
 
-### 3. 左旋调衡
+![Cây đỏ đen minh họa phép quay và đổi màu](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/red-black-tree-3.png)
 
-#### 3.1 一次左旋
+---
 
-![红黑树一次左旋调衡示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/red-black-tree-3.png)
+## So sánh: AVL Tree vs Cây đỏ đen (Red-Black Tree)
 
-#### 3.2 右旋 + 左旋
-
-![红黑树右旋加左旋调衡示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/red-black-tree-4.png)
-
-### 4. 右旋调衡
-
-#### 4.1 一次右旋
-
-![红黑树一次右旋调衡示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/red-black-tree-5.png)
-
-#### 4.2 左旋 + 右旋
-
-![红黑树左旋加右旋调衡示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/red-black-tree-6.png)
-
-## 面试复盘重点
-
-红黑树面试一般不会要求完整手写插入删除修复，更常见的是让你说清性质、为什么近似平衡、和 AVL 树有什么区别、Java 里哪里用到了。
-
-| 对比点   | AVL 树             | 红黑树                               |
-| -------- | ------------------ | ------------------------------------ |
-| 平衡要求 | 更严格             | 相对宽松                             |
-| 查询性能 | 更稳定             | 也能保持 `O(logn)`                   |
-| 插入删除 | 旋转调整可能更多   | 调整次数通常更少                     |
-| 常见应用 | 读多写少的搜索结构 | `TreeMap`、`TreeSet`、`HashMap` 树化 |
-
-面试回答可以按这个顺序组织：
-
-1. 普通二叉搜索树在有序插入时会退化成链表。
-2. 红黑树通过颜色规则限制树高，保证查询、插入、删除仍然是 `O(logn)`。
-3. 它不是完全平衡，而是近似平衡，所以插入删除时调整成本比 AVL 树更低。
-4. Java 中 `TreeMap`、`TreeSet` 基于红黑树，JDK 8 后 `HashMap` 链表过长时也会树化为红黑树。
-
-`HashMap` 树化还要满足容量条件，并不是链表长度到阈值就一定树化。这个细节在 Java 集合面试里经常被追问。
+| Tiêu chí so sánh | AVL Tree | Cây đỏ đen (Red-Black Tree) |
+| :--- | :--- | :--- |
+| **Mức độ cân bằng** | Cân bằng nghiêm ngặt ($|h_L - h_R| \le 1$) | Cân bằng gần đúng ($h_{max} \le 2 h_{min}$) |
+| **Hiệu suất tìm kiếm** | Nhanh hơn một chút vì cây phẳng hơn | Rất nhanh ($O(\log n)$) |
+| **Chi phí Chèn / Xóa** | Thường xuyên phải thực hiện nhiều phép quay phức tạp | Số lần xoay ít hơn (tối đa 2 lần xoay khi chèn, 3 lần khi xóa) |
+| **Ứng dụng tối ưu** | Các hệ thống **Đọc nhiều, Ghi ít** | Các cấu trúc dữ liệu tổng quát trong RAM (**Đọc/Ghi hỗn hợp**) như `TreeMap`, `HashMap` |
 
 <!-- @include: @article-footer.snippet.md -->

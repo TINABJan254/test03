@@ -1,43 +1,43 @@
 ---
-title: 回溯算法面试题总结：组合、排列、子集、剪枝与 Java 模板
-description: 回溯算法面试题总结，讲解回溯题型识别、组合模板、排列模板、子集模板、去重剪枝、复杂度分析和 LeetCode 高频题。
-category: 计算机基础
+title: "Tổng hợp bài toán phỏng vấn thuật toán Backtracking: Tổ hợp, Hoán vị, Tập con, Cắt tỉa nhánh và Java template"
+description: "Tổng hợp bài toán phỏng vấn thuật toán Backtracking, giải thích nhận diện dạng bài toán Backtracking, template tổ hợp, template hoán vị, template tập con, cắt tỉa loại bỏ trùng lặp, phân tích độ phức tạp và các bài toán LeetCode tần suất cao."
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 回溯算法,回溯模板,组合,排列,子集,N皇后,剪枝,Java回溯,LeetCode回溯,算法面试题
+      content: Thuật toán Backtracking,Backtracking template,Tổ hợp,Hoán vị,Tập con,N-Queens,Cắt tỉa nhánh,Java Backtracking,LeetCode Backtracking,Bài toán phỏng vấn thuật toán
 ---
 
-回溯题的特点很明显：题目让你找所有方案、所有路径、所有组合，或者在一堆选择里试探。它和 DFS 很像，区别在于回溯更强调“选择 -> 递归 -> 撤销选择”。
+Đặc điểm của các bài toán Backtracking (Quay lui) rất rõ ràng: Đề bài yêu cầu bạn tìm tất cả các phương án, tất cả các đường đi, tất cả các tổ hợp, hoặc thử nghiệm từng bước trong một tập hợp các lựa chọn. Nó rất giống với DFS, điểm khác biệt là Backtracking nhấn mạnh hơn vào chu trình "Đưa ra lựa chọn -> Đệ quy -> Thu hồi lựa chọn (Backtrack)".
 
-面试里写回溯，最重要的是先说清递归函数的含义。函数含义稳了，参数、结束条件和撤销选择就不容易乱。
+Khi viết Backtracking trong phỏng vấn, điều quan trọng nhất là nêu rõ ý nghĩa của hàm đệ quy trước. Khi ý nghĩa hàm đã rõ ràng, các tham số, điều kiện dừng và bước thu hồi lựa chọn sẽ không bị nhầm lẫn.
 
-## 面试考察重点
+## Trọng tâm khảo sát trong phỏng vấn
 
-- 能写组合、排列、子集三类模板。
-- 能解释 `path`、`startIndex`、`used` 的作用。
-- 能根据题目判断是否需要去重。
-- 能做简单剪枝，避免无效搜索。
-- 能说清复杂度和结果规模有关。
+- Viết thành thạo 3 bộ template: Tổ hợp (Combinations), Hoán vị (Permutations), Tập con (Subsets).
+- Giải thích được vai trò của `path`, `startIndex`, `used`.
+- Phán đoán chính xác bài toán có cần loại bỏ trùng lặp (deduplication) hay không.
+- Thực hiện cắt tỉa nhánh (pruning) cơ bản để tránh tìm kiếm vô ích.
+- Nêu rõ độ phức tạp thuật toán gắn liền với quy mô kết quả sinh ra.
 
-## 回溯题怎么想？
+## Tư duy giải bài toán Backtracking như thế nào?
 
-回溯题可以先画成一棵“选择树”。树上的每一层代表一次选择，根节点代表还没选，叶子节点代表一个完整方案。
+Bài toán Backtracking có thể vẽ thành một "Cây lựa chọn" (Decision Tree). Mỗi tầng trên cây đại diện cho một lần lựa chọn, node gốc đại diện cho trạng thái chưa chọn gì, các node lá đại diện cho một phương án hoàn chỉnh.
 
-写代码前先回答 4 个问题：
+Trước khi viết code, hãy trả lời 4 câu hỏi:
 
-1. 路径是什么？通常是已经选择的元素，代码里叫 `path`。
-2. 选择列表是什么？当前还能选哪些元素。
-3. 结束条件是什么？什么时候把 `path` 放进答案。
-4. 是否需要剪枝？哪些选择一定不会得到合法答案。
+1. Đường đi (path) là gì? Thường là các phần tử đã được chọn, trong code thường đặt tên là `path`.
+2. Danh sách lựa chọn (choices) là gì? Những phần tử nào hiện tại vẫn có thể chọn tiếp.
+3. Điều kiện kết thúc là gì? Khi nào thì đưa `path` vào danh sách kết quả (`ans`).
+4. Có cần cắt tỉa nhánh không? Những lựa chọn nào chắc chắn không thể tạo ra kết quả hợp lệ.
 
-回溯模板里的“撤销选择”不是形式主义。因为 `path` 是复用的，当前分支试完后必须还原现场，给下一个分支使用。
+Bước "Thu hồi lựa chọn" trong template Backtracking không phải là thủ tục hình thức. Vì đối tượng `path` được tái sử dụng trong suốt quá trình đệ quy, sau khi một nhánh duyệt xong, bắt buộc phải hoàn trả hiện trường (undo choice) để nhánh tiếp theo có thể sử dụng.
 
-## 组合模板
+## Template Tổ hợp (Combinations)
 
-组合不关心顺序，通常用 `startIndex` 控制下一层从哪里开始：
+Tổ hợp không quan tâm đến thứ tự, thường dùng `startIndex` để kiểm soát tầng tiếp theo bắt đầu chọn từ vị trí nào:
 
 ```java
 List<List<Integer>> combine(int n, int k) {
@@ -59,9 +59,9 @@ void backtrack(int start, int n, int k, List<Integer> path, List<List<Integer>> 
 }
 ```
 
-组合问题不关心顺序，所以 `[1, 2]` 和 `[2, 1]` 是同一个答案。`start` 的作用就是保证后续只能选当前位置之后的数字，避免重复。
+Bài toán tổ hợp không quan tâm đến thứ tự, vì vậy `[1, 2]` và `[2, 1]` là cùng một đáp án. Vai trò của `start` là đảm bảo các bước tiếp theo chỉ được chọn các số đứng sau vị trí hiện tại, tránh bị trùng lặp.
 
-如果要从 `1..n` 里选 `k` 个数，还可以剪枝：
+Nếu muốn chọn `k` số từ tập hợp `1..n`, ta còn có thể cắt tỉa nhánh:
 
 ```java
 for (int i = start; i <= n - (k - path.size()) + 1; i++) {
@@ -69,11 +69,11 @@ for (int i = start; i <= n - (k - path.size()) + 1; i++) {
 }
 ```
 
-含义是：如果从 `i` 开始，剩余数字数量已经不够凑满 `k` 个，就没必要继续枚举。
+Ý nghĩa là: Nếu bắt đầu từ `i`, số lượng phần tử còn lại trong dãy không còn đủ để ghép thành `k` phần tử nữa, thì không cần tiếp tục duyệt vòng lặp `for`.
 
-## 排列模板
+## Template Hoán vị (Permutations)
 
-排列关心顺序，通常用 `used` 标记元素是否已经被选过：
+Hoán vị quan tâm đến thứ tự, thường dùng mảng đánh dấu `used` để ghi nhận xem phần tử đã được chọn hay chưa:
 
 ```java
 List<List<Integer>> permute(int[] nums) {
@@ -101,9 +101,9 @@ void backtrack(int[] nums, boolean[] used, List<Integer> path, List<List<Integer
 }
 ```
 
-排列问题关心顺序，所以每一层都可以从所有数字里选，只是不能重复使用同一个数字。`used[i]` 表示 `nums[i]` 是否已经在当前路径里。
+Bài toán hoán vị quan tâm đến thứ tự, vì vậy mỗi tầng đều có thể chọn từ tất cả các số, chỉ là không được dùng lặp lại cùng một số đã chọn trước đó. `used[i]` biểu thị phần tử `nums[i]` đã nằm trong đường đi hiện tại hay chưa.
 
-如果数组里有重复数字，排列去重要比组合更容易写错。通常先排序，然后在同一层跳过“前一个相同数字还没被使用”的情况：
+Nếu mảng đầu vào chứa các phần tử trùng lặp, việc loại bỏ trùng lặp trong hoán vị sẽ dễ sai hơn tổ hợp. Cách chuẩn là sắp xếp mảng trước, sau đó ở cùng một tầng, bỏ qua trường hợp "phần tử trùng lặp đứng trước chưa được sử dụng":
 
 ```java
 if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
@@ -111,11 +111,11 @@ if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
 }
 ```
 
-这句的作用是固定重复数字在同一层的选择顺序，避免生成重复排列。
+Câu lệnh này có tác dụng cố định thứ tự lựa chọn của các phần tử trùng lặp trên cùng một tầng, tránh sinh ra các hoán vị giống nhau.
 
-## 子集模板
+## Template Tập con (Subsets)
 
-子集问题通常每个节点都是一个答案：
+Với bài toán tập con, thông thường mỗi node trên cây lựa chọn đều là một đáp án hợp lệ:
 
 ```java
 List<List<Integer>> subsets(int[] nums) {
@@ -134,9 +134,9 @@ void backtrack(int start, int[] nums, List<Integer> path, List<List<Integer>> an
 }
 ```
 
-子集问题和组合问题很像，但它不是只在固定长度时收集答案，而是每到一个节点都收集一次。因为任何长度的路径都可以是一个子集。
+Bài toán tập con rất giống bài toán tổ hợp, nhưng nó không chỉ thu thập đáp án khi đạt độ dài cố định, mà cứ mỗi khi duyệt đến một node là thu thập kết quả một lần. Bởi vì đường đi với bất kỳ độ dài nào cũng là một tập con hợp lệ.
 
-如果题目要求去重，比如输入 `[1, 2, 2]`，仍然是先排序，再跳过同一层重复元素：
+Nếu đề bài yêu cầu loại bỏ trùng lặp, ví dụ mảng đầu vào là `[1, 2, 2]`, ta vẫn sắp xếp mảng trước, sau đó bỏ qua các phần tử trùng lặp trên cùng một tầng:
 
 ```java
 if (i > start && nums[i] == nums[i - 1]) {
@@ -144,61 +144,61 @@ if (i > start && nums[i] == nums[i - 1]) {
 }
 ```
 
-## 去重怎么做？
+## Khử trùng lặp như thế nào?
 
-如果输入有重复元素，通常先排序，再根据题型选择去重策略：
+Nếu đầu vào chứa các phần tử trùng lặp, thông thường ta sắp xếp trước, sau đó chọn chiến lược khử trùng lặp tùy theo dạng bài:
 
-- 子集、组合这类按下标向后选择的题，跳过同一层重复元素，例如 `i > start && nums[i] == nums[i - 1]`。
-- 全排列这类每层都可能从头扫描的题，通常还要结合 `used[]`，避免同一个位置被重复使用。
-- 去重判断要区分“同一层重复选择”和“同一路径重复使用”。前者会产生重复答案，后者可能正是题目允许的选择。
+- Với dạng bài chọn tịnh tiến theo chỉ số (chẳng hạn như Subsets, Combinations), bỏ qua phần tử trùng lặp trên cùng một tầng, ví dụ: `i > start && nums[i] == nums[i - 1]`.
+- Với dạng bài hoán vị (Permutations) mà mỗi tầng đều có thể quét từ đầu mảng, thường phải kết hợp thêm `used[]` để tránh một vị trí bị dùng lại nhiều lần.
+- Điều kiện khử trùng lặp cần phân biệt rõ giữa "chọn trùng lặp trên cùng một tầng" và "dùng trùng lặp trên cùng một đường đi". Trường hợp trước sẽ tạo ra đáp án trùng nhau, còn trường hợp sau có thể chính là lựa chọn hợp lệ mà đề bài cho phép.
 
-## 过程示意和边界样例
+## Minh họa quy trình và các trường hợp biên
 
-以 `n = 3, k = 2` 的组合问题为例，选择树可以简化成下面这样：
+Lấy bài toán tổ hợp với `n = 3, k = 2` làm ví dụ, cây lựa chọn có thể rút gọn như sau:
 
-| 第一层选择 | 第二层可选 | 产生结果           |
+| Lựa chọn tầng 1 | Khả năng chọn ở tầng 2 | Kết quả sinh ra |
 | ---------- | ---------- | ------------------ |
-| 选 1       | 2、3       | `[1, 2]`、`[1, 3]` |
-| 选 2       | 3          | `[2, 3]`           |
-| 选 3       | 无         | 不足 2 个数，剪枝  |
+| Chọn 1 | 2, 3 | `[1, 2]`, `[1, 3]` |
+| Chọn 2 | 3 | `[2, 3]` |
+| Chọn 3 | Không còn | Không đủ 2 số, cắt tỉa nhánh |
 
-回溯题建议检查这些边界：
+Với bài toán Backtracking, bạn nên kiểm tra các trường hợp biên sau:
 
-| 输入         | 重点                    |
+| Đầu vào | Trọng tâm kiểm tra |
 | ------------ | ----------------------- |
-| 空数组       | 子集题通常要返回 `[[]]` |
-| `k = 0`      | 组合题是否返回空组合    |
-| 有重复元素   | 是否先排序并做同层去重  |
-| 结果只有一个 | 是否正确拷贝 `path`     |
+| Mảng rỗng | Bài toán Subsets thông thường phải trả về `[[]]` |
+| `k = 0` | Bài toán tổ hợp có trả về tổ hợp rỗng hay không |
+| Chứa phần tử trùng lặp | Đã sắp xếp và khử trùng lặp trên cùng tầng chưa |
+| Chỉ có 1 kết quả duy nhất | Có sao chép `path` chính xác không |
 
-常见错误写法：
+Lỗi viết code rất phổ biến:
 
 ```java
-ans.add(path); // 错：后续 path 会继续变化
+ans.add(path); // Sai: path sẽ tiếp tục bị thay đổi trong các đệ quy tiếp theo
 ```
 
-应该写成：
+Bắt buộc phải viết thành:
 
 ```java
 ans.add(new ArrayList<>(path));
 ```
 
-回溯里的 `path` 是复用对象，不拷贝就会导致答案里的列表一起被后续递归修改。
+Trong Backtracking, đối tượng `path` được tái sử dụng liên tục. Nếu không tạo bản sao (copy) mới, danh sách lưu trong đáp án sẽ bị các bước đệ quy sau đó làm biến đổi toàn bộ.
 
-## 易错点
+## Các lỗi thường gặp (Pitfalls)
 
-- 加入答案时要拷贝 `path`，不能直接放引用。
-- 组合用 `startIndex`，排列用 `used`，不要混着写。
-- 去重通常要先排序。
-- 剪枝条件必须不影响正确答案。
-- 回溯复杂度经常和结果数量相同量级，不要随手写 `O(n)`。
+- Khi đưa vào danh sách đáp án phải tạo bản sao của `path`, không được đưa trực tiếp tham chiếu vào.
+- Bài toán tổ hợp dùng `startIndex`, bài toán hoán vị dùng `used`, không được viết lẫn lộn hai cơ chế này.
+- Loại bỏ trùng lặp thông thường bắt buộc phải sắp xếp mảng trước.
+- Điều kiện cắt tỉa nhánh tuyệt đối không được làm ảnh hưởng đến các đáp án chính xác.
+- Độ phức tạp của Backtracking thường cùng bậc với số lượng kết quả sinh ra, đừng tùy tiện kết luận là `O(n)`.
 
-## 推荐练习题
+## Bài tập rèn luyện đề xuất
 
-- [77. 组合](https://leetcode.cn/problems/combinations/)
-- [78. 子集](https://leetcode.cn/problems/subsets/)
-- [46. 全排列](https://leetcode.cn/problems/permutations/)
-- [39. 组合总和](https://leetcode.cn/problems/combination-sum/)
-- [51. N 皇后](https://leetcode.cn/problems/n-queens/)
+- [77. Combinations](https://leetcode.cn/problems/combinations/)
+- [78. Subsets](https://leetcode.cn/problems/subsets/)
+- [46. Permutations](https://leetcode.cn/problems/permutations/)
+- [39. Combination Sum](https://leetcode.cn/problems/combination-sum/)
+- [51. N-Queens](https://leetcode.cn/problems/n-queens/)
 
 <!-- @include: @article-footer.snippet.md -->

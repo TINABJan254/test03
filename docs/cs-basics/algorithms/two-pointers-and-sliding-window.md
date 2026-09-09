@@ -1,42 +1,42 @@
 ---
-title: 双指针与滑动窗口面试题总结：数组、链表、字符串高频模板
-description: 双指针与滑动窗口面试题总结，讲解左右指针、快慢指针、读写指针、固定窗口、可变窗口、Java 模板和 LeetCode 高频题。
-category: 计算机基础
+title: "Tổng hợp bài toán phỏng vấn Two Pointers và Sliding Window: Template tần suất cao cho Mảng, LinkedList, Chuỗi"
+description: "Tổng hợp bài toán phỏng vấn Two Pointers và Sliding Window, giải thích Left-Right Pointers, Fast-Slow Pointers, Read-Write Pointers, Fixed Window, Dynamic Window, Java template và các bài toán LeetCode tần suất cao."
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 双指针,滑动窗口,快慢指针,左右指针,读写指针,固定窗口,可变窗口,数组算法,链表算法,字符串算法,LeetCode
+      content: Two Pointers,Sliding Window,Fast-Slow Pointers,Left-Right Pointers,Read-Write Pointers,Fixed Window,Dynamic Window,Thuật toán mảng,Thuật toán LinkedList,Thuật toán chuỗi,LeetCode
 ---
 
-双指针和滑动窗口经常放在一起复习，但它们解决的问题不完全一样。双指针更像一种移动策略，滑动窗口则强调维护一个连续区间里的状态。
+Two Pointers (Hai con trỏ) và Sliding Window (Cửa sổ trượt) thường được ôn tập cùng nhau, nhưng bản chất vấn đề chúng giải quyết không hoàn toàn giống nhau. Two Pointers giống một chiến lược di chuyển hơn, trong khi Sliding Window nhấn mạnh vào việc duy trì trạng thái bên trong một khoảng liên tục (continuous interval).
 
-一个实用判断：如果题目关心两个位置之间的关系，先想双指针；如果题目关心连续子数组或连续子串，并且窗口内有条件要维护，先想滑动窗口。
+Một quy tắc phán đoán thực tế: Nếu bài toán quan tâm đến mối quan hệ giữa hai vị trí, hãy nghĩ đến Two Pointers trước; nếu bài toán quan tâm đến mảng con liên tục (contiguous subarray) hoặc chuỗi con liên tục (substring), và bên trong cửa sổ có điều kiện cần duy trì, hãy nghĩ đến Sliding Window trước.
 
-## 面试考察重点
+## Trọng tâm khảo sát trong phỏng vấn
 
-- 能区分左右指针、快慢指针、读写指针。
-- 能维护滑动窗口里的计数、和、最大值或匹配情况。
-- 能解释为什么指针只向一个方向移动，时间复杂度是 `O(n)`。
-- 能处理空数组、单元素、重复元素和窗口收缩边界。
+- Phân biệt được Left-Right Pointers (con trỏ trái phải), Fast-Slow Pointers (con trỏ nhanh chậm), Read-Write Pointers (con trỏ đọc ghi).
+- Duy trì được bộ đếm (count), tổng (sum), giá trị lớn nhất (max) hoặc trạng thái khớp (matching) trong Sliding Window.
+- Giải thích được tại sao các con trỏ chỉ di chuyển theo một hướng thì độ phức tạp thời gian là `O(n)`.
+- Xử lý tốt mảng rỗng, phần tử đơn lẻ, phần tử trùng lặp và các biên thu hẹp cửa sổ.
 
-## 两者到底有什么区别？
+## Điểm khác biệt cốt lõi giữa hai phương pháp là gì?
 
-双指针是一种更宽泛的写法，只要用两个指针协作推进，都可以叫双指针。滑动窗口更具体，它维护的是一个连续区间 `[left, right]`，窗口里通常有一组状态，比如字符计数、元素和、最大值、匹配数量。
+Two Pointers là một cách viết mang tính khái quát rộng hơn: chỉ cần dùng hai con trỏ phối hợp tịnh tiến thì đều có thể gọi là Two Pointers. Sliding Window cụ thể hơn, nó duy trì một khoảng liên tục `[left, right]`, bên trong cửa sổ thường chứa một tập hợp trạng thái như: số lần xuất hiện của ký tự, tổng các phần tử, giá trị lớn nhất, số lượng điều kiện đã thỏa mãn.
 
-| 问题特征                            | 更可能使用 |
+| Đặc điểm bài toán | Thường ưu tiên sử dụng |
 | ----------------------------------- | ---------- |
-| 有序数组里找两个数                  | 左右指针   |
-| 链表找环、找中点、找倒数第 K 个节点 | 快慢指针   |
-| 原地删除或覆盖元素                  | 读写指针   |
-| 连续子数组/子串的最长、最短、计数   | 滑动窗口   |
+| Tìm hai số trong mảng đã sắp xếp | Left-Right Pointers |
+| LinkedList: tìm chu trình (cycle), tìm trung điểm, tìm node thứ K từ dưới lên | Fast-Slow Pointers |
+| Xóa hoặc ghi đè phần tử tại chỗ (In-place) | Read-Write Pointers |
+| Dài nhất, ngắn nhất, đếm số lượng của mảng con/chuỗi con liên tục | Sliding Window |
 
-面试时先把指针含义说出来，比直接写代码更稳。比如“`left` 表示窗口左边界，`right` 表示正在尝试加入窗口的字符”，后面收缩窗口就不会乱。
+Trong phỏng vấn, nêu rõ ý nghĩa của các con trỏ trước khi viết code sẽ giúp bạn tự tin và chắc chắn hơn rất nhiều. Ví dụ: "`left` biểu thị biên trái của cửa sổ, `right` biểu thị ký tự đang thử thêm vào cửa sổ", khi thu hẹp cửa sổ về sau sẽ không bị rối loạn logic.
 
-## 左右指针
+## Left-Right Pointers (Con trỏ trái phải)
 
-左右指针常用于有序数组或两端收缩问题：
+Left-Right Pointers thường dùng cho mảng đã sắp xếp hoặc các bài toán thu hẹp dần từ hai đầu:
 
 ```java
 int[] twoSumSorted(int[] nums, int target) {
@@ -56,18 +56,18 @@ int[] twoSumSorted(int[] nums, int target) {
 }
 ```
 
-如果数组无序，通常先排序，再用左右指针。排序后要记得复杂度变成 `O(nlogn)`。
+Nếu mảng chưa sắp xếp, thông thường cần sắp xếp trước rồi mới dùng Left-Right Pointers. Sau khi sort, hãy nhớ độ phức tạp sẽ trở thành `O(n log n)`.
 
-左右指针能工作的原因，是每次比较后可以排除一部分答案。以有序数组两数之和为例：
+Nguyên nhân Left-Right Pointers hoạt động hiệu quả là vì sau mỗi lần so sánh có thể loại bỏ được một phần không gian nghiệm. Lấy bài toán Two Sum trên mảng đã sắp xếp làm ví dụ:
 
-- 当前和太小，说明左指针指向的数太小，右指针再往左只会更小，所以只能左指针右移。
-- 当前和太大，说明右指针指向的数太大，左指针再往右只会更大，所以只能右指针左移。
+- Tổng hiện tại quá nhỏ: cho thấy phần tử tại con trỏ trái quá nhỏ, nếu dịch con trỏ phải sang trái thì tổng chỉ càng nhỏ hơn, do đó chỉ có thể dịch con trỏ trái sang phải (`left++`).
+- Tổng hiện tại quá lớn: cho thấy phần tử tại con trỏ phải quá lớn, nếu dịch con trỏ trái sang phải thì tổng chỉ càng lớn hơn, do đó chỉ có thể dịch con trỏ phải sang trái (`right--`).
 
-三数之和也是同一个思路，只是先固定一个数，再在剩余区间里做两数之和。难点在去重：固定数要去重，左右指针找到答案后也要跳过重复值。
+Bài toán Three Sum (Tổng 3 số) cũng dựa trên tư duy tương tự: cố định trước một số, sau đó tìm Two Sum trên khoảng còn lại. Điểm khó nằm ở việc loại bỏ trùng lặp (deduplication): số cố định cần loại bỏ trùng lặp, sau khi hai con trỏ trái phải tìm được đáp án cũng phải bỏ qua các giá trị trùng lặp tiếp theo.
 
-## 快慢指针
+## Fast-Slow Pointers (Con trỏ nhanh chậm)
 
-快慢指针常用于链表：
+Fast-Slow Pointers thường dùng cho LinkedList:
 
 ```java
 boolean hasCycle(ListNode head) {
@@ -84,18 +84,18 @@ boolean hasCycle(ListNode head) {
 }
 ```
 
-链表题的重点不是代码长，而是指针含义稳定。`fast != null && fast.next != null` 的顺序也不能反。
+Điểm mấu chốt của các bài toán LinkedList không nằm ở độ dài code, mà ở việc ý nghĩa của con trỏ phải nhất quán và điều kiện biên ổn định. Thứ tự điều kiện `fast != null && fast.next != null` tuyệt đối không được đảo ngược.
 
-快慢指针常见有两种速度差：
+Fast-Slow Pointers thường có hai dạng chênh lệch tốc độ:
 
-- `fast` 每次走 2 步，`slow` 每次走 1 步：用于环检测和找链表中点。
-- 一个指针先走 `k` 步，另一个指针再一起走：用于找倒数第 `k` 个节点。
+- `fast` mỗi lần đi 2 bước, `slow` mỗi lần đi 1 bước: dùng để phát hiện chu trình (cycle detection) và tìm trung điểm của LinkedList.
+- Một con trỏ đi trước `k` bước, con trỏ còn lại sau đó mới cùng xuất phát: dùng để tìm node thứ `k` tính từ cuối LinkedList lên.
 
-找倒数第 `k` 个节点时，两个指针之间保持 `k` 个节点的距离。当前面的指针走到链表末尾，后面的指针刚好停在目标位置。删除倒数第 `N` 个节点时，通常会加虚拟头节点，避免删除头节点时单独处理。
+Khi tìm node thứ `k` tính từ cuối lên, hai con trỏ duy trì khoảng cách đúng bằng `k` nodes. Khi con trỏ phía trước đi đến cuối danh sách, con trỏ phía sau sẽ dừng đúng tại vị trí mục tiêu. Khi xóa node thứ `N` tính từ cuối lên, người ta thường dùng Dummy Head (node giả đầu danh sách) để tránh phải xử lý trường hợp ngoại lệ khi xóa chính node đầu.
 
-## 读写指针
+## Read-Write Pointers (Con trỏ đọc ghi)
 
-读写指针常用于原地修改数组：
+Read-Write Pointers thường dùng để sửa đổi mảng tại chỗ (In-place):
 
 ```java
 int removeDuplicates(int[] nums) {
@@ -113,15 +113,15 @@ int removeDuplicates(int[] nums) {
 }
 ```
 
-`read` 负责扫描原数组，`write` 指向下一个可写入位置。面试里最好先把这两个变量的含义说出来。
+`read` chịu trách nhiệm duyệt qua mảng gốc, `write` trỏ vào vị trí tiếp theo có thể ghi dữ liệu. Trong phỏng vấn, tốt nhất nên nêu rõ ý nghĩa của hai biến này ngay từ đầu.
 
-读写指针的核心是“读完整个数组，只把需要保留的内容写回前面”。这类题经常要求原地修改，返回新长度，而不是创建新数组。
+Cốt lõi của Read-Write Pointers là "duyệt qua toàn bộ mảng, chỉ ghi đè những nội dung cần giữ lại lên phần đầu". Dạng bài này thường yêu cầu thao tác in-place và trả về độ dài mới thay vì cấp phát mảng mới.
 
-判断写入时机时，可以问自己：当前 `read` 指向的元素是否应该保留？如果应该保留，就写到 `write`，然后 `write++`；如果不应该保留，只移动 `read`。
+Khi xác định thời điểm ghi dữ liệu, hãy tự hỏi: Phần tử mà `read` đang trỏ tới có nên được giữ lại không? Nếu nên giữ lại, ghi vào vị trí `write` và tăng `write++`; nếu không nên giữ lại, chỉ tăng con trỏ `read`.
 
-## 可变滑动窗口
+## Dynamic Sliding Window (Cửa sổ trượt có thể thay đổi kích thước)
 
-以“无重复字符的最长子串”为例：
+Lấy bài toán "Chuỗi con dài nhất không chứa ký tự trùng lặp" làm ví dụ:
 
 ```java
 int lengthOfLongestSubstring(String s) {
@@ -142,24 +142,24 @@ int lengthOfLongestSubstring(String s) {
 }
 ```
 
-这个模板里，右指针负责扩大窗口，左指针负责在窗口不合法时收缩。每个字符最多进窗口一次、出窗口一次，所以时间复杂度是 `O(n)`。
+Trong template này, con trỏ phải chịu trách nhiệm mở rộng cửa sổ, con trỏ trái chịu trách nhiệm thu hẹp cửa sổ khi trạng thái cửa sổ không hợp lệ. Mỗi ký tự tối đa vào cửa sổ một lần và ra khỏi cửa sổ một lần, vì vậy độ phức tạp thời gian là `O(n)`.
 
-可变窗口一般有一个固定节奏：
+Cửa sổ trượt biến thiên thường tuân theo một nhịp điệu cố định:
 
-1. 右指针加入新元素，更新窗口状态。
-2. 当窗口不满足条件时，不断移动左指针，并同步更新状态。
-3. 在窗口满足题意的位置更新答案。
+1. Con trỏ phải thêm phần tử mới vào, cập nhật trạng thái cửa sổ.
+2. Khi cửa sổ không thỏa mãn điều kiện đề bài, liên tục di chuyển con trỏ trái và đồng bộ cập nhật trạng thái.
+3. Cập nhật kết quả tại vị trí cửa sổ thỏa mãn yêu cầu đề bài.
 
-最长问题和最短问题的更新时机不一样：
+Thời điểm cập nhật kết quả giữa bài toán tìm dài nhất và tìm ngắn nhất là khác nhau:
 
-- 求最长合法窗口：通常在窗口恢复合法后更新答案。
-- 求最短满足条件窗口：通常在窗口已经满足条件时更新答案，然后继续收缩左边界。
+- Tìm cửa sổ hợp lệ dài nhất: Thường cập nhật kết quả sau khi cửa sổ đã phục hồi về trạng thái hợp lệ.
+- Tìm cửa sổ thỏa mãn điều kiện ngắn nhất: Thường cập nhật kết quả ngay khi cửa sổ vừa thỏa mãn điều kiện, sau đó tiếp tục thu hẹp biên trái để tìm phương án ngắn hơn.
 
-比如“最小覆盖子串”里，窗口一旦覆盖了目标字符，就要先更新答案，再尝试缩小窗口；“最长无重复子串”里，窗口有重复字符时要先缩到合法，再更新答案。
+Ví dụ trong bài "Minimum Window Substring", khi cửa sổ đã bao phủ đủ các ký tự mục tiêu, ta cập nhật kết quả trước rồi mới cố gắng thu hẹp cửa sổ; còn trong bài "Longest Substring Without Repeating Characters", khi cửa sổ xuất hiện ký tự trùng lặp, ta phải thu hẹp cho đến khi hợp lệ rồi mới cập nhật kết quả.
 
-## 固定滑动窗口
+## Fixed Sliding Window (Cửa sổ trượt kích thước cố định)
 
-固定窗口适合“长度为 k 的子数组/子串”：
+Cửa sổ cố định phù hợp với các bài toán yêu cầu "mảng con/chuỗi con có độ dài k":
 
 ```java
 int maxSum(int[] nums, int k) {
@@ -177,39 +177,39 @@ int maxSum(int[] nums, int k) {
 }
 ```
 
-固定窗口的重点是右侧进一个元素，左侧出一个元素。
+Trọng tâm của cửa sổ cố định là: phía bên phải nhận thêm một phần tử thì phía bên trái phải loại bỏ một phần tử tương ứng.
 
-固定窗口不用 `while` 收缩，因为窗口长度始终固定。它更像一个滚动统计：
+Cửa sổ cố định không cần vòng lặp `while` để thu hẹp, vì độ dài cửa sổ luôn giữ nguyên. Nó giống như một phép thống kê trượt (rolling calculation):
 
-- 新元素进入窗口。
-- 离开窗口的旧元素被移除。
-- 更新当前窗口答案。
+- Phần tử mới đi vào cửa sổ.
+- Phần tử cũ rời khỏi cửa sổ bị loại bỏ.
+- Cập nhật kết quả của cửa sổ hiện tại.
 
-如果窗口里还要维护最大值或最小值，普通变量不够用，通常要用单调队列。比如“滑动窗口最大值”中，队列里存可能成为最大值的下标，队首就是当前窗口最大值。
+Nếu bên trong cửa sổ cần duy trì giá trị lớn nhất hoặc nhỏ nhất, biến thông thường là không đủ, thường phải dùng Monotonic Queue (hàng đợi đơn điệu). Ví dụ trong bài "Sliding Window Maximum", hàng đợi lưu trữ các chỉ số (index) có khả năng trở thành giá trị lớn nhất, và phần tử đầu hàng đợi luôn là giá trị lớn nhất của cửa sổ hiện tại.
 
-## 面试手写路径
+## Lộ trình viết code từng bước trong phỏng vấn
 
-双指针和滑动窗口题，面试里最怕指针含义写到一半变了。建议按这个顺序写：
+Với bài toán Two Pointers và Sliding Window, điều kỵ nhất khi phỏng vấn là ý nghĩa con trỏ bị thay đổi giữa chừng. Bạn nên viết code theo trình tự sau:
 
-1. 先判断题型：是两端收缩、快慢追赶、原地覆盖，还是连续窗口。
-2. 明确指针含义：`left`、`right`、`slow`、`fast`、`write` 分别指向哪里。
-3. 明确窗口状态：窗口内维护的是和、计数、最大值，还是匹配数量。
-4. 明确移动条件：什么时候右指针扩张，什么时候左指针收缩。
-5. 明确答案更新时机：合法后更新最长，满足条件时更新最短。
+1. Xác định dạng bài: Là thu hẹp hai đầu, đuổi bắt nhanh chậm, ghi đè in-place, hay cửa sổ liên tục.
+2. Xác định rõ ý nghĩa con trỏ: `left`, `right`, `slow`, `fast`, `write` trỏ vào vị trí nào.
+3. Xác định rõ trạng thái cửa sổ: Bên trong cửa sổ duy trì tổng, bộ đếm, giá trị lớn nhất, hay số lượng điều kiện khớp.
+4. Xác định điều kiện di chuyển: Khi nào con trỏ phải mở rộng, khi nào con trỏ trái thu hẹp.
+5. Xác định thời điểm cập nhật kết quả: Sau khi hợp lệ thì cập nhật dài nhất, khi vừa thỏa mãn điều kiện thì cập nhật ngắn nhất.
 
-一句话区分最长和最短：**最长题通常先修复窗口再更新答案，最短题通常先记录答案再继续收缩。**
+Một câu tóm tắt phân biệt bài toán dài nhất và ngắn nhất: **Bài toán tìm dài nhất thường sửa cửa sổ cho hợp lệ rồi mới cập nhật kết quả; bài toán tìm ngắn nhất thường ghi nhận kết quả trước rồi tiếp tục thu hẹp.**
 
-## 代表题精讲：最小覆盖子串
+## Phân tích bài toán tiêu biểu: Minimum Window Substring
 
-[76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/) 是滑动窗口里最能考细节的一题。题目要求在 `s` 中找到最短子串，使它覆盖 `t` 中所有字符和对应次数。
+[76. Minimum Window Substring](https://leetcode.cn/problems/minimum-window-substring/) là bài toán kiểm tra chi tiết kỹ năng Sliding Window toàn diện nhất. Đề bài yêu cầu tìm chuỗi con ngắn nhất trong `s` sao cho bao phủ toàn bộ các ký tự và số lần xuất hiện tương ứng trong `t`.
 
-这题的关键不是会不会用窗口，而是能不能说清两个计数：
+Mấu chốt của bài này không phải là biết dùng cửa sổ hay không, mà là có thể trình bày rõ ràng hai bộ đếm sau:
 
-- `need`：目标字符串 `t` 里每个字符需要多少个。
-- `window`：当前窗口里每个字符已经有多少个。
-- `valid`：有多少种字符已经满足所需次数。
+- `need`: Mỗi ký tự trong chuỗi mục tiêu `t` cần bao nhiêu lần xuất hiện.
+- `window`: Mỗi ký tự trong cửa sổ hiện tại đã xuất hiện bao nhiêu lần.
+- `valid`: Có bao nhiêu loại ký tự đã đạt đủ số lần yêu cầu.
 
-当 `valid == need.size()` 时，说明当前窗口已经覆盖 `t`，这时要更新答案，并尝试收缩左边界。
+Khi `valid == need.size()`, tức là cửa sổ hiện tại đã bao phủ toàn bộ chuỗi `t`, lúc này ta cập nhật kết quả và cố gắng thu hẹp biên trái.
 
 ```java
 String minWindow(String s, String t) {
@@ -253,63 +253,63 @@ String minWindow(String s, String t) {
 }
 ```
 
-这里有两个容易写错的点：
+Có hai điểm rất dễ viết sai:
 
-- `valid--` 要发生在减少 `window[out]` 之前，因为此时窗口还刚好满足条件。
-- 更新答案要放在 `while (valid == need.size())` 里面，因为只有当前窗口已经覆盖 `t`，才有资格参与最短答案比较。
+- `valid--` phải diễn ra trước khi giảm `window.get(out)`, vì tại thời điểm này cửa sổ vẫn vừa đủ thỏa mãn điều kiện.
+- Việc cập nhật kết quả phải đặt bên trong `while (valid == need.size())`, vì chỉ khi cửa sổ hiện tại đã bao phủ đầy đủ `t` thì mới đủ điều kiện tham gia so sánh tìm đáp án ngắn nhất.
 
-## 过程示意和边界样例
+## Minh họa quy trình và các trường hợp biên
 
-以“无重复字符的最长子串”为例，字符串 `abba` 的窗口变化如下：
+Lấy bài toán "Chuỗi con dài nhất không chứa ký tự trùng lặp" làm ví dụ, sự thay đổi cửa sổ với chuỗi `abba` như sau:
 
-| 右指针字符 | 加入后窗口 | 是否合法 | 左指针怎么动                          | 当前最长 |
+| Ký tự con trỏ phải | Cửa sổ sau khi thêm | Hợp lệ không | Con trỏ trái di chuyển thế nào | Chiều dài lớn nhất hiện tại |
 | ---------- | ---------- | -------- | ------------------------------------- | -------- |
-| `a`        | `a`        | 合法     | 不动                                  | 1        |
-| `b`        | `ab`       | 合法     | 不动                                  | 2        |
-| `b`        | `abb`      | 不合法   | 移走 `a` 后仍不合法，再移走第一个 `b` | 2        |
-| `a`        | `ba`       | 合法     | 不动                                  | 2        |
+| `a` | `a` | Hợp lệ | Đứng yên | 1 |
+| `b` | `ab` | Hợp lệ | Đứng yên | 2 |
+| `b` | `abb` | Không hợp lệ | Bỏ `a` vẫn không hợp lệ, tiếp tục bỏ ký tự `b` đầu tiên | 2 |
+| `a` | `ba` | Hợp lệ | Đứng yên | 2 |
 
-滑动窗口建议至少检查这些边界：
+Với Sliding Window, bạn nên kiểm tra ít nhất các trường hợp biên sau:
 
-| 输入                 | 重点                     |
+| Đầu vào | Trọng tâm kiểm tra |
 | -------------------- | ------------------------ |
-| 空字符串或空数组     | 是否直接返回 0           |
-| 全部字符相同         | 左边界是否持续收缩       |
-| 没有重复字符         | 答案是否能更新到整个长度 |
-| 最优窗口在开头或结尾 | 更新答案的时机是否正确   |
+| Chuỗi rỗng hoặc mảng rỗng | Có trả về 0 trực tiếp không |
+| Toàn bộ ký tự giống nhau | Biên trái có thu hẹp liên tục không |
+| Không có ký tự nào trùng lặp | Kết quả có cập nhật được đến toàn bộ độ dài chuỗi không |
+| Cửa sổ tối ưu nằm ở đầu hoặc cuối chuỗi | Thời điểm cập nhật kết quả có chính xác không |
 
-常见错误写法：
+Lỗi thường gặp khi viết code:
 
 ```java
 if (count.get(c) > 1) {
-    left++; // 错：只移动一次不一定能恢复合法窗口
+    left++; // Sai: chỉ di chuyển 1 lần chưa chắc đã phục hồi được cửa sổ hợp lệ
 }
 ```
 
-可变窗口收缩时通常要用 `while`，直到窗口重新满足条件。只移动一次，遇到 `abba`、`aaabc` 这类输入就容易错。
+Khi thu hẹp cửa sổ biến thiên, thông thường phải dùng vòng lặp `while` cho đến khi cửa sổ thỏa mãn lại điều kiện. Nếu chỉ di chuyển một lần, khi gặp các chuỗi như `abba`, `aaabc` sẽ rất dễ bị sai.
 
-## 易错点
+## Các lỗi thường gặp (Pitfalls)
 
-- 双指针题先明确两个指针的含义，不要边写边猜。
-- 滑动窗口里，更新答案的时机要看题目问的是最长还是最短。
-- 窗口收缩时，窗口内的计数、和、匹配数都要同步更新。
-- 链表快慢指针要先判断 `fast` 和 `fast.next`。
-- 三数之和这类题，排序后的去重要单独处理。
+- Với bài toán Two Pointers, cần xác định rõ ý nghĩa của cả hai con trỏ ngay từ đầu, không vừa viết vừa đoán mò.
+- Trong Sliding Window, thời điểm cập nhật kết quả phụ thuộc vào câu hỏi yêu cầu dài nhất hay ngắn nhất.
+- Khi cửa sổ thu hẹp, các trạng thái đếm, tổng, số điều kiện khớp trong cửa sổ đều phải được đồng bộ cập nhật.
+- Với Fast-Slow Pointers trên LinkedList, phải kiểm tra `fast` và `fast.next` trước khi truy cập `fast.next.next`.
+- Những bài như Three Sum, sau khi sắp xếp thì logic loại bỏ trùng lặp cần được xử lý riêng biệt và cẩn thận.
 
-## 高频问题自测
+## Câu hỏi tự kiểm tra tần suất cao
 
-- 为什么双指针题通常是 `O(n)`，而不是两层循环的 `O(n^2)`？
-- 三数之和为什么需要排序？去重分别发生在哪几个位置？
-- 快慢指针找链表中点时，偶数长度返回前中点还是后中点？
-- 滑动窗口什么时候用 `if` 收缩，什么时候必须用 `while` 收缩？
-- 最长窗口和最短窗口的答案更新时机有什么区别？
+- Tại sao các bài toán Two Pointers thường có độ phức tạp `O(n)` thay vì `O(n^2)` như hai vòng lặp lồng nhau?
+- Tại sao Three Sum cần sắp xếp trước? Việc loại bỏ phần tử trùng lặp diễn ra ở những vị trí nào?
+- Khi dùng Fast-Slow Pointers tìm trung điểm LinkedList, với danh sách độ dài chẵn thì con trỏ dừng ở trung điểm trước hay trung điểm sau?
+- Khi nào Sliding Window dùng `if` để thu hẹp, khi nào bắt buộc phải dùng `while`?
+- Thời điểm cập nhật đáp án giữa bài toán cửa sổ dài nhất và cửa sổ ngắn nhất khác nhau như thế nào?
 
-## 推荐练习题
+## Bài tập rèn luyện đề xuất
 
-- [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/)
-- [15. 三数之和](https://leetcode.cn/problems/3sum/)
-- [141. 环形链表](https://leetcode.cn/problems/linked-list-cycle/)
-- [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/)
-- [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/)
+- [26. Remove Duplicates from Sorted Array](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/)
+- [15. 3Sum](https://leetcode.cn/problems/3sum/)
+- [141. Linked List Cycle](https://leetcode.cn/problems/linked-list-cycle/)
+- [3. Longest Substring Without Repeating Characters](https://leetcode.cn/problems/longest-substring-without-repeating-characters/)
+- [76. Minimum Window Substring](https://leetcode.cn/problems/minimum-window-substring/)
 
 <!-- @include: @article-footer.snippet.md -->

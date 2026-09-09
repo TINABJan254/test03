@@ -1,146 +1,144 @@
 ---
-title: 数据结构知识体系：数组、链表、哈希表、树、图、堆与面试
-description: 数据结构面试复习路线，涵盖数组、链表、栈、队列、哈希表、树、图、堆、Trie、并查集、跳表、红黑树、布隆过滤器、LRU、复杂度分析和 Java 后端工程场景。
-category: 计算机基础
+title: Hệ thống kiến thức Cấu trúc dữ liệu: Mảng, Danh sách liên kết, Bảng băm, Cây, Đồ thị, Heap & Phỏng vấn
+description: Lộ trình ôn tập phỏng vấn Cấu trúc dữ liệu, bao gồm Mảng, Danh sách liên kết, Ngăn xếp, Hàng đợi, Bảng băm, Cây, Đồ thị, Heap, Trie, Union-Find, Skip List, Red-Black Tree, Bloom Filter, LRU Cache, phân tích độ phức tạp và ứng dụng thực tế trong Java Backend.
+category: Cơ sở máy tính
 tag:
-  - 数据结构
-  - 算法
-  - 面试
+  - Cấu trúc dữ liệu
+  - Thuật toán
+  - Phỏng vấn
 sitemap:
   changefreq: weekly
   priority: 0.9
 head:
   - - meta
     - name: keywords
-      content: 数据结构,数据结构面试题,数据结构复习路线,数组,链表,栈,队列,哈希表,HashMap,树,图,堆,Trie,并查集,跳表,红黑树,布隆过滤器,LRU,Java集合,Redis,MySQL索引,后端面试
+      content: Cấu trúc dữ liệu, Câu hỏi phỏng vấn Cấu trúc dữ liệu, Lộ trình ôn tập Cấu trúc dữ liệu, Array, LinkedList, Stack, Queue, Hash Table, HashMap, Tree, Graph, Heap, Trie, Union-Find, Skip List, Red-Black Tree, Bloom Filter, LRU, Java Collection, Redis, MySQL Index, Phỏng vấn Backend
 ---
 
-这份 **数据结构知识体系** 按面试和 Java 后端场景组织内容：先理解数据怎么存，再看常见操作复杂度，最后把结构和 Java 集合、MySQL 索引、Redis、缓存、消息队列这些工程问题连起来。
+Tài liệu **Hệ thống kiến thức Cấu trúc dữ liệu** này được tổ chức theo định hướng phỏng vấn và các kịch bản thực tế trong Java Backend: Trước hết hiểu cách dữ liệu được lưu trữ, tiếp theo xem xét độ phức tạp của các thao tác phổ biến, và cuối cùng liên kết cấu trúc dữ liệu với các bài toán kỹ thuật như Java Collections, MySQL Index, Redis, Caching và Message Queue.
 
-面试里问数据结构，很少只停在“数组是什么”。更常见的是追问：数组和链表为什么一个查询快、一个插入删除方便？`HashMap` 为什么需要扩容？B+ 树为什么适合索引？布隆过滤器为什么会误判？这些问题背后都在考同一件事：你是否理解结构选择带来的复杂度和场景取舍。
+Trong các buổi phỏng vấn, nhà tuyển dụng hiếm khi chỉ hỏi đơn thuần "Mảng là gì". Câu hỏi thường gặp hơn là các câu hỏi đào sâu: Tại sao mảng và danh sách liên kết lại có sự khác biệt (một bên truy vấn nhanh, một bên chèn/xóa linh hoạt)? Tại sao `HashMap` cần phải mở rộng dung lượng (resize / rehash)? Tại sao B+ Tree lại phù hợp làm chỉ mục (Index) cơ sở dữ liệu? Tại sao Bloom Filter lại có thể xảy ra nhận định sai (False Positive)? Đằng sau những câu hỏi này đều kiểm tra một điều duy nhất: Bạn có thực sự hiểu sự đánh đổi (trade-offs) và độ phức tạp khi lựa chọn cấu trúc dữ liệu cho từng bài toán thực tế hay không.
 
-准备数据结构时，不建议只背定义。更有效的方式是把每个结构拆成 4 个问题：怎么存、怎么查、怎么改、适合什么场景。能把这 4 个问题讲清楚，再去刷对应的算法题，效率会高很多。
+Khi chuẩn bị kiến thức về cấu trúc dữ liệu, bạn không nên chỉ học thuộc lòng định nghĩa. Cách học hiệu quả hơn là bóc tách từng cấu trúc theo 4 câu hỏi: Lưu trữ như thế nào? Truy vấn như thế nào? Sửa đổi như thế nào? Phù hợp với kịch bản nào? Khi bạn trả lời rõ ràng được 4 câu hỏi này, việc luyện tập các bài toán giải thuật tương ứng sẽ đạt hiệu suất cao hơn rất nhiều.
 
-## 适合谁看
+## Phù hợp với ai
 
-- 正在补数据结构基础，准备校招或社招后端面试的同学。
-- 刷算法题时经常卡在数组、链表、树、图、堆等结构上的读者。
-- 想把数据结构和 Java 集合、Redis、MySQL、缓存系统联系起来的工程师。
-- 已经看过概念，但回答面试题时容易停在定义层面的开发者。
+- Các bạn đang củng cố nền tảng Cấu trúc dữ liệu, chuẩn bị cho kỳ tuyển dụng đại học (Campus Recruitment) hoặc phỏng vấn kỹ sư Backend.
+- Những độc giả khi giải bài thuật toán thường xuyên gặp khó khăn ở các cấu trúc như mảng, danh sách liên kết, cây, đồ thị, heap.
+- Các kỹ sư muốn liên kết cấu trúc dữ liệu với Java Collections, Redis, MySQL, và các hệ thống Cache.
+- Những lập trình viên đã nắm khái niệm nhưng khi trả lời phỏng vấn vẫn còn dừng lại ở mức định nghĩa lý thuyết đơn thuần.
 
-## 数据结构面试考什么
+## Phỏng vấn Cấu trúc dữ liệu hỏi những gì?
 
-| 考察点     | 常见问法                                                   | 复习重点                     |
-| ---------- | ---------------------------------------------------------- | ---------------------------- |
-| 存储方式   | 顺序存储和链式存储有什么区别？                             | 内存连续性、指针、缓存友好性 |
-| 操作复杂度 | 为什么数组查询是 O(1)，链表查询是 O(n)？                   | 查询、插入、删除、遍历复杂度 |
-| 结构对比   | 红黑树和 AVL 树怎么选？B 树和 B+ 树有什么区别？            | 对比表 + 适用场景            |
-| 工程关联   | HashMap、TreeMap、PriorityQueue、Redis ZSet 用了什么结构？ | Java/数据库/缓存中的真实应用 |
-| 算法承接   | 树遍历、图搜索、Top K、LRU 怎么写？                        | 和算法模板一起复习           |
+| Khía cạnh đánh giá | Cách hỏi thường gặp | Trọng tâm ôn tập |
+| :--- | :--- | :--- |
+| **Phương thức lưu trữ** | Lưu trữ tuần tự (Sequential) và Lưu trữ liên kết (Linked) khác nhau như thế nào? | Tính liên tục của bộ nhớ, con trỏ, tính thân thiện với CPU Cache |
+| **Độ phức tạp thao tác** | Tại sao truy vấn mảng là $O(1)$, còn danh sách liên kết là $O(n)$? | Độ phức tạp khi tìm kiếm, chèn, xóa, duyệt |
+| **So sánh cấu trúc** | Khi nào chọn Red-Black Tree, khi nào chọn AVL Tree? B-Tree và B+ Tree khác nhau ra sao? | Bảng so sánh + Kịch bản áp dụng |
+| **Liên hệ kỹ thuật** | `HashMap`, `TreeMap`, `PriorityQueue`, Redis ZSet sử dụng cấu trúc dữ liệu gì? | Ứng dụng thực tế trong Java / Cơ sở dữ liệu / Bộ nhớ đệm |
+| **Áp dụng giải thuật** | Duyệt cây, tìm kiếm trên đồ thị, Top-K, LRU cài đặt như thế nào? | Ôn tập kết hợp với các Template thuật toán |
 
-## 面试回答框架
+## Khung trả lời phỏng vấn chuẩn
 
-数据结构题的回答不要只停在“是什么”。面试里更稳的表达方式是按下面这条线展开：
+Khi trả lời các câu hỏi về cấu trúc dữ liệu, bạn không nên chỉ dừng lại ở việc trả lời "nó là gì". Cách diễn đạt mạch lạc và vững chắc nhất trong phỏng vấn là triển khai theo mạch tư duy sau:
 
 ```text
-定义 -> 存储方式 -> 常见操作复杂度 -> 优缺点 -> 适用场景 -> Java/Redis/MySQL 中的应用
+Định nghĩa -> Phương thức lưu trữ -> Độ phức tạp thao tác thường gặp -> Ưu nhược điểm -> Kịch bản áp dụng -> Ứng dụng trong Java / Redis / MySQL
 ```
 
-以哈希表为例，一个完整回答可以这样组织：
+Lấy ví dụ về Bảng băm (Hash Table), một câu trả lời hoàn chỉnh có thể tổ chức như sau:
 
-1. 哈希表通过哈希函数把 key 映射到数组下标。
-2. 查询、插入、删除平均是 `O(1)`，但冲突严重时会退化。
-3. 冲突可以用拉链法、开放寻址法等方式处理。
-4. Java `HashMap` 使用数组 + 链表 + 红黑树，扩容用于控制负载因子。
-5. 它适合快速查找、计数、去重、缓存索引等场景，但会消耗额外空间。
+1. Bảng băm ánh xạ Key thành chỉ số mảng (Index) thông qua Hàm băm (Hash Function).
+2. Thao tác tìm kiếm, chèn, xóa trung bình đạt $O(1)$, nhưng khi xảy ra xung đột nghiêm trọng sẽ bị suy thoái.
+3. Xung đột băm có thể xử lý bằng phương pháp Separate Chaining (Phương pháp nối chuỗi/danh sách liên kết) hoặc Open Addressing (Địa chỉ mở).
+4. Trong Java, `HashMap` sử dụng Mảng + Danh sách liên kết + Cây đỏ đen (Red-Black Tree), và cơ chế Rehash được dùng để kiểm soát Hệ số tải (Load Factor).
+5. Phù hợp cho các kịch bản tìm kiếm nhanh, đếm tần suất, loại bỏ trùng lặp, đánh chỉ mục cache, nhưng sẽ tiêu tốn thêm không gian bộ nhớ phụ.
 
-这种回答比“哈希表查询是 O(1)”更耐追问，因为它同时交代了原理、复杂度和工程落点。
+Cách trả lời này sẽ thuyết phục người phỏng vấn hơn nhiều so với việc chỉ nói "truy vấn bảng băm là $O(1)$", bởi vì nó bao quát đầy đủ từ nguyên lý, độ phức tạp cho đến thực tế ứng dụng trong dự án.
 
-## 建议阅读顺序
+## Lộ trình đọc gợi ý
 
-1. [线性数据结构详解](./linear-data-structure.md)：先掌握数组、链表、栈、队列，理解顺序存储和链式存储。
-2. [哈希表面试题总结](./hash-table.md)：理解哈希函数、冲突、扩容，并和 `HashMap` 连起来。
-3. [树结构详解](./tree.md)：掌握二叉树、二叉搜索树、AVL、B 树、B+ 树，以及 MySQL 索引关联。
-4. [堆详解](./heap.md)：理解优先队列、Top K、堆排序和 `PriorityQueue`。
-5. [图详解](./graph.md)：理解图的存储、DFS、BFS、拓扑排序和最短路径入口。
-6. [Trie 前缀树面试题总结](./trie.md)、[并查集面试题总结](./union-find.md)：补齐字符串集合和连通性问题。
-7. [跳表面试题总结](./skip-list.md)、[红黑树详解](./red-black-tree.md)、[布隆过滤器详解](./bloom-filter.md)、[LRU 缓存面试题总结](./lru-cache.md)：面向 Java 集合、Redis、缓存和数据库场景复盘。
+1. [Chi tiết Cấu trúc dữ liệu tuyến tính](./linear-data-structure.md): Nắm vững mảng, danh sách liên kết, ngăn xếp, hàng đợi, hiểu rõ lưu trữ tuần tự và lưu trữ liên kết.
+2. [Tổng hợp câu hỏi phỏng vấn Bảng băm](./hash-table.md): Hiểu hàm băm, xung đột băm, mở rộng dung lượng và liên hệ chặt chẽ với `HashMap`.
+3. [Chi tiết Cấu trúc Cây](./tree.md): Nắm vững Cây nhị phân, Cây tìm kiếm nhị phân (BST), AVL Tree, B-Tree, B+ Tree và mối liên hệ với MySQL Index.
+4. [Chi tiết Heap](./heap.md): Hiểu Hàng đợi ưu tiên (Priority Queue), bài toán Top-K, Heap Sort và `PriorityQueue` trong Java.
+5. [Chi tiết Đồ thị](./graph.md): Hiểu cách biểu diễn đồ thị, DFS, BFS, Sắp xếp tô-pô (Topological Sort) và các thuật toán đường đi ngắn nhất.
+6. [Tổng hợp câu hỏi phỏng vấn Cây tiền tố Trie](./trie.md), [Tổng hợp câu hỏi phỏng vấn Union-Find](./union-find.md): Bổ sung kiến thức xử lý tập hợp chuỗi và bài toán tính liên thông.
+7. [Tổng hợp câu hỏi phỏng vấn Skip List](./skip-list.md), [Chi tiết Cây đỏ đen](./red-black-tree.md), [Chi tiết Bloom Filter](./bloom-filter.md), [Tổng hợp câu hỏi phỏng vấn LRU Cache](./lru-cache.md): Ôn tập chuyên sâu phục vụ Java Collections, Redis, Caching và Database.
 
-## 核心文章
+## Danh mục bài viết cốt lõi
 
-| 文章                                           | 重点                          | 常见关联                            |
-| ---------------------------------------------- | ----------------------------- | ----------------------------------- |
-| [线性数据结构详解](./linear-data-structure.md) | 数组、链表、栈、队列          | `ArrayList`、`LinkedList`、消息队列 |
-| [哈希表面试题总结](./hash-table.md)            | 哈希函数、冲突、扩容          | `HashMap`、缓存、去重               |
-| [树结构详解](./tree.md)                        | 二叉树、BST、AVL、B 树、B+ 树 | MySQL 索引、表达式树                |
-| [图详解](./graph.md)                           | 邻接表、邻接矩阵、DFS、BFS    | 依赖关系、路由、推荐关系            |
-| [堆详解](./heap.md)                            | 最大堆、最小堆、堆排序        | `PriorityQueue`、Top K、延迟队列    |
-| [红黑树详解](./red-black-tree.md)              | 近似平衡、旋转、变色          | `TreeMap`、`HashMap` 树化           |
-| [布隆过滤器详解](./bloom-filter.md)            | 位数组、哈希、误判            | 缓存穿透、去重、黑名单              |
-| [跳表面试题总结](./skip-list.md)               | 多级索引、范围查询            | Redis ZSet                          |
-| [LRU 缓存面试题总结](./lru-cache.md)           | 哈希表 + 双向链表             | 本地缓存、页面置换                  |
+| Bài viết | Trọng tâm | Liên hệ thường gặp |
+| :--- | :--- | :--- |
+| [Chi tiết Cấu trúc dữ liệu tuyến tính](./linear-data-structure.md) | Mảng, Danh sách liên kết, Ngăn xếp, Hàng đợi | `ArrayList`, `LinkedList`, Message Queue |
+| [Tổng hợp câu hỏi phỏng vấn Bảng băm](./hash-table.md) | Hàm băm, Xung đột băm, Mở rộng dung lượng | `HashMap`, Cache, Khử trùng lặp dữ liệu |
+| [Chi tiết Cấu trúc Cây](./tree.md) | Cây nhị phân, BST, AVL, B-Tree, B+ Tree | MySQL Index, Expression Tree |
+| [Chi tiết Đồ thị](./graph.md) | Danh sách kề, Ma trận kề, DFS, BFS | Mối quan hệ phụ thuộc, Routing, Recommendation |
+| [Chi tiết Heap](./heap.md) | Max-Heap, Min-Heap, Heap Sort | `PriorityQueue`, Top-K, DelayQueue |
+| [Chi tiết Cây đỏ đen](./red-black-tree.md) | Cân bằng gần đúng, Phép quay, Đổi màu | `TreeMap`, `HashMap` Treeify |
+| [Chi tiết Bloom Filter](./bloom-filter.md) | Mảng bit, Hàm băm, Xác suất nhận định sai | Chống Cache Penetration, Khử trùng, Blacklist |
+| [Tổng hợp câu hỏi phỏng vấn Skip List](./skip-list.md) | Chỉ mục đa cấp, Truy vấn khoảng (Range Query) | Redis ZSet |
+| [Tổng hợp câu hỏi phỏng vấn LRU Cache](./lru-cache.md) | Bảng băm + Danh sách liên kết đôi | Local Cache, Page Replacement |
 
-## 结构选型速查
+## Bảng tra cứu nhanh lựa chọn cấu trúc dữ liệu
 
-很多数据结构问题，实际是在问“这个场景为什么选它，而不是另一个结构”。下面这张表适合面试前快速复盘：
+Rất nhiều câu hỏi phỏng vấn thực chất là đang hỏi: "Trong kịch bản này tại sao lại chọn cấu trúc này mà không phải cấu trúc khác?". Bảng dưới đây rất hữu ích để ôn tập nhanh trước buổi phỏng vấn:
 
-| 场景                      | 优先考虑            | 取舍点                                             |
-| ------------------------- | ------------------- | -------------------------------------------------- |
-| 按下标频繁随机访问        | 数组、`ArrayList`   | 查询快，插入删除中间元素成本高                     |
-| 频繁在两端插入删除        | 双端队列、链表      | 指针操作灵活，但随机访问慢                         |
-| 快速判断元素是否存在      | 哈希表、布隆过滤器  | 哈希表准确但占空间，布隆过滤器省空间但可能误判     |
-| 维护有序集合和范围查询    | 红黑树、跳表、B+ 树 | 红黑树适合内存有序集合，跳表适合范围查询和工程实现 |
-| 处理最大值、最小值、Top K | 堆、优先队列        | 只关心局部最值，不适合全量有序遍历                 |
-| 判断连通性和分组          | 并查集              | 合并和查询很快，但不适合频繁删除关系               |
-| 前缀匹配、搜索提示        | Trie                | 查询与字符串长度相关，但节点数量可能较多           |
-| 缓存淘汰                  | LRU、LFU            | LRU 看最近访问，LFU 看访问频率                     |
+| Kịch bản bài toán | Cấu trúc ưu tiên cân nhắc | Điểm đánh đổi (Trade-offs) |
+| :--- | :--- | :--- |
+| **Truy cập ngẫu nhiên thường xuyên theo Index** | Array, `ArrayList` | Truy vấn cực nhanh ($O(1)$), nhưng chi phí chèn/xóa phần tử ở giữa cao ($O(n)$) |
+| **Chèn và xóa thường xuyên ở 2 đầu** | Deque (Hàng đợi hai đầu), LinkedList | Thao tác con trỏ linh hoạt ($O(1)$), nhưng truy cập ngẫu nhiên chậm ($O(n)$) |
+| **Phán đoán nhanh phần tử có tồn tại hay không** | Hash Table, Bloom Filter | Hash Table chính xác tuyệt đối nhưng tốn RAM; Bloom Filter siêu tiết kiệm RAM nhưng có thể có sai số (False Positive) |
+| **Duy trì tập hợp có thứ tự & Truy vấn khoảng** | Red-Black Tree, Skip List, B+ Tree | Red-Black Tree phù hợp tập có thứ tự trong RAM; Skip List phù hợp truy vấn khoảng và dễ cài đặt; B+ Tree tối ưu cho I/O đĩa |
+| **Xử lý Giá trị lớn nhất / Nhỏ nhất / Top-K** | Heap, Priority Queue | Chỉ quan tâm đến phần tử cực trị cục bộ ($O(1)$ lấy đỉnh, $O(\log n)$ điều chỉnh), không phù hợp để duyệt toàn bộ theo thứ tự |
+| **Kiểm tra tính liên thông và phân nhóm** | Union-Find (DSU) | Hợp nhất và truy vấn cực nhanh ($O(\alpha(n))$), nhưng không hỗ trợ xóa quan hệ kết nối |
+| **Khớp tiền tố chuỗi ký tự, gợi ý tìm kiếm** | Trie | Tốc độ tìm kiếm phụ thuộc vào độ dài chuỗi ký tự, nhưng số lượng node có thể tăng cao |
+| **Thuật toán đào thải bộ nhớ đệm (Cache Eviction)** | LRU, LFU | LRU xét theo thời điểm truy cập gần nhất, LFU xét theo tần suất truy cập |
 
-复习时可以反过来问自己：如果不用这个结构，会慢在哪里？会多占多少空间？边界条件是什么？这几个问题想清楚，面试追问通常就能接住。
+## Lộ trình ôn tập 7 ngày
 
-## 7 天复习路线
+| Thời gian | Trọng tâm ôn tập | Hành động gợi ý |
+| :--- | :--- | :--- |
+| **Ngày 1** | Mảng, Danh sách liên kết | Lập bảng độ phức tạp, tự tay code Đảo ngược danh sách liên kết và Xóa node |
+| **Ngày 2** | Ngăn xếp, Hàng đợi, Bảng băm | Code bài toán Khớp dấu ngoặc, Cài đặt hàng đợi bằng stack, Two Sum |
+| **Ngày 3** | Cây | Code Duyệt cây nhị phân, Tổ tiên chung gần nhất (LCA), ôn tập B+ Tree |
+| **Ngày 4** | Heap | Code bài toán Top-K, K phần tử xuất hiện nhiều nhất, hiểu `PriorityQueue` |
+| **Ngày 5** | Đồ thị | Code DFS/BFS, Số lượng đảo (Number of Islands), Sắp xếp lịch học (Course Schedule) |
+| **Ngày 6** | Red-Black Tree, Skip List, Bloom Filter | Tập trung chuẩn bị các câu hỏi đào sâu trong kịch bản kỹ thuật thực tế |
+| **Ngày 7** | LRU & Ôn tập tổng hợp | Tự tay code LRU Cache, tổng hợp lại độ phức tạp và ứng dụng của toàn bộ cấu trúc |
 
-| 天数    | 重点                     | 建议动作                                      |
-| ------- | ------------------------ | --------------------------------------------- |
-| 第 1 天 | 数组、链表               | 写复杂度表，手写反转链表和删除节点            |
-| 第 2 天 | 栈、队列、哈希表         | 写括号匹配、用栈实现队列、两数之和            |
-| 第 3 天 | 树                       | 写二叉树遍历、最近公共祖先，复盘 B+ 树        |
-| 第 4 天 | 堆                       | 写 Top K、前 K 高频元素，理解 `PriorityQueue` |
-| 第 5 天 | 图                       | 写 DFS/BFS、岛屿数量、课程表                  |
-| 第 6 天 | 红黑树、跳表、布隆过滤器 | 重点准备工程场景追问                          |
-| 第 7 天 | LRU 和综合复盘           | 手写 LRU，整理所有结构的复杂度和应用场景      |
+## Lộ trình ôn tập 30 ngày
 
-## 30 天复习路线
+| Giai đoạn | Thời gian | Mục tiêu |
+| :--- | :--- | :--- |
+| **Giai đoạn 1** | Ngày 1 đến 6 | Cấu trúc tuyến tính và Bảng băm, giải thích rõ độ phức tạp và liên hệ Java Collections |
+| **Giai đoạn 2** | Ngày 7 đến 13 | Cây, Heap, Đồ thị, kết hợp luyện đề DFS/BFS và Top-K |
+| **Giai đoạn 3** | Ngày 14 đến 20 | Trie, Union-Find, Skip List, Red-Black Tree, hoàn thiện các cấu trúc nâng cao |
+| **Giai đoạn 4** | Ngày 21 đến 25 | Bloom Filter, LRU, bài toán thiết kế hệ thống, kết nối với Redis/MySQL/Cache |
+| **Giai đoạn 5** | Ngày 26 đến 30 | Ôn lại các bài làm sai, luyện nói phỏng vấn, chuẩn bị 2 câu hỏi đào sâu cho mỗi cấu trúc |
 
-| 阶段     | 时间           | 目标                                               |
-| -------- | -------------- | -------------------------------------------------- |
-| 第一阶段 | 第 1 到 6 天   | 线性结构和哈希表，能说清复杂度和 Java 集合关联     |
-| 第二阶段 | 第 7 到 13 天  | 树、堆、图，配合 DFS/BFS 和 Top K 刷题             |
-| 第三阶段 | 第 14 到 20 天 | Trie、并查集、跳表、红黑树，补齐进阶结构           |
-| 第四阶段 | 第 21 到 25 天 | 布隆过滤器、LRU、工程场景题，连接 Redis/MySQL/缓存 |
-| 第五阶段 | 第 26 到 30 天 | 做错题复盘和面试口述练习，每个结构准备 2 个追问    |
+## Tự kiểm tra các câu hỏi tần suất cao
 
-## 高频问题自测
+- Bố cục bộ nhớ của Mảng và Danh sách liên kết khác nhau ra sao? Tại sao Mảng truy cập ngẫu nhiên lại nhanh?
+- Trong Java, khi nào nên chọn `ArrayList` và khi nào nên chọn `LinkedList`?
+- Ngăn xếp và Hàng đợi lần lượt phù hợp với những kịch bản nào? Monotonic Stack (Ngăn xếp đơn điệu) và Monotonic Queue giải quyết bài toán gì?
+- Có những phương pháp xử lý xung đột băm nào? Tại sao `HashMap` lại cần mở rộng dung lượng (Rehash)?
+- Sự khác biệt giữa Cây tìm kiếm nhị phân (BST), AVL Tree và Red-Black Tree là gì?
+- Tại sao B-Tree và B+ Tree lại đặc biệt phù hợp làm chỉ mục cơ sở dữ liệu?
+- Heap và Cây nhị phân thông thường khác nhau như thế nào? Tại sao giải bài toán Top-K thường dùng Heap?
+- Khi nào nên chọn Danh sách kề, khi nào nên chọn Ma trận kề để biểu diễn đồ thị? Độ phức tạp của DFS và BFS là bao nhiêu?
+- Tại sao Skip List lại phù hợp cho truy vấn khoảng? Tại sao Redis lại chọn dùng Skip List cho ZSet?
+- Tại sao Bloom Filter lại có thể nhận định sai? Tại sao thao tác xóa trong Bloom Filter lại rất khó khăn?
+- Tại sao thuật toán LRU thường được cài đặt bằng Bảng băm kết hợp với Danh sách liên kết đôi?
 
-- 数组和链表的内存布局有什么区别？为什么数组随机访问快？
-- `ArrayList` 和 `LinkedList` 在 Java 里怎么选？
-- 栈和队列分别适合哪些场景？单调栈、单调队列解决什么问题？
-- 哈希冲突有哪些解决方式？`HashMap` 为什么要扩容？
-- 二叉搜索树、AVL 树、红黑树有什么区别？
-- B 树和 B+ 树为什么适合数据库索引？
-- 堆和普通二叉树有什么区别？Top K 为什么常用堆？
-- 图的邻接表和邻接矩阵怎么选？DFS 和 BFS 复杂度是多少？
-- 跳表为什么适合范围查询？Redis 为什么使用跳表？
-- 布隆过滤器为什么会误判？为什么删除困难？
-- LRU 为什么常用哈希表加双向链表实现？
+## Chuyên đề liên quan
 
-## 相关专题
-
-- [计算机基础知识体系](../)
-- [算法专题](../algorithms/)
-- [常见数据结构经典 LeetCode 题目推荐](../algorithms/common-data-structures-leetcode-recommendations.md)
-- [Java 集合](../../java/collection/java-collection-questions-01.md)
-- [MySQL 索引详解](../../database/mysql/mysql-index.md)
-- [Redis 常见面试题总结](../../database/redis/redis-questions-01.md)
-- [面试准备](../../interview-preparation/)
+- [Hệ thống kiến thức Cơ sở máy tính](../)
+- [Chuyên đề Thuật toán](../algorithms/)
+- [Gợi ý các bài tập LeetCode kinh điển về Cấu trúc dữ liệu](../algorithms/common-data-structures-leetcode-recommendations.md)
+- [Chi tiết Java Collections](../../java/collection/java-collection-questions-01.md)
+- [Chi tiết Chỉ mục MySQL (MySQL Index)](../../database/mysql/mysql-index.md)
+- [Tổng hợp câu hỏi phỏng vấn Redis](../../database/redis/redis-questions-01.md)
+- [Chuẩn bị phỏng vấn](../../interview-preparation/)
 
 <!-- @include: @article-footer.snippet.md -->

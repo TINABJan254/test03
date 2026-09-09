@@ -1,144 +1,153 @@
 ---
-title: 线性数据结构详解（数组、链表、栈、队列）
-description: 总结数组/链表/栈/队列的特性与操作，配合复杂度分析与典型应用，掌握线性结构的选型与实现。
-category: 计算机基础
+title: Chi tiết Cấu trúc dữ liệu tuyến tính (Mảng, Danh sách liên kết, Ngăn xếp, Hàng đợi)
+description: Tổng hợp toàn diện đặc tính và thao tác của Mảng, Danh sách liên kết, Ngăn xếp, Hàng đợi, phân tích độ phức tạp thuật toán và ứng dụng thực tế trong kỹ thuật phần mềm.
+category: Cơ sở máy tính
 tag:
-  - 数据结构
+  - Cấu trúc dữ liệu
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 数组,链表,栈,队列,双端队列,复杂度分析,随机访问,插入删除
+      content: Mảng, Danh sách liên kết, Ngăn xếp, Hàng đợi, Deque, Phân tích độ phức tạp, Array, LinkedList, Stack, Queue, Truy cập ngẫu nhiên, Chèn xóa
 ---
 
-# 线性数据结构
+# Cấu trúc dữ liệu tuyến tính (Linear Data Structure)
 
-## 1. 数组
+## 1. Mảng (Array)
 
-**数组（Array）** 是一种很常见的数据结构。它由相同类型的元素（element）组成，并且是使用一块连续的内存来存储。
+**Mảng (Array)** là một cấu trúc dữ liệu cơ bản và phổ biến nhất. Nó bao gồm một tập hợp các phần tử (element) có **cùng kiểu dữ liệu**, được lưu trữ trong một **khối bộ nhớ liên tục**.
 
-我们直接可以利用元素的索引（index）可以计算出该元素对应的存储地址。
+Nhờ tính liên tục trong bộ nhớ, chúng ta có thể trực tiếp sử dụng chỉ số (index) của phần tử để tính toán chính xác địa chỉ lưu trữ vật lý của nó trong RAM theo công thức:
 
-数组的特点是：**提供随机访问** 并且容量有限。
+$$\text{Địa chỉ}(i) = \text{Địa chỉ cơ sở} + i \times \text{Kích thước phần tử}$$
+
+Đặc điểm nổi bật nhất của mảng là: **Cung cấp khả năng truy cập ngẫu nhiên (Random Access) với thời gian $O(1)$** và có dung lượng cố định khi khởi tạo.
 
 ```java
-假如数组的长度为 n。
-访问：O(1) //访问特定位置的元素
-插入：O(n) //最坏的情况发生在插入发生在数组的首部并需要移动所有元素时
-删除：O(n) //最坏的情况发生在删除数组的开头发生并需要移动第一元素后面所有的元素时
+Giả sử mảng có độ dài là n:
+Truy cập (Access): O(1) // Truy cập phần tử tại vị trí chỉ số xác định
+Chèn (Insertion):  O(n) // Trường hợp xấu nhất chèn vào đầu mảng và phải dịch chuyển toàn bộ n phần tử phía sau
+Xóa (Deletion):    O(n) // Trường hợp xấu nhất xóa phần tử đầu tiên và phải dịch chuyển toàn bộ các phần tử còn lại
 ```
 
-![数组](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/array.png)
+![Cấu trúc Mảng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/array.png)
 
-## 2. 链表
+## 2. Danh sách liên kết (LinkedList)
 
-### 2.1. 链表简介
+### 2.1. Giới thiệu Danh sách liên kết
 
-**链表（LinkedList）** 虽然是一种线性表，但是并不会按线性的顺序存储数据，使用的不是连续的内存空间来存储数据。
+**Danh sách liên kết (LinkedList)** mặc dù là một danh sách tuyến tính, nhưng nó **không lưu trữ các phần tử theo thứ tự liên tục trong bộ nhớ vật lý**.
 
-链表的插入和删除操作的复杂度为 O(1)，只需要知道目标位置元素的上一个元素即可。但是，在查找一个节点或者访问特定位置的节点的时候复杂度为 O(n)。
+Mỗi phần tử trong danh sách liên kết được gọi là một **Node (Nút)**. Mỗi Node bao gồm 2 phần: **Dữ liệu (Data)** và **Con trỏ liên kết (Pointer / Reference)** trỏ đến địa chỉ của Node kế tiếp (hoặc Node liền trước).
 
-使用链表结构可以克服数组需要预先知道数据大小的缺点，链表结构可以充分利用计算机内存空间，实现灵活的内存动态管理。但链表不会节省空间，相比于数组会占用更多的空间，因为链表中每个节点存放的还有指向其他节点的指针。除此之外，链表不具有数组随机读取的优点。
+Thao tác chèn và xóa trong danh sách liên kết có độ phức tạp là $O(1)$ khi đã biết trước vị trí của Node cần thao tác (chỉ cần thay đổi liên kết con trỏ). Tuy nhiên, khi tìm kiếm một giá trị hoặc truy cập phần tử tại một vị trí bất kỳ, độ phức tạp là $O(n)$ do phải duyệt tuần tự từ đầu danh sách.
 
-### 2.2. 链表分类
+Sử dụng danh sách liên kết giúp khắc phục nhược điểm cần khai báo trước kích thước cố định của mảng, tận dụng linh hoạt các vùng nhớ phân mảnh trong RAM và hỗ trợ mở rộng kích thước động. Tuy nhiên, danh sách liên kết sẽ tốn thêm bộ nhớ để lưu trữ các con trỏ, và không hỗ trợ truy cập ngẫu nhiên nhanh chóng như mảng.
 
-**常见链表分类：**
+### 2.2. Phân loại Danh sách liên kết
 
-1. 单链表
-2. 双向链表
-3. 循环链表
-4. 双向循环链表
+**Các loại danh sách liên kết phổ biến:**
+
+1. Danh sách liên kết đơn (Singly LinkedList)
+2. Danh sách liên kết đôi (Doubly LinkedList)
+3. Danh sách liên kết vòng đơn (Circular LinkedList)
+4. Danh sách liên kết vòng đôi (Doubly Circular LinkedList)
 
 ```java
-假如链表中有n个元素。
-访问：O(n) //访问特定位置的元素
-插入删除：O(1) //必须要要知道插入元素的位置
+Giả sử danh sách liên kết có n phần tử:
+Truy cập (Access): O(n) // Phải duyệt tuần tự để đến vị trí cần tìm
+Chèn / Xóa:        O(1) // Khi đã biết con trỏ tại vị trí cần thao tác
 ```
 
-#### 2.2.1. 单链表
+#### 2.2.1. Danh sách liên kết đơn (Singly LinkedList)
 
-**单链表** 单向链表只有一个方向，结点只有一个后继指针 next 指向后面的节点。因此，链表这种数据结构通常在物理内存上是不连续的。我们习惯性地把第一个结点叫作头结点，链表通常有一个不保存任何值的 head 节点（头结点），通过头结点我们可以遍历整个链表。尾结点通常指向 null。
+**Danh sách liên kết đơn** chỉ có một chiều duy nhất. Mỗi Node chỉ chứa một con trỏ `next` trỏ tới Node tiếp theo phía sau. Vì vậy, các Node trong danh sách phân tán rải rác trong bộ nhớ. Node đầu tiên được gọi là `head` (Nút đầu), qua đó ta có thể duyệt toàn bộ danh sách. Con trỏ `next` của Node cuối cùng (`tail`) trỏ tới `null`.
 
-![单链表](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/single-linkedlist.png)
+![Danh sách liên kết đơn](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/single-linkedlist.png)
 
-#### 2.2.2. 循环链表
+#### 2.2.2. Danh sách liên kết vòng (Circular LinkedList)
 
-**循环链表** 其实是一种特殊的单链表，和单链表不同的是循环链表的尾结点不是指向 null，而是指向链表的头结点。
+**Danh sách liên kết vòng** thực chất là một biến thể của danh sách liên kết đơn. Điểm khác biệt duy nhất là con trỏ `next` của Node cuối cùng không trỏ tới `null` mà quay ngược lại trỏ vào Node `head` tạo thành một vòng tròn khép kín.
 
-![循环链表](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/circular-linkedlist.png)
+![Danh sách liên kết vòng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/circular-linkedlist.png)
 
-#### 2.2.3. 双向链表
+#### 2.2.3. Danh sách liên kết đôi (Doubly LinkedList)
 
-**双向链表** 包含两个指针，一个 prev 指向前一个节点，一个 next 指向后一个节点。
+**Danh sách liên kết đôi** mỗi Node chứa hai con trỏ: con trỏ `prev` trỏ tới Node liền trước và con trỏ `next` trỏ tới Node liền sau. Nhờ vậy, ta có thể duyệt danh sách theo cả hai chiều tiến và lùi một cách thuận tiện.
 
-![双向链表](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/bidirectional-linkedlist.png)
+![Danh sách liên kết đôi](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/bidirectional-linkedlist.png)
 
-#### 2.2.4. 双向循环链表
+#### 2.2.4. Danh sách liên kết vòng đôi (Doubly Circular LinkedList)
 
-**双向循环链表** 最后一个节点的 next 指向 head，而 head 的 prev 指向最后一个节点，构成一个环。
+**Danh sách liên kết vòng đôi** kết hợp đặc tính của cả hai loại trên: con trỏ `next` của Node cuối cùng trỏ về `head`, và con trỏ `prev` của `head` trỏ tới Node cuối cùng.
 
-![双向循环链表](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/bidirectional-circular-linkedlist.png)
+![Danh sách liên kết vòng đôi](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/bidirectional-circular-linkedlist.png)
 
-### 2.3. 应用场景
+### 2.3. Kịch bản áp dụng
 
-- 如果需要支持随机访问的话，链表没办法做到。
-- 如果需要存储的数据元素的个数不确定，并且需要经常添加和删除数据的话，使用链表比较合适。
-- 如果需要存储的数据元素的个数确定，并且不需要经常添加和删除数据的话，使用数组比较合适。
+- Nếu bài toán đòi hỏi **truy cập ngẫu nhiên thường xuyên theo chỉ số**, mảng là lựa chọn bắt buộc; danh sách liên kết không đáp ứng được.
+- Nếu số lượng phần tử **không xác định trước** và liên tục có nhu cầu **thêm, bớt phần tử**, danh sách liên kết sẽ phù hợp hơn.
+- Nếu số lượng phần tử đã cố định hoặc ít khi thay đổi, sử dụng mảng sẽ tiết kiệm bộ nhớ và đạt hiệu năng CPU Cache cao hơn.
 
-### 2.4. 数组 vs 链表
+### 2.4. So sánh: Mảng (Array) vs Danh sách liên kết (LinkedList)
 
-- 数组支持随机访问，而链表不支持。
-- 数组使用的是连续内存空间对 CPU 的缓存机制友好，链表则相反。
-- 数组的大小固定，而链表则天然支持动态扩容。如果声明的数组过小，需要另外申请一个更大的内存空间存放数组元素，然后将原数组拷贝进去，这个操作是比较耗时的！
+- Mảng hỗ trợ truy cập ngẫu nhiên $O(1)$, danh sách liên kết chỉ hỗ trợ truy cập tuần tự $O(n)$.
+- Mảng sử dụng khối bộ nhớ liên tục nên rất **thân thiện với cơ chế CPU Cache L1/L2 (Spatial Locality)**; danh sách liên kết lưu trữ phân mảnh nên tỷ lệ Cache Miss cao hơn.
+- Kích thước của mảng cố định; khi mảng động (`ArrayList`) bị đầy, hệ thống phải cấp phát một vùng nhớ mới lớn hơn và sao chép toàn bộ phần tử cũ sang, thao tác này tiêu tốn thời gian. Danh sách liên kết mở rộng tự nhiên từng Node một mà không cần di chuyển dữ liệu cũ.
 
-## 3. 栈
+---
 
-### 3.1. 栈简介
+## 3. Ngăn xếp (Stack)
 
-**栈（Stack）** 只允许在有序的线性数据集合的一端（称为栈顶 top）进行加入数据（push）和移除数据（pop）。因而按照 **后进先出（LIFO, Last In First Out）** 的原理运作。**在栈中，push 和 pop 的操作都发生在栈顶。**
+### 3.1. Giới thiệu Ngăn xếp
 
-栈常用一维数组或链表来实现，用数组实现的栈叫作 **顺序栈**，用链表实现的栈叫作 **链式栈**。
+**Ngăn xếp (Stack)** là một tập hợp dữ liệu tuyến tính chỉ cho phép thêm phần tử (`push`) và lấy phần tử (`pop`) tại một đầu duy nhất, gọi là **Đỉnh ngăn xếp (Top)**. Do đó, ngăn xếp hoạt động theo nguyên lý **Vào sau ra trước (LIFO - Last In, First Out)**.
+
+Ngăn xếp có thể được hiện thực bằng mảng một chiều (**Sequential Stack - Ngăn xếp tuần tự**) hoặc bằng danh sách liên kết (**Linked Stack - Ngăn xếp liên kết**).
 
 ```java
-假设堆栈中有n个元素。
-访问：O(n) //最坏情况
-插入删除：O(1) //顶端插入和删除元素
+Giả sử ngăn xếp có n phần tử:
+Truy cập (Access): O(n) // Trường hợp xấu nhất để tìm một phần tử ở đáy
+Chèn / Xóa:        O(1) // Thao tác push/pop tại đỉnh ngăn xếp luôn là hằng số thời gian
 ```
 
-![栈的后进先出结构示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/stack.png)
+![Cấu trúc Vào sau ra trước của Ngăn xếp](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/stack.png)
 
-### 3.2. 栈的常见应用场景
+### 3.2. Kịch bản ứng dụng phổ biến của Ngăn xếp
 
-当我们我们要处理的数据只涉及在一端插入和删除数据，并且满足 **后进先出（LIFO, Last In First Out）** 的特性时，我们就可以使用栈这个数据结构。
+Bất cứ khi nào dữ liệu cần xử lý theo quy tắc phần tử nào đến sau cùng sẽ được xử lý đầu tiên (**LIFO**), ta đều có thể áp dụng cấu trúc Ngăn xếp.
 
-#### 3.2.1. 实现浏览器的回退和前进功能
+#### 3.2.1. Tính năng Back / Forward trên trình duyệt Web
 
-我们只需要使用两个栈（Stack1 和 Stack2）就能实现这个功能。比如你按顺序查看了 1,2,3,4 这四个页面，我们依次把 1,2,3,4 这四个页面压入 Stack1 中。当你想回头看 2 这个页面的时候，你点击回退按钮，我们依次把 4,3 这两个页面从 Stack1 弹出，然后压入 Stack2 中。假如你又想回到页面 3，你点击前进按钮，我们将 3 页面从 Stack2 弹出，然后压入到 Stack1 中。示例图如下：
+Chúng ta chỉ cần sử dụng **2 ngăn xếp (Stack 1 và Stack 2)** là có thể cài đặt hoàn hảo tính năng này:
+1. Khi bạn lần lượt truy cập các trang `1 -> 2 -> 3 -> 4`, các trang được lần lượt `push` vào Stack 1.
+2. Khi bạn bấm nút **Back** để quay lại trang `2`: Ta lần lượt `pop` trang `4` và `3` khỏi Stack 1 rồi `push` sang Stack 2.
+3. Nếu bạn bấm nút **Forward** để tiến lên trang `3`: Ta `pop` trang `3` khỏi Stack 2 và `push` ngược lại vào Stack 1.
 
-![使用两个栈实现浏览器后退和前进功能](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/stack-browser-back-forward.png)
+![Sử dụng 2 ngăn xếp cài đặt tính năng Back và Forward](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/stack-browser-back-forward.png)
 
-#### 3.2.2. 检查符号是否成对出现
+#### 3.2.2. Kiểm tra dấu ngoặc hợp lệ (Valid Parentheses)
 
-> 给定一个只包括 `'('`，`')'`，`'{'`，`'}'`，`'['`，`']'` 的字符串，判断该字符串是否有效。
+> Cho một chuỗi chỉ chứa các ký tự `'('`, `')'`, `'{'`, `'}'`, `'['`, `']'`, hãy kiểm tra chuỗi đó có hợp lệ hay không.
 >
-> 有效字符串需满足：
+> Chuỗi hợp lệ phải thỏa mãn:
+> 1. Dấu ngoặc mở phải được đóng bằng dấu ngoặc đóng cùng loại.
+> 2. Các dấu ngoặc mở phải được đóng theo đúng thứ tự.
 >
-> 1. 左括号必须用相同类型的右括号闭合。
-> 2. 左括号必须以正确的顺序闭合。
->
-> 比如 "()"、"()[]{}"、"{[]}" 都是有效字符串，而 "(]"、"([)]" 则不是。
+> Ví dụ: `"()"`, `"()[]{}"`, `"{[]}"` là hợp lệ; còn `"(]"`, `"([)]"` là không hợp lệ.
 
-这个问题实际是 Leetcode 的一道题目，我们可以利用栈 `Stack` 来解决这个问题。
-
-1. 首先我们将括号间的对应规则存放在 `Map` 中，这一点应该毋容置疑；
-2. 创建一个栈。遍历字符串，如果字符是左括号就直接加入 `stack` 中，否则将 `stack` 的栈顶元素与这个括号做比较，如果不相等就直接返回 false。遍历结束，如果 `stack` 为空，返回 `true`。
+Chúng ta sử dụng `Stack` để giải quyết bài toán kinh điển này:
+1. Tạo một bảng băm `Map` lưu trữ quy tắc tương ứng giữa ngoặc đóng và ngoặc mở;
+2. Duyệt từng ký tự trong chuỗi: nếu là dấu ngoặc mở thì `push` vào stack; nếu là dấu ngoặc đóng, ta kiểm tra phần tử đỉnh stack có khớp với dấu ngoặc mở tương ứng không, nếu không khớp hoặc stack rỗng thì trả về `false`. Khi duyệt hết chuỗi, nếu stack rỗng thì trả về `true`.
 
 ```java
-public boolean isValid(String s){
-    // 括号之间的对应规则
+public boolean isValid(String s) {
+    // Quy tắc khớp giữa ngoặc đóng và ngoặc mở
     HashMap<Character, Character> mappings = new HashMap<Character, Character>();
     mappings.put(')', '(');
     mappings.put('}', '{');
     mappings.put(']', '[');
+    
     Stack<Character> stack = new Stack<Character>();
     char[] chars = s.toCharArray();
     for (int i = 0; i < chars.length; i++) {
@@ -155,42 +164,34 @@ public boolean isValid(String s){
 }
 ```
 
-#### 3.2.3. 反转字符串
+#### 3.2.3. Đảo ngược chuỗi (String Reversal)
+Đẩy lần lượt từng ký tự của chuỗi vào ngăn xếp rồi `pop` toàn bộ ra ngoài.
 
-将字符串中的每个字符先入栈再出栈就可以了。
+#### 3.2.4. Quản lý lời gọi hàm (Call Stack)
+Hàm nào được gọi sau cùng sẽ phải hoàn thành trước và trả về kết quả, hoàn toàn khớp với nguyên lý **LIFO**. Ví dụ: Lời gọi hàm đệ quy (Recursion) được quản lý trong bộ nhớ JVM bằng Call Stack, mỗi lần gọi hàm mới sẽ đẩy tham số và địa chỉ trả về (Return Address) vào Stack frame.
 
-#### 3.2.4. 维护函数调用
+#### 3.2.5. Tìm kiếm theo chiều sâu (DFS - Depth First Search)
+Trong thuật toán DFS trên đồ thị hoặc cây, ngăn xếp được dùng để lưu trữ đường đi tìm kiếm nhằm phục vụ việc quay lui (Backtracking).
 
-最后一个被调用的函数必须先完成执行，符合栈的 **后进先出（LIFO, Last In First Out）** 特性。
-例如递归函数调用可以通过栈来实现，每次递归调用都会将参数和返回地址压栈。
+### 3.3. Cài đặt Ngăn xếp bằng Mảng
 
-#### 3.2.5 深度优先遍历（DFS）
-
-在深度优先搜索过程中，栈被用来保存搜索路径，以便回溯到上一层。
-
-### 3.3. 栈的实现
-
-栈既可以通过数组实现，也可以通过链表来实现。不管基于数组还是链表，入栈、出栈的时间复杂度都为 O(1)。
-
-下面我们使用数组来实现一个栈，并且这个栈具有 `push()`、`pop()`（返回栈顶元素并出栈）、`peek()`（返回栈顶元素不出栈）、`isEmpty()`、`size()` 这些基本的方法。
-
-> 提示：每次入栈之前先判断栈的容量是否够用，如果不够用就用 `Arrays.copyOf()` 进行扩容；
+Dưới đây là mã nguồn cài đặt một Ngăn xếp động hỗ trợ các phương thức cơ bản: `push()`, `pop()`, `peek()`, `isEmpty()`, `size()`.
 
 ```java
 public class MyStack {
-    private int[] storage;//存放栈中元素的数组
-    private int capacity;//栈的容量
-    private int count;//栈中元素数量
-    private static final int GROW_FACTOR = 2;
+    private int[] storage; // Mảng lưu trữ các phần tử
+    private int capacity;  // Sức chứa hiện tại
+    private int count;     // Số lượng phần tử hiện có
+    private static final int GROW_FACTOR = 2; // Hệ số mở rộng
 
-    //不带初始容量的构造方法。默认容量为8
+    // Constructor mặc định với sức chứa ban đầu là 8
     public MyStack() {
         this.capacity = 8;
-        this.storage=new int[8];
+        this.storage = new int[8];
         this.count = 0;
     }
 
-    //带初始容量的构造方法
+    // Constructor với sức chứa tùy chỉnh
     public MyStack(int initialCapacity) {
         if (initialCapacity < 1)
             throw new IllegalArgumentException("Capacity too small.");
@@ -200,7 +201,7 @@ public class MyStack {
         this.count = 0;
     }
 
-    //入栈
+    // Đẩy phần tử vào đỉnh ngăn xếp
     public void push(int value) {
         if (count == capacity) {
             ensureCapacity();
@@ -208,14 +209,14 @@ public class MyStack {
         storage[count++] = value;
     }
 
-    //确保容量大小
+    // Tự động mở rộng dung lượng khi đầy
     private void ensureCapacity() {
         int newCapacity = capacity * GROW_FACTOR;
         storage = Arrays.copyOf(storage, newCapacity);
         capacity = newCapacity;
     }
 
-    //返回栈顶元素并出栈
+    // Lấy phần tử đỉnh ngăn xếp ra ngoài và xóa khỏi stack
     public int pop() {
         if (count == 0)
             throw new IllegalArgumentException("Stack is empty.");
@@ -223,148 +224,110 @@ public class MyStack {
         return storage[count];
     }
 
-    //返回栈顶元素不出栈
+    // Xem giá trị phần tử đỉnh ngăn xếp mà không xóa
     public int peek() {
-        if (count == 0){
+        if (count == 0) {
             throw new IllegalArgumentException("Stack is empty.");
-        }else {
-            return storage[count-1];
+        } else {
+            return storage[count - 1];
         }
     }
 
-    //判断栈是否为空
+    // Kiểm tra ngăn xếp có rỗng không
     public boolean isEmpty() {
         return count == 0;
     }
 
-    //返回栈中元素的个数
+    // Trả về số lượng phần tử trong ngăn xếp
     public int size() {
         return count;
     }
-
 }
 ```
 
-验证：
+---
+
+## 4. Hàng đợi (Queue)
+
+### 4.1. Giới thiệu Hàng đợi
+
+**Hàng đợi (Queue)** là cấu trúc dữ liệu tuyến tính hoạt động theo nguyên lý **Vào trước ra trước (FIFO - First In, First Out)**.
+
+Trong ứng dụng thực tế, hàng đợi có thể cài đặt bằng mảng (**Sequential Queue - Hàng đợi tuần tự**) hoặc bằng danh sách liên kết (**Linked Queue - Hàng đợi liên kết**).
+
+Quy tắc của Hàng đợi:
+- Thao tác thêm phần tử (**Enqueue / Đưa vào hàng đợi**) chỉ được thực hiện ở **Đuôi hàng đợi (Rear / Tail)**.
+- Thao tác lấy phần tử (**Dequeue / Lấy khỏi hàng đợi**) chỉ được thực hiện ở **Đầu hàng đợi (Front / Head)**.
 
 ```java
-MyStack myStack = new MyStack(3);
-myStack.push(1);
-myStack.push(2);
-myStack.push(3);
-myStack.push(4);
-myStack.push(5);
-myStack.push(6);
-myStack.push(7);
-myStack.push(8);
-System.out.println(myStack.peek());//8
-System.out.println(myStack.size());//8
-for (int i = 0; i < 8; i++) {
-    System.out.println(myStack.pop());
-}
-System.out.println(myStack.isEmpty());//true
-myStack.pop();//报错：java.lang.IllegalArgumentException: Stack is empty.
+Giả sử hàng đợi có n phần tử:
+Truy cập (Access): O(n) // Trường hợp xấu nhất khi tìm kiếm phần tử ở giữa
+Chèn / Xóa:        O(1) // Enqueue ở đuôi và Dequeue ở đầu luôn đạt O(1)
 ```
 
-## 4. 队列
+![Cấu trúc Hàng đợi FIFO](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/queue.png)
 
-### 4.1. 队列简介
+### 4.2. Phân loại Hàng đợi
 
-**队列（Queue）** 是 **先进先出（FIFO，First In, First Out）** 的线性表。在具体应用中通常用链表或者数组来实现，用数组实现的队列叫作 **顺序队列**，用链表实现的队列叫作 **链式队列**。**队列只允许在后端（rear）进行插入操作也就是入队 enqueue，在前端（front）进行删除操作也就是出队 dequeue。**
+#### 4.2.1. Hàng đợi đơn (Single Queue)
 
-队列的操作方式和堆栈类似，唯一的区别在于队列只允许新数据在后端进行添加。
+Hàng đợi thông thường thêm phần tử vào đuôi và lấy ra ở đầu.
 
-```java
-假设队列中有n个元素。
-访问：O(n) //最坏情况
-插入删除：O(1) //后端插入前端删除元素
-```
+**Nhược điểm của Hàng đợi tuần tự cài bằng mảng là hiện tượng "Tràn ảo" (False Overflow):**
+Khi thực hiện enqueue và dequeue liên tục, cả 2 con trỏ `front` và `rear` đều dịch chuyển về phía cuối mảng. Khi `rear` chạm đến giới hạn cuối mảng, ta không thể thêm phần tử mới mặc dù các ô nhớ ở đầu mảng (do dequeue tạo ra) vẫn còn trống!
 
-![队列](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/queue.png)
+![Hiện tượng Tràn ảo trong Hàng đợi tuần tự](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/seq-queue-false-overflow.png)
 
-### 4.2. 队列分类
+#### 4.2.2. Hàng đợi vòng (Circular Queue)
 
-#### 4.2.1. 单队列
+**Hàng đợi vòng** giải quyết triệt để hiện tượng tràn ảo bằng cách nối liền vị trí cuối mảng quay vòng về vị trí đầu tiên (chỉ số 0).
 
-单队列就是常见的队列，每次添加元素时，都是添加到队尾。单队列又分为 **顺序队列（数组实现）** 和 **链式队列（链表实现）**。
+![Hàng đợi vòng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/circular-queue.png)
 
-**顺序队列存在“假溢出”的问题也就是明明有位置却不能添加的情况。**
+Trong hàng đợi vòng, để phân biệt giữa trạng thái **Hàng đợi Rỗng** và **Hàng đợi Đầy**, có 2 giải pháp phổ biến:
+1. **Dùng biến cờ (`flag`) hoặc biến đếm `count`**: Khi `front == rear` và `count == 0` là rỗng; khi `front == rear` và `count == capacity` là đầy.
+2. **Quy ước để trống 1 vị trí trong mảng**:
+   - Điều kiện rỗng: `front == rear`
+   - Điều kiện đầy: `(rear + 1) % capacity == front`
 
-假设下图是一个顺序队列，我们将前两个元素 1,2 出队，并入队两个元素 7,8。当进行入队、出队操作的时候，front 和 rear 都会持续往后移动，当 rear 移动到最后的时候，我们无法再往队列中添加数据，即使数组中还有空余空间，这种现象就是 **“假溢出”**。除了假溢出问题之外，如下图所示，当添加元素 8 的时候，rear 指针移动到数组之外（越界）。
+#### 4.2.3. Hàng đợi hai đầu (Deque - Double Ended Queue)
 
-> 为了避免当只有一个元素的时候，队头和队尾重合使处理变得麻烦，所以引入两个指针，front 指针指向对头元素，rear 指针指向队列最后一个元素的下一个位置，这样当 front 等于 rear 时，此队列不是还剩一个元素，而是空队列。——From 《大话数据结构》
+**Deque (Double Ended Queue)** cho phép thực hiện chèn và xóa phần tử linh hoạt ở cả hai đầu (Head và Tail). Deque cung cấp các hàm: `addFirst()`, `addLast()`, `removeFirst()`, `removeLast()`.
 
-![顺序队列假溢出](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/seq-queue-false-overflow.png)
+Trong Java, `Deque` có thể hoạt động vừa như một Hàng đợi FIFO, vừa như một Ngăn xếp LIFO hoàn hảo.
 
-#### 4.2.2. 循环队列
+#### 4.2.4. Hàng đợi ưu tiên (Priority Queue)
 
-循环队列可以解决顺序队列的假溢出和越界问题。解决办法就是：从头开始，这样也就会形成头尾相接的循环，这也就是循环队列名字的由来。
+**Hàng đợi ưu tiên (Priority Queue)** về bản chất không phải cấu trúc tuyến tính đơn thuần mà thường được hiện thực bên dưới bằng cấu trúc **Heap (Đống)**.
+- Khi thêm phần tử, phần tử mới được đưa vào Heap và tiến hành điều chỉnh (Sift-Up) với độ phức tạp $O(\log n)$.
+- Khi lấy phần tử, phần tử có mức ưu tiên cao nhất (hoặc nhỏ nhất) tại đỉnh Heap được lấy ra và Heap tự cân bằng lại (Sift-Down) với độ phức tạp $O(\log n)$.
 
-还是用上面的图，我们将 rear 指针指向数组下标为 0 的位置就不会有越界问题了。当我们再向队列中添加元素的时候，rear 向后移动。
+---
 
-![循环队列](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/circular-queue.png)
+### 4.3. Kịch bản ứng dụng của Hàng đợi trong thực tế
 
-顺序队列中，我们说 `front==rear` 的时候队列为空，循环队列中则不一样，也可能为满，如上图所示。解决办法有两种：
+- **Hàng đợi chặn (BlockingQueue) & Mô hình Producer-Consumer**: Khi hàng đợi rỗng, luồng Consumer sẽ bị chặn (block) chờ dữ liệu; khi hàng đợi đầy, luồng Producer bị chặn chờ chỗ trống.
+- **Hàng đợi tác vụ trong ThreadPool (Task Queue)**: Khi toàn bộ luồng trong ThreadPool đang bận, các task mới được đưa vào `BlockingQueue` (ví dụ `LinkedBlockingQueue`, `ArrayBlockingQueue`) để chờ xử lý.
+- **Thay thế Stack trong Java**: JDK khuyến nghị sử dụng `Deque` (ví dụ `ArrayDeque`) thay thế cho lớp cổ điển `java.util.Stack` vì `Stack` kế thừa từ `Vector` và bị khóa đồng bộ hóa chậm chạp.
+- **Tìm kiếm theo chiều rộng (BFS - Breadth First Search)**: Sử dụng hàng đợi để duyệt qua các đỉnh của đồ thị/cây theo từng lớp lang (Level-order).
+- **Message Queue (RabbitMQ, Kafka, RocketMQ)**: Xử lý bất đồng bộ, gọt đỉnh tải (Peak Shaving) và tách rời hệ thống (Decoupling).
 
-1. 可以设置一个标志变量 `flag`，当 `front==rear` 并且 `flag=0` 的时候队列为空，当 `front==rear` 并且 `flag=1` 的时候队列为满。
-2. 队列为空的时候就是 `front==rear`，队列满的时候，我们保证数组还有一个空闲的位置，rear 就指向这个空闲位置，如下图所示，那么现在判断队列是否为满的条件就是：`(rear+1) % QueueSize==front`。
+---
 
-#### 4.2.3 双端队列
+## Bảng so sánh tổng kết các cấu trúc tuyến tính
 
-**双端队列（Deque）** 是一种在队列的两端都可以进行插入和删除操作的队列，相比单队列来说更加灵活。
+| Cấu trúc | Truy vấn | Chèn / Xóa | Kiểu dữ liệu Java tiêu biểu | Dạng bài toán phỏng vấn thường gặp |
+| :--- | :--- | :--- | :--- | :--- |
+| **Mảng (Array)** | Theo chỉ số $O(1)$ | Vị trí giữa $O(n)$ | Mảng cơ sở, `ArrayList` | Tìm kiếm nhị phân, Hai con trỏ, Mảng tiền tố |
+| **Danh sách liên kết (LinkedList)** | $O(n)$ | Khi biết node $O(1)$ | `LinkedList` | Đảo ngược linkedlist, Con trỏ nhanh chậm, Hợp nhất |
+| **Ngăn xếp (Stack)** | Đỉnh $O(1)$ | Đỉnh $O(1)$ | `ArrayDeque`, `Deque` | Khớp dấu ngoặc, Monotonic Stack, DFS |
+| **Hàng đợi (Queue)** | Đầu $O(1)$ | Đầu/Đuôi $O(1)$ | `ArrayDeque`, `BlockingQueue` | BFS, Producer-Consumer, Hàng đợi xử lý tác vụ |
 
-一般来说，我们可以对双端队列进行 `addFirst`、`addLast`、`removeFirst` 和 `removeLast` 操作。
+## Đề xuất bài tập luyện tập
 
-#### 4.2.4 优先队列
-
-**优先队列（Priority Queue）** 从底层结构上来讲并非线性的数据结构，它一般是由堆来实现的。
-
-1. 在每个元素入队时，优先队列会将新元素插入堆中并调整堆。
-2. 在队头出队时，优先队列会返回堆顶元素并调整堆。
-
-关于堆的具体实现可以看 [堆](https://javaguide.cn/cs-basics/data-structure/heap.html) 这一节。
-
-优先队列只保证队头是当前优先级最高（或最低）的元素，不保证底层数组、迭代器或整个集合全局有序。每次取出队头后，下一优先级的元素才会成为新的队头。
-
-虽然优先队列通常由堆这种非线性结构实现，但它通过队列接口向使用者提供按优先级出队的能力。这里的“优先”只描述出队顺序，不能理解成集合中的所有元素会自动排好序。
-
-### 4.3. 队列的常见应用场景
-
-当我们需要按照一定顺序来处理数据的时候可以考虑使用队列这个数据结构。
-
-- **阻塞队列：** 阻塞队列可以看成在队列基础上加了阻塞操作的队列。当队列为空的时候，出队操作阻塞，当队列满的时候，入队操作阻塞。使用阻塞队列我们可以很容易实现“生产者 - 消费者”模型。
-- **线程池中的请求/任务队列：** 当线程池中没有空闲线程时，新的任务请求线程资源会被如何处理呢？答案是这些任务会被放入任务队列中，等待线程池中的线程空闲后再从队列中取出任务执行。任务队列分为无界队列（基于链表实现）和有界队列（基于数组实现）。无界队列的特点是队列容量理论上没有限制，任务可以持续入队，直到系统资源耗尽。例如：`FixedThreadPool` 使用的阻塞队列 `LinkedBlockingQueue`，其默认容量为 `Integer.MAX_VALUE`，因此可以被视为“无界队列”。而有界队列则不同，当队列已满时，如果再有新任务提交，由于队列无法继续容纳任务，线程池会拒绝这些任务，并抛出 `java.util.concurrent.RejectedExecutionException` 异常。
-- **栈：** 双端队列可以实现栈的全部功能（`push`、`pop` 和 `peek`），并且在 `Deque` 接口中已经定义了相关方法。`Stack` 没有被标记为废弃，但它是较早的 `Vector` 子类，JDK 文档建议优先使用 `Deque` 及其实现（如 `ArrayDeque`）完成栈操作。
-- **广度优先搜索（BFS）：** 在图的广度优先搜索过程中，队列被用于存储待访问的节点，保证按照层次顺序遍历图的节点。
-- Linux 内核进程队列（按优先级排队）
-- 现实生活中的派对，播放器上的播放列表；
-- 消息队列
-- 等等……
-
-## 面试复盘重点
-
-线性结构是算法题和 Java 集合的基础，面试里常把数组、链表、栈、队列放在一起对比。
-
-| 结构 | 查询          | 插入/删除         | 典型 Java 类型         | 高频题型                     |
-| ---- | ------------- | ----------------- | ---------------------- | ---------------------------- |
-| 数组 | 按下标 `O(1)` | 中间位置 `O(n)`   | `ArrayList` 底层数组   | 二分、双指针、前缀和         |
-| 链表 | `O(n)`        | 已知节点时 `O(1)` | `LinkedList`           | 反转链表、快慢指针、合并链表 |
-| 栈   | 栈顶 `O(1)`   | 栈顶 `O(1)`       | `ArrayDeque`           | 括号匹配、单调栈、DFS        |
-| 队列 | 队头 `O(1)`   | 入队/出队 `O(1)`  | `ArrayDeque`、阻塞队列 | BFS、生产者消费者、任务排队  |
-
-几个回答面试题时很有用的点：
-
-- 数组随机访问快，是因为内存连续，可以通过基地址和下标直接计算地址。
-- 链表插入删除快有前提：已经拿到要操作位置的节点；如果还要先查找，整体仍然是 `O(n)`。
-- Java 中不推荐继续使用 `Stack`，更常见的选择是 `Deque`，比如 `ArrayDeque`。
-- 队列在工程里不只用于算法 BFS，也用于线程池任务队列、消息队列、限流削峰等场景。
-- 循环队列的关键是区分队空和队满，常见做法是浪费一个位置或单独维护元素数量。
-
-## 推荐练习题
-
-- 数组：[704. 二分查找](https://leetcode.cn/problems/binary-search/)、[26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/)
-- 链表：[206. 反转链表](https://leetcode.cn/problems/reverse-linked-list/)、[19. 删除链表的倒数第 N 个结点](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/)
-- 栈：[20. 有效的括号](https://leetcode.cn/problems/valid-parentheses/)、[739. 每日温度](https://leetcode.cn/problems/daily-temperatures/)
-- 队列：[102. 二叉树的层序遍历](https://leetcode.cn/problems/binary-tree-level-order-traversal/)、[239. 滑动窗口最大值](https://leetcode.cn/problems/sliding-window-maximum/)
+- **Mảng**: [LeetCode 704. Binary Search](https://leetcode.com/problems/binary-search/), [LeetCode 26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+- **Danh sách liên kết**: [LeetCode 206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/), [LeetCode 19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+- **Ngăn xếp**: [LeetCode 20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/), [LeetCode 739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
+- **Hàng đợi**: [LeetCode 102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/), [LeetCode 239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 
 <!-- @include: @article-footer.snippet.md -->

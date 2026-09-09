@@ -1,121 +1,123 @@
 ---
-title: 二分查找面试题总结：左右边界、答案二分与 Java 模板
-description: 二分查找面试题总结，系统讲解基础二分、左边界、右边界、答案二分、Java 手写模板、复杂度分析和 LeetCode 高频题。
-category: 计算机基础
+title: Tổng hợp câu hỏi phỏng vấn Tìm kiếm nhị phân: Biên trái, Biên phải, Đáp án nhị phân và Java Template
+description: Cẩm nang chuyên sâu về Tìm kiếm nhị phân (Binary Search): Nguyên lý tính đơn điệu, kỹ thuật xử lý Biên trái (lowerBound), Biên phải (upperBound), Tìm kiếm nhị phân trên không gian đáp án (Binary Search on Answer) và các bài toán LeetCode kinh điển.
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
+  - LeetCode
 head:
   - - meta
     - name: keywords
-      content: 二分查找,二分查找模板,左右边界,答案二分,Java二分查找,LeetCode二分查找,算法面试题
+      content: Tìm kiếm nhị phân, Binary Search, Biên trái, Biên phải, lowerBound, upperBound, Đáp án nhị phân, Binary Search on Answer, Java Binary Search, LeetCode Binary Search
 ---
 
-二分查找最容易让人翻车的地方不是思想，而是边界。`left`、`right`、`mid`、循环条件、返回值，只要有一个含义没想清楚，就很容易写出死循环或者漏掉答案。
+Điểm dễ gây mất điểm nhất của **Tìm kiếm nhị phân (Binary Search)** không nằm ở mặt ý tưởng, mà nằm ở **Xử lý các điều kiện biên (Boundary Conditions)**.
 
-面试里判断能不能用二分，先看一句话：**答案所在空间是否有单调性**。数组有序只是最直观的一种情况，最小速度、最小容量、最小天数这类题，也可以在答案范围上二分。
+Chỉ cần bạn chưa xác định rõ ràng ý nghĩa của các biến `left`, `right`, `mid`, điều kiện dừng vòng lặp (`left <= right` hay `left < right`), và quy tắc cập nhật cận biên (`mid`, `mid + 1` hay `mid - 1`), bạn sẽ rất dễ viết ra một đoạn code bị rơi vào **Vòng lặp vô tận (Infinite Loop)** hoặc **Bỏ sót đáp án chính xác**.
 
-## 面试考察重点
+Khi phỏng vấn, để nhận diện xem một bài toán có thể áp dụng Binary Search hay không, hãy nhớ quy tắc vàng: **Không gian tìm kiếm của bài toán có tồn tại Tính đơn điệu (Monotonicity) hay không?**
+Mảng được sắp xếp tăng dần chỉ là trường hợp trực quan nhất của tính đơn điệu; các bài toán tìm Tốc độ tối thiểu, Sức chứa nhỏ nhất, hay Số ngày ngắn nhất đều có thể áp dụng tìm kiếm nhị phân trên chính **Không gian giá trị của đáp án**.
 
-- 能写出基础二分模板。
-- 能处理左边界、右边界。
-- 能识别答案二分，而不是只会在数组里找数。
-- 能解释为什么循环会结束，为什么不会漏答案。
-- 能说出时间复杂度是 `O(logn)`，空间复杂度通常是 `O(1)`。
+---
 
-## 什么时候想到二分？
+## Trọng tâm đánh giá trong phỏng vấn
 
-不要把二分查找理解成“只能在有序数组里找数字”。它真正依赖的是 **单调性**。
+- Viết chuẩn xác Template tìm kiếm nhị phân cơ bản mà không bị lỗi tràn số nguyên.
+- Xử lý mượt mà bài toán tìm **Biên trái (Left Bound)** và **Biên phải (Right Bound)** khi mảng có phần tử trùng lặp.
+- Nhận diện và giải quyết thành thạo dạng bài **Tìm kiếm nhị phân trên không gian đáp án (Binary Search on Answer)**.
+- Giải thích rành mạch tại sao vòng lặp chắc chắn sẽ kết thúc và không bao giờ bỏ sót nghiệm.
+- Phân tích chuẩn xác độ phức tạp thời gian là **$O(\log n)$** và độ phức tạp không gian thường là **$O(1)$**.
 
-常见单调性有两类：
+---
 
-| 类型     | 例子                           | 判断方式                                   |
-| -------- | ------------------------------ | ------------------------------------------ |
-| 数组单调 | 有序数组中找 `target`          | `nums[mid]` 和 `target` 比较后能排除一半   |
-| 答案单调 | 求最小速度、最小容量、最少天数 | 某个答案可行时，更大的答案也可行，或反过来 |
+## Khi nào nên nghĩ tới Tìm kiếm nhị phân?
 
-比如“爱吃香蕉的珂珂”里，吃香蕉速度越快，越容易在规定时间内吃完。这里数组本身不需要有序，单调的是“速度”和“是否能吃完”之间的关系。
+Đừng bao giờ giới hạn suy nghĩ rằng Binary Search chỉ dùng được khi đề bài cho một "mảng số đã sắp xếp". Cốt lõi của Binary Search là **Tính đơn điệu**:
 
-面试时可以这样判断：
+| Dạng đơn điệu | Ví dụ cụ thể | Cách kiểm tra loại trừ một nửa |
+| :--- | :--- | :--- |
+| **Mảng đơn điệu** | Tìm `target` trong mảng tăng dần | So sánh `nums[mid]` với `target` để loại bỏ hẳn nửa trái hoặc nửa phải |
+| **Đáp án đơn điệu** | Tìm tốc độ ăn chuối tối thiểu, sức chứa thuyền nhỏ nhất | Nếu một giá trị $x$ khả thi, thì mọi giá trị lớn hơn $x$ chắc chắn cũng khả thi (hoặc ngược lại) |
 
-1. 题目是否在找一个位置、边界或最小/最大可行值？
-2. 如果猜一个答案 `x`，能不能在 `O(n)` 或更低复杂度内判断它是否可行？
-3. `x` 变大或变小时，可行性是否单调变化？
+Ví dụ trong bài toán *"Koko ăn chuối (LeetCode 875)"*: Tốc độ ăn càng nhanh thì thời gian ăn hết càng ít, càng dễ hoàn thành trước hạn chót. Ở đây mảng các nải chuối hoàn toàn không cần sắp xếp; tính đơn điệu nằm ở mối quan hệ giữa **Tốc độ ăn** và **Khả năng hoàn thành nhiệm vụ**.
 
-三个问题都能回答上来，基本就可以尝试二分。
+Khi đối diện với một bài toán mới, hãy tự hỏi 3 câu:
+1. Đề bài có đang yêu cầu tìm một Vị trí, Điểm ranh giới, hoặc Giá trị khả thi Nhỏ nhất / Lớn nhất hay không?
+2. Nếu ta "đoán mò" một đáp án $x$, liệu ta có thể viết một hàm kiểm tra `check(x)` chạy trong thời gian $O(n)$ để xác định $x$ có thỏa mãn hay không?
+3. Khi $x$ tăng lên (hoặc giảm đi), tính khả thi của `check(x)` có biến thiên đơn điệu (từ `false` chuyển hẳn sang `true`, hoặc ngược lại) hay không?
 
-## 基础二分模板
+Nếu cả 3 câu trả lời đều là **CÓ**, bạn chắc chắn có thể giải bài toán bằng Tìm kiếm nhị phân!
 
-适合在有序数组中查找一个确定值：
+---
+
+## 1. Template Tìm kiếm nhị phân cơ bản (Khoảng đóng `[left, right]`)
+
+Áp dụng khi tìm kiếm một giá trị đích `target` cụ thể trong mảng tăng dần không chứa phần tử trùng lặp:
 
 ```java
 int binarySearch(int[] nums, int target) {
     int left = 0;
-    int right = nums.length - 1;
-    while (left <= right) {
+    int right = nums.length - 1; // Khoảng tìm kiếm là [left, right]
+
+    while (left <= right) { // Khi left > right thì khoảng tìm kiếm rỗng -> dừng
+        // Tránh tràn số nguyên thay vì dùng (left + right) / 2
         int mid = left + (right - left) / 2;
+
         if (nums[mid] == target) {
-            return mid;
+            return mid; // Tìm thấy mục tiêu
         } else if (nums[mid] < target) {
-            left = mid + 1;
+            left = mid + 1; // target nằm ở nửa phải [mid + 1, right]
         } else {
-            right = mid - 1;
+            right = mid - 1; // target nằm ở nửa trái [left, mid - 1]
         }
     }
-    return -1;
+    return -1; // Không tìm thấy
 }
 ```
 
-这个模板里，搜索区间是闭区间 `[left, right]`，所以循环条件是 `left <= right`。每次排除 `mid`，因此更新成 `mid + 1` 或 `mid - 1`。
+> **Bản chất**: Khoảng tìm kiếm là **Khoảng đóng hai đầu `[left, right]`**. Mỗi vị trí trong khoảng đều còn cơ hội là đáp án. Mỗi lần loại trừ ta loại bỏ hoàn toàn `mid`, do đó cập nhật thành `mid + 1` hoặc `mid - 1`. Vòng lặp kết thúc khi khoảng rỗng (`left > right`).
 
-用一句话记这个模板：**区间里每个位置都还可能是答案，循环结束时区间为空。**
+---
 
-举个例子，数组 `[1, 3, 5, 7, 9]` 中找 `7`：
+## 2. Template Tìm Biên trái (Left Bound / `lowerBound`)
 
-1. `left = 0`，`right = 4`，`mid = 2`，`nums[mid] = 5`，目标在右侧。
-2. 更新 `left = mid + 1 = 3`。
-3. `mid = 3`，找到 `7`。
-
-如果查找 `6`，最后会出现 `left > right`，说明闭区间已经被排空，返回 `-1`。
-
-## 左边界模板
-
-找第一个大于等于 `target` 的位置：
+Dùng để tìm **vị trí đầu tiên có giá trị $\ge target$** (phù hợp khi mảng có các phần tử trùng lặp hoặc cần tìm vị trí chèn):
 
 ```java
 int lowerBound(int[] nums, int target) {
     int left = 0;
-    int right = nums.length;
+    int right = nums.length; // Khoảng tìm kiếm là nửa mở [left, right)
+
     while (left < right) {
         int mid = left + (right - left) / 2;
         if (nums[mid] >= target) {
-            right = mid;
+            right = mid; // mid vẫn có thể là biên trái hợp lệ, không được trừ 1
         } else {
-            left = mid + 1;
+            left = mid + 1; // Chắc chắn không phải, bỏ hẳn nửa trái
         }
     }
-    return left;
+    return left; // Khi vòng lặp dừng, left == right chính là biên trái
 }
 ```
 
-这个模板的搜索区间是左闭右开 `[left, right)`。`right` 初始化为 `nums.length`，返回值可能等于 `nums.length`，表示数组中不存在大于等于 `target` 的位置。
+- **Quy ước khoảng**: Sử dụng nửa mở `[left, right)`. `right` khởi tạo bằng `nums.length`.
+- Khi `nums[mid] >= target`, vị trí `mid` này rất có thể chính là vị trí xuất hiện đầu tiên của `target` (hoặc một số lớn hơn đầu tiên), vì vậy ta **thu hẹp bờ phải về `right = mid` chứ không được trừ 1**.
+- Khi vòng lặp kết thúc, `left == right`. Nếu `left == nums.length`, điều đó có nghĩa mọi phần tử trong mảng đều nhỏ hơn `target`.
 
-左边界模板的关键不是“找到 target”，而是“找到第一个满足条件的位置”。这个写法能自然处理目标不存在的情况。
+---
 
-比如数组 `[1, 2, 2, 2, 4]`，找第一个大于等于 `2` 的位置：
+## 3. Template Tìm Biên phải (Right Bound / `upperBound`)
 
-- 当 `nums[mid] >= 2`，`mid` 可能就是答案，所以不能排除 `mid`，更新 `right = mid`。
-- 当 `nums[mid] < 2`，`mid` 和它左边都不可能是答案，更新 `left = mid + 1`。
+Dùng để tìm **vị trí cuối cùng có giá trị $\le target$**:
 
-循环结束时，`left == right`，这个位置就是第一个满足条件的位置。
-
-## 右边界模板
-
-找最后一个小于等于 `target` 的位置，可以先找第一个大于 `target` 的位置，再减 1：
+Cách thông minh và ít bị nhầm lẫn nhất là: **Chuyển bài toán tìm biên phải về bài toán tìm biên trái!**
+- Vị trí cuối cùng $\le target$ chính là: **(Vị trí đầu tiên $> target$) $- 1$**.
 
 ```java
 int upperBound(int[] nums, int target) {
     int left = 0;
     int right = nums.length;
+
     while (left < right) {
         int mid = left + (right - left) / 2;
         if (nums[mid] > target) {
@@ -124,195 +126,74 @@ int upperBound(int[] nums, int target) {
             left = mid + 1;
         }
     }
-    return left - 1;
+    return left - 1; // Vị trí đầu tiên > target trừ đi 1
 }
 ```
 
-这种写法的好处是左右边界只记一套思路：找第一个满足条件的位置。
+---
 
-右边界容易写错，推荐转化成左边界问题：
+## 4. Tìm kiếm nhị phân trên Không gian đáp án (Binary Search on Answer)
 
-- 最后一个小于等于 `target` 的位置 = 第一个大于 `target` 的位置 - 1。
-- 最后一个小于 `target` 的位置 = 第一个大于等于 `target` 的位置 - 1。
+Đây là dạng toán xuất hiện dày đặc nhất trong các bài LeetCode Medium/Hard.
 
-这样不需要维护两套模板，面试手写时更稳。
-
-## 答案二分
-
-答案二分不是在数组里找元素，而是在答案范围里找最小可行值或最大可行值。
-
-典型问题：给定若干堆香蕉和总时间 `h`，求最小吃香蕉速度。速度越快，越容易在 `h` 小时内吃完，这就是单调性。
-
-这类题通常分两步：
-
-1. 确定答案范围。比如速度最小是 `1`，最大不超过最大那堆香蕉数。
-2. 写 `check` 函数。给定一个速度，判断能不能在 `h` 小时内吃完。
-
-这个上界成立依赖题目约束：`h >= piles.length`。因为速度等于最大堆大小时，每堆香蕉最多 1 小时吃完，总耗时不会超过堆数。
+### Bài toán tiêu biểu: Koko ăn chuối (LeetCode 875)
+> Koko có $n$ đống chuối, mỗi đống có `piles[i]` quả chuối, và có tổng cộng $h$ giờ để ăn hết. Mỗi giờ Koko chọn một đống và ăn tối đa $k$ quả chuối từ đống đó. Hãy tìm tốc độ ăn tối thiểu $k$ để ăn hết tất cả chuối trong vòng $h$ giờ.
 
 ```java
-int minEatingSpeed(int[] piles, int h) {
-    int left = 1;
+public int minEatingSpeed(int[] piles, int h) {
+    int left = 1; // Tốc độ ăn tối thiểu là 1 quả/giờ
     int right = 0;
     for (int pile : piles) {
-        right = Math.max(right, pile);
+        right = Math.max(right, pile); // Tốc độ tối đa không cần vượt quá đống lớn nhất
     }
+
     while (left < right) {
         int mid = left + (right - left) / 2;
         if (canFinish(piles, h, mid)) {
-            right = mid;
+            right = mid; // Tốc độ mid khả thi, thử tìm tốc độ nhỏ hơn nữa
         } else {
-            left = mid + 1;
+            left = mid + 1; // Tốc độ mid không đủ nhanh, bắt buộc phải tăng tốc
         }
     }
-    return left;
+    return left; // left == right chính là tốc độ tối thiểu
 }
 
-boolean canFinish(int[] piles, int h, int speed) {
+// Hàm kiểm tra với tốc độ speed thì có ăn hết trong h giờ không
+private boolean canFinish(int[] piles, int h, int speed) {
     long hours = 0;
     for (int pile : piles) {
+        // Công thức làm tròn lên: (pile + speed - 1) / speed
         hours += (pile + speed - 1) / speed;
     }
     return hours <= h;
 }
 ```
 
-这里为什么返回 `left`？因为循环一直在找“第一个可行速度”。当 `canFinish(mid)` 为 true，说明 `mid` 可行，但可能还有更小的速度也可行，所以收缩右边界。最后左右边界重合的位置，就是最小可行速度。
+---
 
-答案二分的 `check` 函数往往比二分本身更重要。面试时建议先把 `check` 的含义说清楚，再写二分框架。
+## Bảng so sánh 3 loại Tìm kiếm nhị phân
 
-## 三类二分怎么选？
+| Dạng bài | Mục tiêu | Điều kiện vòng lặp | Cập nhật khi thỏa mãn | Giá trị trả về |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cơ bản** | Tìm chính xác chỉ số của `target` | `left <= right` | `return mid` ngay lập tức | Chỉ số hoặc `-1` nếu không có |
+| **Biên trái** | Tìm vị trí đầu tiên $\ge target$ | `left < right` | `right = mid` | `left` (trong khoảng $[0, n]$) |
+| **Đáp án nhị phân** | Tìm giá trị nghiệm nhỏ nhất khả thi | `left < right` | `right = mid` (nếu `check` đúng) | `left` |
 
-| 目标                         | 推荐模板 | 返回值                        |
-| ---------------------------- | -------- | ----------------------------- |
-| 找到某个等于 `target` 的下标 | 基础二分 | 找到返回下标，找不到返回 `-1` |
-| 找第一个满足条件的位置       | 左边界   | 返回 `left`，可能等于数组长度 |
-| 找最小可行答案               | 答案二分 | 返回最终的 `left`             |
+---
 
-如果题目里有“第一个”“最后一个”“最小可行”“最大可行”，不要急着写基础二分，先判断是不是边界问题。
+## Các lỗi sai kinh điển cần tránh
 
-## 面试手写路径
+1. **Tràn số nguyên khi tính `mid`**: Tuyệt đối tránh dùng `(left + right) / 2` vì khi `left + right > Integer.MAX_VALUE` sẽ bị tràn thành số âm. Luôn viết: `left + (right - left) / 2`.
+2. **Không phân biệt khoảng đóng và nửa mở**: Nếu dùng `while (left <= right)` thì cập nhật `right = mid - 1`. Nếu dùng `while (left < right)` thì cập nhật `right = mid`. Tránh trộn lẫn hai trường phái.
+3. **Bỏ sót trường hợp `target` không tồn tại**: Hàm tìm biên trái luôn trả về một chỉ số `left`. Nếu muốn kiểm tra xem phần tử đó có thực sự bằng `target` không, bạn phải kiểm tra: `left < nums.length && nums[left] == target`.
+4. **Tràn số trong hàm `check()`**: Khi cộng dồn thời gian hoặc dung lượng trong hàm `check()`, hãy dùng kiểu `long` thay vì `int`.
 
-二分题的代码不长，面试里更容易被追问的是“你为什么敢丢掉一半”。手写时可以按这个顺序来：
+## Đề xuất bài tập luyện tập
 
-1. 先说明搜索空间：是在数组下标里找，还是在答案范围里找。
-2. 再说明单调性：`mid` 左右两侧为什么可以排除一边。
-3. 明确区间含义：闭区间 `[left, right]` 还是左闭右开 `[left, right)`。
-4. 写更新规则：`mid` 还能不能成为答案，决定写 `right = mid` 还是 `right = mid - 1`。
-5. 最后说返回值：循环结束时 `left`、`right` 分别代表什么。
-
-一个很实用的自检问题是：**当 `nums[mid]` 正好满足条件时，我有没有把可能的答案删掉？** 左边界、答案二分里，`mid` 经常仍然可能是答案，所以不能随手写成 `right = mid - 1`。
-
-## 代表题精讲：查找第一个和最后一个位置
-
-[34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/) 是边界二分的典型题。题目要求返回 `target` 的起始和结束位置，如果不存在返回 `[-1, -1]`。
-
-这题不要写成“找到一个 target 后向两边扫描”。虽然能过一些用例，但最坏情况下会退化成 `O(n)`。更稳的写法是做两次边界查找：
-
-- 第一次找第一个大于等于 `target` 的位置。
-- 第二次找第一个大于 `target` 的位置，再减 1。
-
-下面两个辅助方法与上文模板一致，这里保留完整代码，方便把返回值含义和主逻辑放在一起对照。
-
-```java
-int[] searchRange(int[] nums, int target) {
-    int left = lowerBound(nums, target);
-    if (left == nums.length || nums[left] != target) {
-        return new int[] {-1, -1};
-    }
-    int right = upperBound(nums, target) - 1;
-    return new int[] {left, right};
-}
-
-int lowerBound(int[] nums, int target) {
-    int left = 0;
-    int right = nums.length;
-    while (left < right) {
-        int mid = left + (right - left) / 2;
-        if (nums[mid] >= target) {
-            right = mid;
-        } else {
-            left = mid + 1;
-        }
-    }
-    return left;
-}
-
-int upperBound(int[] nums, int target) {
-    int left = 0;
-    int right = nums.length;
-    while (left < right) {
-        int mid = left + (right - left) / 2;
-        if (nums[mid] > target) {
-            right = mid;
-        } else {
-            left = mid + 1;
-        }
-    }
-    return left;
-}
-```
-
-面试里这题常见追问是：如果数组中全是 `target` 怎么办？如果 `target` 不存在但应该插在中间怎么办？这两个问题其实都在考返回值含义。`lowerBound` 返回的是第一个满足条件的位置，不保证这个位置上的值一定等于 `target`，所以返回前要再检查一次。
-
-## 过程示意和边界样例
-
-以左边界模板为例，数组 `[1, 2, 2, 2, 4]` 中找第一个大于等于 `2` 的位置：
-
-| 轮次 | `left` | `right` | `mid` | 判断            | 下一步      |
-| ---- | ------ | ------- | ----- | --------------- | ----------- |
-| 1    | 0      | 5       | 2     | `nums[2] >= 2`  | `right = 2` |
-| 2    | 0      | 2       | 1     | `nums[1] >= 2`  | `right = 1` |
-| 3    | 0      | 1       | 0     | `nums[0] < 2`   | `left = 1`  |
-| 结束 | 1      | 1       | -     | `left == right` | 返回 1      |
-
-几个边界样例建议手写前先过一遍：
-
-| 输入        | 目标       | 预期                                 |
-| ----------- | ---------- | ------------------------------------ |
-| `[]`        | `1`        | 返回 `-1` 或插入位置 `0`，看题目要求 |
-| `[1]`       | `1`        | 能命中唯一元素                       |
-| `[1, 1, 1]` | 左边界 `1` | 返回 `0`                             |
-| `[1, 3, 5]` | 左边界 `4` | 返回 `2`                             |
-| `[1, 3, 5]` | 左边界 `6` | 返回 `3`                             |
-
-常见错误写法：
-
-```java
-while (left < right) {
-    int mid = (left + right) / 2;
-    if (nums[mid] >= target) {
-        right = mid - 1; // 错：mid 可能就是左边界，不能直接排除
-    } else {
-        left = mid + 1;
-    }
-}
-```
-
-左边界里，当 `nums[mid] >= target` 时，`mid` 仍然可能是答案，所以应该写 `right = mid`。
-
-## 易错点
-
-- `mid = (left + right) / 2` 可能整数溢出，推荐写成 `left + (right - left) / 2`。
-- 不要混用闭区间和左闭右开区间的更新方式。
-- 找边界时，命中目标后通常不能直接返回，还要继续收缩区间。
-- 答案二分要先证明单调性，不能看到“最小值”就硬套。
-- `canFinish` 这类判断函数里可能需要 `long`，避免累计值溢出。
-
-## 高频问题自测
-
-- `left < right` 和 `left <= right` 有什么区别？
-- 二分查找为什么是 `O(logn)`？
-- 找左边界时，为什么命中后要移动 `right`？
-- 什么是答案二分？它和普通二分有什么区别？
-- 二分查找一定要求数组有序吗？
-
-## 推荐练习题
-
-- [704. 二分查找](https://leetcode.cn/problems/binary-search/)
-- [35. 搜索插入位置](https://leetcode.cn/problems/search-insert-position/)
-- [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/)
-- [875. 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas/)
-- [1011. 在 D 天内送达包裹的能力](https://leetcode.cn/problems/capacity-to-ship-packages-within-d-days/)
+- [LeetCode 704. Binary Search](https://leetcode.com/problems/binary-search/)
+- [LeetCode 35. Search Insert Position](https://leetcode.com/problems/search-insert-position/)
+- [LeetCode 34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+- [LeetCode 875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/)
+- [LeetCode 1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
 
 <!-- @include: @article-footer.snippet.md -->

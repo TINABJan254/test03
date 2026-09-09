@@ -1,11 +1,11 @@
 ---
-title: 算法专题：面试刷题路线、核心模板与 LeetCode 高频题
-description: 算法面试复习路线，涵盖复杂度分析、二分、双指针、滑动窗口、DFS/BFS、回溯、动态规划、贪心、Top K、字符串、链表、排序和 LeetCode 高频题。
-category: 计算机基础
+title: Chuyên đề Thuật toán: Lộ trình luyện đề phỏng vấn, Template cốt lõi và bài tập LeetCode tần suất cao
+description: Lộ trình ôn tập phỏng vấn Thuật toán, bao gồm Phân tích độ phức tạp, Tìm kiếm nhị phân, Hai con trỏ, Cửa sổ trượt, DFS/BFS, Quay lui, Quy hoạch động, Tham lam, Top-K, Chuỗi ký tự, Danh sách liên kết, Sắp xếp và bài tập LeetCode tần suất cao.
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
   - LeetCode
-  - 面试
+  - Phỏng vấn
 sidebar: false
 sitemap:
   changefreq: weekly
@@ -13,103 +13,114 @@ sitemap:
 head:
   - - meta
     - name: keywords
-      content: 算法,算法面试题,LeetCode,刷题路线,二分查找,双指针,滑动窗口,DFS,BFS,回溯,动态规划,贪心,TopK,排序算法,字符串算法,链表算法,后端面试
+      content: Thuật toán, Câu hỏi phỏng vấn Thuật toán, LeetCode, Lộ trình luyện đề, Binary Search, Two Pointers, Sliding Window, DFS, BFS, Backtracking, Dynamic Programming, Greedy, Top-K, Thuật toán sắp xếp, Thuật toán chuỗi, Thuật toán LinkedList, Phỏng vấn Backend
 ---
 
-这份 **算法专题** 不是按教材顺序堆知识点，而是按面试刷题的真实路径整理：先搞清复杂度，再掌握二分、双指针、滑动窗口、DFS/BFS、回溯、动态规划、贪心、Top K 这些高频模板，最后用字符串、链表、排序和 LeetCode 题单做复盘。
+Tài liệu **Chuyên đề Thuật toán** này không sắp xếp kiến thức theo kiểu liệt kê lý thuyết giáo trình một cách máy móc, mà được tổng hợp dựa trên **lộ trình luyện đề phỏng vấn thực tế**: Bắt đầu từ việc làm rõ bản chất phân tích độ phức tạp (Complexity Analysis), tiếp theo là làm chủ các mẫu giải thuật (Templates) tần suất cao nhất như Tìm kiếm nhị phân (Binary Search), Hai con trỏ (Two Pointers), Cửa sổ trượt (Sliding Window), DFS/BFS, Quay lui (Backtracking), Quy hoạch động (Dynamic Programming), Tham lam (Greedy), Top-K; và cuối cùng là tổng kết, củng cố qua các chuyên đề Chuỗi ký tự, Danh sách liên kết, 10 Thuật toán sắp xếp kinh điển và danh sách đề thi LeetCode chọn lọc.
 
-算法题准备到后面，很容易陷入一个状态：题刷了不少，但换个条件就卡住。原因通常不是题量不够，而是没有把题目归到模板里。面试时真正有用的是：看到题目后能判断它像哪类问题，先写出可工作的版本，再解释复杂度和边界处理。
+Khi ôn luyện thuật toán, nhiều bạn rất dễ rơi vào một trạng thái: Đã giải qua khá nhiều bài, nhưng chỉ cần người phỏng vấn thay đổi nhẹ một điều kiện đề bài là lập tức bị tắc nghẽn. Nguyên nhân thường không phải do bạn làm chưa đủ số lượng bài, mà là do bạn chưa gom các bài toán về đúng **Khuôn mẫu tư duy (Algorithm Template)**. Điều thực sự hữu ích khi phỏng vấn là: Vừa nhìn thấy đề bài là có thể nhận diện ngay nó thuộc dạng bài toán nào, nhanh chóng viết ra một phiên bản code hoạt động chuẩn xác, sau đó giải thích rành mạch về độ phức tạp và các trường hợp biên (Edge cases).
 
-## 适合谁看
+## Phù hợp với ai
 
-- 正在准备校招、社招算法题，希望按题型系统刷 LeetCode 的同学。
-- 已经刷过一些题，但复盘时说不清“这题为什么这么做”的读者。
-- 数据结构基础还可以，但缺少算法模板和边界处理经验的后端开发者。
-- 面试前只有 7 到 30 天，需要快速找回手感的工程师。
+- Các bạn đang chuẩn bị cho kỳ tuyển dụng đại học (Campus Recruitment) hoặc phỏng vấn kỹ sư Backend, mong muốn luyện đề LeetCode bài bản theo từng dạng bài.
+- Những độc giả đã giải qua nhiều bài tập nhưng khi nhìn lại vẫn chưa tự tin trả lời rõ ràng câu hỏi: *"Tại sao bài này lại dùng cách tiếp cận đó?"*.
+- Các kỹ sư có nền tảng Cấu trúc dữ liệu khá tốt nhưng còn thiếu kinh nghiệm về Template thuật toán và xử lý các trường hợp góc/biên.
+- Những lập trình viên chỉ có từ 7 đến 30 ngày trước buổi phỏng vấn và cần lấy lại phản xạ giải thuật trong thời gian ngắn nhất.
 
-## 算法面试考什么
+## Phỏng vấn Thuật toán đánh giá điều gì?
 
-算法面试一般不只是看你能不能 AC 一道题，更多是在看 4 件事：
+Trong các buổi phỏng vấn kỹ thuật, người phỏng vấn thường không chỉ xem bạn có bấm nộp code đạt AC (Accepted) được hay không, mà quan trọng hơn là đánh giá **4 năng lực cốt lõi**:
 
-| 考察点     | 面试里的具体表现                     | 复习时要做什么                 |
-| ---------- | ------------------------------------ | ------------------------------ |
-| 题型识别   | 这题是二分、滑动窗口、回溯还是 DP    | 按题型刷，不要完全随机刷       |
-| 代码稳定性 | 边界、空指针、下标、循环条件是否可靠 | 每个模板准备 2 到 3 个边界样例 |
-| 复杂度表达 | 能否说清时间复杂度和空间复杂度       | 每做完一题都写复杂度           |
-| 迁移能力   | 条件变化后能否改模板                 | 一类题至少刷基础题和变体题     |
+| Khía cạnh đánh giá | Biểu hiện cụ thể trong phỏng vấn | Việc cần làm khi ôn tập |
+| :--- | :--- | :--- |
+| **Nhận diện dạng bài** | Bài này là Binary Search, Sliding Window, Backtracking hay Dynamic Programming? | Luyện đề theo từng dạng bài, không làm đề ngẫu nhiên |
+| **Độ ổn định của mã nguồn** | Các điểm biên, con trỏ null, chỉ số mảng (Index), điều kiện dừng vòng lặp có tin cậy không? | Mỗi Template luôn chuẩn bị sẵn 2 đến 3 ca kiểm thử biên (Edge cases) |
+| **Trình bày độ phức tạp** | Có giải thích rành mạch được Độ phức tạp thời gian và Không gian bộ nhớ không? | Sau mỗi bài giải xong luôn tự phân tích và ghi lại Big-O |
+| **Khả năng chuyển giao** | Khi điều kiện bài toán thay đổi, có biết cách biến tấu Template không? | Mỗi dạng bài làm tối thiểu bài cơ bản và các bài biến thể |
 
-如果只能记一句话：**先按题型建模板，再用代表题练迁移。**
+> **Nguyên tắc ghi nhớ then chốt:**  
+> **Xây dựng Template vững chắc theo từng dạng bài $\rightarrow$ Dùng các bài toán đại diện để rèn luyện khả năng chuyển giao.**
 
-## 建议阅读顺序
+---
 
-1. [时间复杂度和空间复杂度面试指南](./complexity-analysis.md)：先把 Big O、递归复杂度和常见误判讲清楚。
-2. [二分查找面试题总结](./binary-search.md)：练基础二分、左右边界和答案二分。
-3. [双指针与滑动窗口面试题总结](./two-pointers-and-sliding-window.md)：解决数组、字符串、链表里的高频题。
-4. [DFS 与 BFS 面试题总结](./dfs-bfs.md)：掌握树、图、矩阵搜索和层序遍历。
-5. [回溯算法面试题总结](./backtracking.md)：集中处理组合、排列、子集和棋盘问题。
-6. [动态规划面试题总结](./dynamic-programming.md)：从状态定义和转移方程入手，不靠背题。
-7. [贪心算法面试题总结](./greedy.md) 和 [Top K 问题面试题总结](./top-k.md)：补齐排序贪心、堆、快排分区和桶计数。
-8. [几道常见的字符串算法题](./string-algorithm-problems.md)、[几道常见的链表算法题](./linkedlist-algorithm-problems.md)、[十大经典排序算法总结](./10-classical-sorting-algorithms.md)：按专题做面试前复盘。
+## Lộ trình đọc gợi ý
 
-## 核心模板
+1. [Cẩm nang phỏng vấn Độ phức tạp thời gian & không gian](./complexity-analysis.md): Làm rõ Big-O, độ phức tạp đệ quy và các ngộ nhận thường gặp.
+2. [Tổng hợp câu hỏi phỏng vấn Tìm kiếm nhị phân (Binary Search)](./binary-search.md): Luyện Binary Search cơ bản, biên trái, biên phải và tìm kiếm nhị phân trên không gian đáp án.
+3. [Tổng hợp câu hỏi phỏng vấn Hai con trỏ & Cửa sổ trượt](./two-pointers-and-sliding-window.md): Giải quyết các dạng bài tần suất cực cao trên Mảng, Chuỗi ký tự và Danh sách liên kết.
+4. [Tổng hợp câu hỏi phỏng vấn DFS & BFS](./dfs-bfs.md): Nắm vững duyệt cây, duyệt đồ thị, tìm kiếm trên ma trận và duyệt theo tầng (Level-order).
+5. [Tổng hợp câu hỏi phỏng vấn Thuật toán quay lui (Backtracking)](./backtracking.md): Tập trung xử lý các bài toán Tổ hợp, Hoán vị, Tập con và bàn cờ (N-Queens).
+6. [Tổng hợp câu hỏi phỏng vấn Quy hoạch động (Dynamic Programming)](./dynamic-programming.md): Tiếp cận từ định nghĩa Trạng thái (State) và Phương trình chuyển trạng thái, không học vẹt lời giải.
+7. [Tổng hợp câu hỏi phỏng vấn Thuật toán tham lam (Greedy)](./greedy.md) và [Tổng hợp câu hỏi phỏng vấn Bài toán Top-K](./top-k.md): Bổ sung kỹ thuật Tham lam kết hợp sắp xếp, Heap, Phân vùng Quickselect và Đếm thùng.
+8. [Các bài toán thuật toán Chuỗi ký tự thường gặp](./string-algorithm-problems.md), [Các bài toán thuật toán Danh sách liên kết thường gặp](./linkedlist-algorithm-problems.md), [Tổng hợp 10 thuật toán sắp xếp kinh điển](./10-classical-sorting-algorithms.md): Ôn tập chuyên đề tổng lực trước ngày phỏng vấn.
 
-| 模板     | 识别信号                                   | 重点文章                                                           |
-| -------- | ------------------------------------------ | ------------------------------------------------------------------ |
-| 二分查找 | 有序、单调、最小可行值、最大可行值         | [二分查找面试题总结](./binary-search.md)                           |
-| 双指针   | 原地修改、两端收缩、快慢追赶、链表定位     | [双指针与滑动窗口面试题总结](./two-pointers-and-sliding-window.md) |
-| 滑动窗口 | 连续子数组、连续子串、最长/最短窗口        | [双指针与滑动窗口面试题总结](./two-pointers-and-sliding-window.md) |
-| DFS/BFS  | 树遍历、图遍历、矩阵连通块、层序最短步数   | [DFS 与 BFS 面试题总结](./dfs-bfs.md)                              |
-| 回溯     | 枚举所有方案、路径选择、组合排列、棋盘约束 | [回溯算法面试题总结](./backtracking.md)                            |
-| 动态规划 | 最优值、计数、能否到达、子序列、背包       | [动态规划面试题总结](./dynamic-programming.md)                     |
-| 贪心     | 每一步选择当前最合适的对象，常和排序搭配   | [贪心算法面试题总结](./greedy.md)                                  |
-| Top K    | 第 K 大、前 K 高频、数据流、优先级         | [Top K 问题面试题总结](./top-k.md)                                 |
+---
 
-## 7 天速刷路线
+## Các Template giải thuật cốt lõi
 
-时间很紧时，不建议从难题开始。7 天路线的目标是恢复模板和手写稳定性：
+| Mẫu giải thuật (Template) | Dấu hiệu nhận biết trong đề bài | Bài viết trọng tâm |
+| :--- | :--- | :--- |
+| **Tìm kiếm nhị phân (Binary Search)** | Mảng có thứ tự, tính đơn điệu, tìm giá trị khả thi nhỏ nhất / lớn nhất | [Tìm kiếm nhị phân](./binary-search.md) |
+| **Hai con trỏ (Two Pointers)** | Sửa đổi tại chỗ (In-place), hai đầu co hẹp, con trỏ nhanh chậm, định vị node | [Hai con trỏ & Cửa sổ trượt](./two-pointers-and-sliding-window.md) |
+| **Cửa sổ trượt (Sliding Window)** | Mảng con liên tục, chuỗi con liên tục, cửa sổ dài nhất / ngắn nhất | [Hai con trỏ & Cửa sổ trượt](./two-pointers-and-sliding-window.md) |
+| **DFS / BFS** | Duyệt cây, duyệt đồ thị, vết loang ma trận, số bước ngắn nhất theo tầng | [DFS & BFS](./dfs-bfs.md) |
+| **Quay lui (Backtracking)** | Liệt kê tất cả phương án, chọn đường đi, tổ hợp, hoán vị, ràng buộc bàn cờ | [Quay lui](./backtracking.md) |
+| **Quy hoạch động (DP)** | Tìm giá trị tối ưu (Max/Min), đếm số cách, bài toán có thể tới được không, dãy con, cái túi | [Quy hoạch động](./dynamic-programming.md) |
+| **Thuật toán tham lam (Greedy)** | Mỗi bước chọn phương án tối ưu cục bộ, thường đi kèm với thao tác sắp xếp | [Tham lam](./greedy.md) |
+| **Bài toán Top-K** | Phần tử lớn thứ K, K phần tử xuất hiện nhiều nhất, luồng dữ liệu, mức ưu tiên | [Bài toán Top-K](./top-k.md) |
 
-| 天数    | 重点              | 建议动作                                       |
-| ------- | ----------------- | ---------------------------------------------- |
-| 第 1 天 | 复杂度 + 排序     | 复盘 Big O、快排、归并、堆排序和稳定性         |
-| 第 2 天 | 二分 + 双指针     | 写左右边界模板、两数之和、三数之和、删除重复项 |
-| 第 3 天 | 滑动窗口 + 字符串 | 写最长无重复子串、最小覆盖子串、回文相关题     |
-| 第 4 天 | 链表              | 写反转链表、环形链表、删除倒数第 N 个节点      |
-| 第 5 天 | 树和 BFS          | 写前中后序遍历、层序遍历、最近公共祖先         |
-| 第 6 天 | 回溯 + DP         | 写子集、组合、零钱兑换、最长递增子序列         |
-| 第 7 天 | Top K + 复盘      | 写第 K 大、前 K 高频，整理错题和边界样例       |
+---
 
-## 30 天系统路线
+## Lộ trình luyện nhanh 7 ngày
 
-30 天路线不用追求每天刷很多题。更靠谱的节奏是：每天 1 到 3 道代表题，题后写 5 行复盘。
+Khi thời gian phỏng vấn đã cận kề, không nên bắt đầu bằng các bài Hard quá hóc búa. Mục tiêu của lộ trình 7 ngày là khôi phục phản xạ viết code Template và kiểm soát tốt các ca biên:
 
-| 阶段     | 时间           | 目标                                             |
-| -------- | -------------- | ------------------------------------------------ |
-| 第一阶段 | 第 1 到 5 天   | 复杂度、数组、链表、栈、队列，保证基础模板能手写 |
-| 第二阶段 | 第 6 到 12 天  | 二分、双指针、滑动窗口、字符串，重点练边界       |
-| 第三阶段 | 第 13 到 18 天 | 树、图、DFS/BFS、并查集，建立搜索题框架          |
-| 第四阶段 | 第 19 到 24 天 | 回溯、动态规划、贪心，重点练状态定义和剪枝       |
-| 第五阶段 | 第 25 到 30 天 | Top K、排序、综合题和错题复盘，准备面试讲解      |
+| Ngày | Trọng tâm ôn tập | Hành động gợi ý |
+| :--- | :--- | :--- |
+| **Ngày 1** | Độ phức tạp + Thuật toán sắp xếp | Ôn tập Big-O, Quick Sort, Merge Sort, Heap Sort và tính ổn định (Stability) |
+| **Ngày 2** | Nhị phân + Hai con trỏ | Viết template Biên trái/Biên phải, Two Sum, Three Sum, Xóa phần tử trùng lặp |
+| **Ngày 3** | Cửa sổ trượt + Chuỗi ký tự | Viết Chuỗi con không lặp dài nhất, Chuỗi con phủ tối thiểu, Chuỗi đối xứng (Palindrome) |
+| **Ngày 4** | Danh sách liên kết | Viết Đảo ngược LinkedList, Phát hiện chu trình (Floyd), Xóa node thứ N từ cuối lên |
+| **Ngày 5** | Cây & BFS | Viết duyệt Tiền/Trung/Hậu thứ tự, Duyệt theo tầng (Level-order), Tổ tiên chung gần nhất (LCA) |
+| **Ngày 6** | Quay lui + Quy hoạch động | Viết Tập con (Subsets), Tổ hợp (Combinations), Đổi tiền xu (Coin Change), Dãy con tăng dài nhất (LIS) |
+| **Ngày 7** | Top-K + Ôn tập tổng hợp | Viết Phần tử lớn thứ K, K phần tử tần suất cao nhất, tổng kết lỗi sai và các trường hợp biên |
 
-## 高频问题自测
+---
 
-- 时间复杂度为什么要看最高阶？递归复杂度怎么算？
-- 二分查找的 `left < right` 和 `left <= right` 怎么选？
-- 双指针和滑动窗口有什么区别？
-- DFS 和 BFS 分别适合什么问题？什么时候需要 `visited`？
-- 回溯和 DFS 是什么关系？剪枝应该放在哪里？
-- 动态规划为什么难？状态定义和遍历顺序怎么确定？
-- 贪心为什么需要证明？面试中答到什么程度够用？
-- Top K 用堆、快排分区还是桶计数，怎么选？
-- 排序算法的稳定性、原地排序、最好/最坏复杂度分别是什么？
+## Lộ trình bài bản 30 ngày
 
-## 相关专题
+Với lộ trình 30 ngày, bạn không cần chạy theo số lượng bài giải mỗi ngày. Nhịp độ hiệu quả và bền bỉ nhất là: Mỗi ngày từ **1 đến 3 bài đại diện**, sau khi giải xong viết ngắn gọn 5 dòng đúc kết phản tư (Reflection).
 
-- [计算机基础知识体系](../)
-- [数据结构专题](../data-structure/)
-- [常见数据结构经典 LeetCode 题目推荐](./common-data-structures-leetcode-recommendations.md)
-- [经典算法思想总结](./classical-algorithm-problems-recommendations.md)
-- [Java 集合](../../java/collection/java-collection-questions-01.md)
-- [面试准备](../../interview-preparation/)
-- [计算机基础书籍推荐](../../books/cs-basics.md)
+| Giai đoạn | Thời gian | Mục tiêu cụ thể |
+| :--- | :--- | :--- |
+| **Giai đoạn 1** | Ngày 1 đến 5 | Độ phức tạp, Mảng, Danh sách liên kết, Ngăn xếp, Hàng đợi; đảm bảo tự tay viết code mượt mà |
+| **Giai đoạn 2** | Ngày 6 đến 12 | Nhị phân, Hai con trỏ, Cửa sổ trượt, Chuỗi ký tự; tập trung xử lý chắc các điều kiện biên |
+| **Giai đoạn 3** | Ngày 13 đến 18 | Cây, Đồ thị, DFS/BFS, Union-Find; xây dựng khung tư duy tìm kiếm bài bản |
+| **Giai đoạn 4** | Ngày 19 đến 24 | Quay lui, Quy hoạch động, Tham lam; trọng tâm luyện định nghĩa trạng thái và tỉa nhánh (Pruning) |
+| **Giai đoạn 5** | Ngày 25 đến 30 | Top-K, Thuật toán sắp xếp, bài tổng hợp và ôn lại bài sai; luyện giải thích lưu loát khi phỏng vấn |
+
+---
+
+## Tự kiểm tra câu hỏi tần suất cao
+
+- Tại sao khi phân tích độ phức tạp thời gian ta chỉ quan tâm tới bậc cao nhất? Độ phức tạp giải thuật đệ quy tính như thế nào?
+- Trong Tìm kiếm nhị phân, khi nào dùng vòng lặp `left < right` và khi nào dùng `left <= right`?
+- Kỹ thuật Hai con trỏ và Cửa sổ trượt khác nhau như thế nào?
+- DFS và BFS lần lượt phù hợp với những bài toán nào? Khi nào bắt buộc phải dùng mảng `visited`?
+- Thuật toán Quay lui và DFS có mối quan hệ gì? Điều kiện tỉa nhánh (Pruning) nên đặt ở đâu?
+- Tại sao Quy hoạch động lại là nỗi ám ảnh của nhiều người? Làm sao để xác định định nghĩa trạng thái và thứ tự duyệt bảng DP?
+- Tại sao thuật toán Tham lam luôn cần chứng minh tính đúng đắn? Trong phỏng vấn cần giải thích đến mức nào là đủ?
+- Đối với bài toán Top-K: Khi nào chọn Heap, khi nào chọn Phân vùng Quickselect, khi nào chọn Đếm thùng?
+- Các khái niệm: Tính ổn định (Stable Sort), Sắp xếp tại chỗ (In-place), Độ phức tạp tốt nhất / xấu nhất của các thuật toán sắp xếp là gì?
+
+## Chuyên đề liên quan
+
+- [Hệ thống kiến thức Cơ sở máy tính](../)
+- [Chuyên đề Cấu trúc dữ liệu](../data-structure/)
+- [Gợi ý các bài tập LeetCode kinh điển theo Cấu trúc dữ liệu](./common-data-structures-leetcode-recommendations.md)
+- [Tổng hợp tư duy các thuật toán kinh điển](./classical-algorithm-problems-recommendations.md)
+- [Chi tiết Java Collections](../../java/collection/java-collection-questions-01.md)
+- [Chuẩn bị phỏng vấn](../../interview-preparation/)
+- [Sách tham khảo Cơ sở máy tính](../../books/cs-basics.md)
 
 <!-- @include: @article-footer.snippet.md -->

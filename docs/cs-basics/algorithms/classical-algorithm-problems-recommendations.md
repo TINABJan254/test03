@@ -1,144 +1,144 @@
 ---
-title: 经典算法思想总结（含 LeetCode 题目推荐）
-description: 总结二分、双指针、滑动窗口、DFS/BFS、回溯、动态规划、贪心、分治、拓扑排序、并查集、位运算等高频算法思想，并给出题型识别、模板、代表题和复盘重点。
-category: 计算机基础
+title: "Tổng hợp tư duy thuật toán kinh điển (Kèm gợi ý bài tập LeetCode)"
+description: "Tổng hợp các tư duy thuật toán tần suất cao như Binary Search, Two Pointers, Sliding Window, DFS/BFS, Backtracking, Dynamic Programming, Greedy, Divide and Conquer, Topological Sort, Union-Find, Bit Manipulation, cung cấp cách nhận diện dạng bài, template, bài toán tiêu biểu và trọng tâm ôn tập."
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
   - LeetCode
-  - 面试
+  - Phỏng vấn
 head:
   - - meta
     - name: keywords
-      content: 算法思想,二分查找,双指针,滑动窗口,DFS,BFS,回溯,动态规划,贪心,分治,拓扑排序,并查集,位运算,LeetCode题目推荐
+      content: Tư duy thuật toán,Binary Search,Two Pointers,Sliding Window,DFS,BFS,Backtracking,Dynamic Programming,Greedy,Divide and Conquer,Topological Sort,Union-Find,Bit Manipulation,Đề xuất bài tập LeetCode
 ---
 
-算法思想不要孤立背。面试里更有用的问法是：什么信号提示我该用它？模板里最容易错的地方在哪里？如果面试官改条件，我应该从哪个变量或状态开始调整？
+Đừng học vẹt các tư duy thuật toán một cách cô lập. Trong phỏng vấn, những câu hỏi thực tế và hữu ích hơn thường là: Dấu hiệu nào cho thấy tôi nên áp dụng thuật toán này? Điểm nào trong template dễ sai nhất? Nếu người phỏng vấn thay đổi điều kiện, tôi nên bắt đầu điều chỉnh từ biến số hoặc trạng thái nào?
 
-这份题单按思想组织，每一类都给出“识别信号、常用模板、代表题、复盘重点”。题目数量控制在能代表模板的范围内，先把这些题讲明白，比机械刷更多题更划算。
+Danh sách bài tập này được tổ chức theo tư duy thuật toán, mỗi thể loại đều cung cấp: "Dấu hiệu nhận biết, Template thông dụng, Bài toán tiêu biểu, Trọng tâm ôn tập". Số lượng bài toán được chọn lọc vừa đủ để đại diện cho template; việc nắm vững và giải thích trôi chảy những bài này sẽ hiệu quả hơn nhiều so với việc cày cuốc cơ học số lượng lớn bài tập.
 
-## 怎么用这份题单
+## Cách sử dụng danh sách bài tập này
 
-不要一上来就把所有题目按顺序刷完。更适合面试准备的方式是：先读对应的模板文章，确认自己能手写核心代码，再做“必刷题”，最后用“进阶题”检查边界和变体。
+Đừng vội vàng làm tuần tự tất cả các bài từ trên xuống dưới ngay từ đầu. Cách chuẩn bị phỏng vấn hiệu quả hơn là: Đọc bài viết template tương ứng trước để chắc chắn bản thân có thể tự viết code phần cốt lõi, sau đó làm các "Bài bắt buộc làm", và cuối cùng dùng các "Bài nâng cao" để kiểm tra các trường hợp biên và biến thể.
 
-| 目标           | 建议动作                                                                                                                                |
+| Mục tiêu | Hành động đề xuất |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 快速建立模板   | 先读 [二分查找](./binary-search.md)、[双指针与滑动窗口](./two-pointers-and-sliding-window.md)、[DFS/BFS](./dfs-bfs.md) 这些高频模板文章 |
-| 补齐搜索和 DP  | 继续读 [回溯算法](./backtracking.md)、[动态规划](./dynamic-programming.md)，每类至少手写 2 道基础题                                     |
-| 面试前查漏补缺 | 用 [贪心算法](./greedy.md)、[Top K 问题](./top-k.md)、[并查集](../data-structure/union-find.md) 补齐常见变体                            |
-| 复盘自己的答案 | 每题写下题型识别信号、核心变量含义、复杂度、边界样例。如果这些讲不清，说明这题还没真正掌握                                              |
+| Xây dựng nhanh các template | Đọc trước các bài template tần suất cao: [Binary Search](./binary-search.md), [Two Pointers & Sliding Window](./two-pointers-and-sliding-window.md), [DFS & BFS](./dfs-bfs.md) |
+| Bổ sung phần Tìm kiếm và DP | Tiếp tục đọc [Thuật toán Backtracking](./backtracking.md), [Quy hoạch động (DP)](./dynamic-programming.md), mỗi dạng tự tay viết ít nhất 2 bài cơ bản |
+| Rà soát lỗ hổng trước phỏng vấn | Dùng [Thuật toán tham lam (Greedy)](./greedy.md), [Bài toán Top K](./top-k.md), [Union-Find](../data-structure/union-find.md) để củng cố các biến thể phổ biến |
+| Đúc kết lại câu trả lời | Với mỗi bài, hãy ghi lại: dấu hiệu nhận diện, ý nghĩa các biến cốt lõi, độ phức tạp, trường hợp biên. Nếu chưa nói rõ được các điểm này thì chứng tỏ bạn chưa thực sự nắm vững bài toán |
 
-## 二分查找
+## Tìm kiếm nhị phân (Binary Search)
 
-| 项目     | 内容                                                                                                                                                                                                  |
+| Hạng mục | Nội dung |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 有序数组、单调条件、找边界、找最小可行值或最大可行值                                                                                                                                                  |
-| 常用模板 | 基础二分、左边界、右边界、答案二分                                                                                                                                                                    |
-| 必刷题   | [704. 二分查找](https://leetcode.cn/problems/binary-search/)、[34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/) |
-| 进阶题   | [35. 搜索插入位置](https://leetcode.cn/problems/search-insert-position/)、[875. 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas/)                                                    |
-| 复盘重点 | 循环条件、`mid` 计算、边界更新后是否会死循环                                                                                                                                                          |
+| Dấu hiệu nhận diện | Mảng đã sắp xếp, điều kiện đơn điệu, tìm kiếm biên, tìm giá trị khả thi nhỏ nhất hoặc lớn nhất |
+| Template thông dụng | Binary Search cơ bản, biên trái (left boundary), biên phải (right boundary), tìm kiếm nhị phân trên không gian nghiệm |
+| Bài bắt buộc làm | [704. Binary Search](https://leetcode.cn/problems/binary-search/), [34. Find First and Last Position of Element in Sorted Array](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/) |
+| Bài nâng cao | [35. Search Insert Position](https://leetcode.cn/problems/search-insert-position/), [875. Koko Eating Bananas](https://leetcode.cn/problems/koko-eating-bananas/) |
+| Trọng tâm ôn tập | Điều kiện vòng lặp, cách tính `mid`, cập nhật biên để không bị rơi vào vòng lặp vô tận |
 
-## 双指针
+## Hai con trỏ (Two Pointers)
 
-| 项目     | 内容                                                                                                                                                                            |
+| Hạng mục | Nội dung |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 有序数组、原地修改、两端向中间收缩、链表快慢追赶                                                                                                                                |
-| 常用模板 | 左右指针、快慢指针、读写指针                                                                                                                                                    |
-| 必刷题   | [26. 删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/)、[977. 有序数组的平方](https://leetcode.cn/problems/squares-of-a-sorted-array/) |
-| 进阶题   | [15. 三数之和](https://leetcode.cn/problems/3sum/)、[142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/)                                                      |
-| 复盘重点 | 指针含义要固定，去重条件不要漏，链表题先画 3 个节点                                                                                                                             |
+| Dấu hiệu nhận diện | Mảng đã sắp xếp, sửa đổi tại chỗ (in-place), thu hẹp từ hai đầu vào giữa, con trỏ nhanh chậm đuổi bắt trên LinkedList |
+| Template thông dụng | Left-Right Pointers (trái phải), Fast-Slow Pointers (nhanh chậm), Read-Write Pointers (đọc ghi) |
+| Bài bắt buộc làm | [26. Remove Duplicates from Sorted Array](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/), [977. Squares of a Sorted Array](https://leetcode.cn/problems/squares-of-a-sorted-array/) |
+| Bài nâng cao | [15. 3Sum](https://leetcode.cn/problems/3sum/), [142. Linked List Cycle II](https://leetcode.cn/problems/linked-list-cycle-ii/) |
+| Trọng tâm ôn tập | Ý nghĩa con trỏ phải nhất quán, không bỏ sót điều kiện loại bỏ trùng lặp, bài toán LinkedList nên vẽ trước 3 node |
 
-## 滑动窗口
+## Cửa sổ trượt (Sliding Window)
 
-| 项目     | 内容                                                                                                                                                                                      |
+| Hạng mục | Nội dung |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 连续子数组、连续子串、最长/最短、窗口内满足某个条件                                                                                                                                       |
-| 常用模板 | 固定窗口、可变窗口、计数 Map                                                                                                                                                              |
-| 必刷题   | [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/)、[209. 长度最小的子数组](https://leetcode.cn/problems/minimum-size-subarray-sum/) |
-| 进阶题   | [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/)、[438. 找到字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string/)                |
-| 复盘重点 | 什么时候扩右边界，什么时候缩左边界，窗口内变量如何维护                                                                                                                                    |
+| Dấu hiệu nhận diện | Mảng con liên tục, chuỗi con liên tục, dài nhất/ngắn nhất, bên trong cửa sổ thỏa mãn điều kiện nhất định |
+| Template thông dụng | Cửa sổ cố định (Fixed Window), cửa sổ biến thiên (Dynamic Window), Map đếm tần suất |
+| Bài bắt buộc làm | [3. Longest Substring Without Repeating Characters](https://leetcode.cn/problems/longest-substring-without-repeating-characters/), [209. Minimum Size Subarray Sum](https://leetcode.cn/problems/minimum-size-subarray-sum/) |
+| Bài nâng cao | [76. Minimum Window Substring](https://leetcode.cn/problems/minimum-window-substring/), [438. Find All Anagrams in a String](https://leetcode.cn/problems/find-all-anagrams-in-a-string/) |
+| Trọng tâm ôn tập | Khi nào mở rộng biên phải, khi nào thu hẹp biên trái, duy trì các biến bên trong cửa sổ như thế nào |
 
-## DFS 与 BFS
+## DFS và BFS
 
-| 项目     | 内容                                                                                                                                                       |
+| Hạng mục | Nội dung |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 树遍历、图遍历、矩阵连通块、最短步数、层序遍历                                                                                                             |
-| 常用模板 | 递归 DFS、栈模拟 DFS、队列 BFS、层序 BFS                                                                                                                   |
-| 必刷题   | [102. 二叉树的层序遍历](https://leetcode.cn/problems/binary-tree-level-order-traversal/)、[200. 岛屿数量](https://leetcode.cn/problems/number-of-islands/) |
-| 进阶题   | [994. 腐烂的橘子](https://leetcode.cn/problems/rotting-oranges/)、[127. 单词接龙](https://leetcode.cn/problems/word-ladder/)                               |
-| 复盘重点 | 访问标记、越界判断、BFS 层数统计                                                                                                                           |
+| Dấu hiệu nhận diện | Duyệt cây, duyệt đồ thị, thành phần liên thông trên ma trận lưới, số bước ngắn nhất, duyệt theo tầng (level order) |
+| Template thông dụng | Đệ quy DFS, mô phỏng DFS bằng Stack, hàng đợi BFS, BFS theo tầng |
+| Bài bắt buộc làm | [102. Binary Tree Level Order Traversal](https://leetcode.cn/problems/binary-tree-level-order-traversal/), [200. Number of Islands](https://leetcode.cn/problems/number-of-islands/) |
+| Bài nâng cao | [994. Rotting Oranges](https://leetcode.cn/problems/rotting-oranges/), [127. Word Ladder](https://leetcode.cn/problems/word-ladder/) |
+| Trọng tâm ôn tập | Đánh dấu đã truy cập (`visited`), kiểm tra vượt biên, đếm số tầng trong BFS |
 
-## 回溯算法
+## Thuật toán Backtracking (Quay lui)
 
-| 项目     | 内容                                                                                                                |
+| Hạng mục | Nội dung |
 | -------- | ------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 枚举所有方案、路径选择、组合、排列、子集、棋盘约束                                                                  |
-| 常用模板 | 路径 `path`、选择列表、递归层、撤销选择                                                                             |
-| 必刷题   | [77. 组合](https://leetcode.cn/problems/combinations/)、[78. 子集](https://leetcode.cn/problems/subsets/)           |
-| 进阶题   | [39. 组合总和](https://leetcode.cn/problems/combination-sum/)、[51. N 皇后](https://leetcode.cn/problems/n-queens/) |
-| 复盘重点 | 递归参数代表什么，剪枝条件放在循环前还是循环内                                                                      |
+| Dấu hiệu nhận diện | Liệt kê tất cả các phương án, chọn đường đi, tổ hợp, hoán vị, tập con, ràng buộc bàn cờ |
+| Template thông dụng | Đường đi `path`, danh sách lựa chọn, tầng đệ quy, thu hồi lựa chọn (backtrack) |
+| Bài bắt buộc làm | [77. Combinations](https://leetcode.cn/problems/combinations/), [78. Subsets](https://leetcode.cn/problems/subsets/) |
+| Bài nâng cao | [39. Combination Sum](https://leetcode.cn/problems/combination-sum/), [51. N-Queens](https://leetcode.cn/problems/n-queens/) |
+| Trọng tâm ôn tập | Ý nghĩa các tham số đệ quy, điều kiện cắt tỉa nhánh đặt trước vòng lặp hay bên trong vòng lặp |
 
-## 动态规划
+## Quy hoạch động (Dynamic Programming - DP)
 
-| 项目     | 内容                                                                                                                                                               |
+| Hạng mục | Nội dung |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 识别信号 | 求最优值、方案数、能否到达、子序列、背包、区间合并                                                                                                                 |
-| 常用模板 | 一维 DP、二维 DP、滚动数组、背包 DP                                                                                                                                |
-| 必刷题   | [70. 爬楼梯](https://leetcode.cn/problems/climbing-stairs/)、[322. 零钱兑换](https://leetcode.cn/problems/coin-change/)                                            |
-| 进阶题   | [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)、[416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/) |
-| 复盘重点 | `dp[i]` 的含义、初始化、遍历顺序、是否能压缩空间                                                                                                                   |
+| Dấu hiệu nhận diện | Tìm giá trị tối ưu, số phương án, kiểm tra khả năng đạt tới, dãy con, bài toán cái túi (Knapsack), hợp nhất khoảng |
+| Template thông dụng | DP 1 chiều, DP 2 chiều, mảng cuộn (Rolling Array), Knapsack DP |
+| Bài bắt buộc làm | [70. Climbing Stairs](https://leetcode.cn/problems/climbing-stairs/), [322. Coin Change](https://leetcode.cn/problems/coin-change/) |
+| Bài nâng cao | [300. Longest Increasing Subsequence](https://leetcode.cn/problems/longest-increasing-subsequence/), [416. Partition Equal Subset Sum](https://leetcode.cn/problems/partition-equal-subset-sum/) |
+| Trọng tâm ôn tập | Ý nghĩa của `dp[i]`, khởi tạo giá trị ban đầu, thứ tự duyệt, có thể nén không gian bộ nhớ không |
 
-## 贪心算法
+## Thuật toán tham lam (Greedy)
 
-| 项目     | 内容                                                                                                                                      |
+| Hạng mục | Nội dung |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 每一步选择当前最合适的对象，常伴随排序、区间、跳跃、买卖                                                                                  |
-| 常用模板 | 排序后选择、维护最远边界、区间合并/覆盖                                                                                                   |
-| 必刷题   | [455. 分发饼干](https://leetcode.cn/problems/assign-cookies/)、[55. 跳跃游戏](https://leetcode.cn/problems/jump-game/)                    |
-| 进阶题   | [45. 跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/)、[435. 无重叠区间](https://leetcode.cn/problems/non-overlapping-intervals/) |
-| 复盘重点 | 贪心策略为什么不会错，反例能否推翻当前策略                                                                                                |
+| Dấu hiệu nhận diện | Ở mỗi bước luôn chọn đối tượng thích hợp nhất hiện tại, thường đi kèm sắp xếp, khoảng, nhảy, mua bán |
+| Template thông dụng | Lựa chọn sau khi sắp xếp, duy trì biên xa nhất, hợp nhất/bao phủ khoảng |
+| Bài bắt buộc làm | [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/), [55. Jump Game](https://leetcode.cn/problems/jump-game/) |
+| Bài nâng cao | [45. Jump Game II](https://leetcode.cn/problems/jump-game-ii/), [435. Non-overlapping Intervals](https://leetcode.cn/problems/non-overlapping-intervals/) |
+| Trọng tâm ôn tập | Tại sao chiến lược tham lam không bị sai, có phản ví dụ nào lật đổ được chiến lược hiện tại không |
 
-## 分治算法
+## Thuật toán chia để trị (Divide and Conquer)
 
-| 项目     | 内容                                                                                                                                                                       |
+| Hạng mục | Nội dung |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 问题可以拆成同类子问题，子问题结果能合并                                                                                                                                   |
-| 常用模板 | 递归拆分、子问题求解、合并结果                                                                                                                                             |
-| 必刷题   | [108. 将有序数组转换为二叉搜索树](https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/)、[148. 排序链表](https://leetcode.cn/problems/sort-list/)      |
-| 进阶题   | [23. 合并 K 个升序链表](https://leetcode.cn/problems/merge-k-sorted-lists/)、[215. 数组中的第 K 个最大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array/) |
-| 复盘重点 | 递归出口、左右区间是否重叠、合并复杂度                                                                                                                                     |
+| Dấu hiệu nhận diện | Bài toán có thể chia thành các bài toán con cùng loại, kết quả các bài toán con có thể gộp lại được |
+| Template thông dụng | Chia nhỏ bằng đệ quy, giải quyết bài toán con, hợp nhất kết quả |
+| Bài bắt buộc làm | [108. Convert Sorted Array to Binary Search Tree](https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/), [148. Sort List](https://leetcode.cn/problems/sort-list/) |
+| Bài nâng cao | [23. Merge k Sorted Lists](https://leetcode.cn/problems/merge-k-sorted-lists/), [215. Kth Largest Element in an Array](https://leetcode.cn/problems/kth-largest-element-in-an-array/) |
+| Trọng tâm ôn tập | Điều kiện dừng đệ quy, khoảng trái và phải có bị chồng lấn không, độ phức tạp của bước hợp nhất |
 
-## 拓扑排序
+## Sắp xếp tô-pô (Topological Sort)
 
-| 项目     | 内容                                                                                                                                |
+| Hạng mục | Nội dung |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 课程依赖、任务依赖、有向无环图、判断是否能完成                                                                                      |
-| 常用模板 | 入度数组 + 队列，或 DFS 三色标记                                                                                                    |
-| 必刷题   | [207. 课程表](https://leetcode.cn/problems/course-schedule/)                                                                        |
-| 进阶题   | [210. 课程表 II](https://leetcode.cn/problems/course-schedule-ii/)、[269. 火星词典](https://leetcode.cn/problems/alien-dictionary/) |
-| 复盘重点 | 入度什么时候减，结果数量是否等于节点数量                                                                                            |
+| Dấu hiệu nhận diện | Phụ thuộc khóa học, phụ thuộc tác vụ, đồ thị có hướng không chu trình (DAG), kiểm tra khả năng hoàn thành |
+| Template thông dụng | Mảng bán bậc vào (In-degree array) + Hàng đợi (Kahn's Algorithm), hoặc DFS với 3 màu đánh dấu |
+| Bài bắt buộc làm | [207. Course Schedule](https://leetcode.cn/problems/course-schedule/) |
+| Bài nâng cao | [210. Course Schedule II](https://leetcode.cn/problems/course-schedule-ii/), [269. Alien Dictionary](https://leetcode.cn/problems/alien-dictionary/) |
+| Trọng tâm ôn tập | Khi nào giảm bậc vào, số lượng phần tử kết quả có bằng tổng số node của đồ thị không |
 
-## 并查集
+## Tập hợp rời rạc / Cấu trúc dữ liệu hợp nhất (Union-Find / DSU)
 
-| 项目     | 内容                                                                                                                                                               |
+| Hạng mục | Nội dung |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 识别信号 | 连通性、分组、朋友圈、冗余边、等式关系                                                                                                                             |
-| 常用模板 | `find`、`union`、路径压缩、按大小合并                                                                                                                              |
-| 必刷题   | [547. 省份数量](https://leetcode.cn/problems/number-of-provinces/)                                                                                                 |
-| 进阶题   | [684. 冗余连接](https://leetcode.cn/problems/redundant-connection/)、[990. 等式方程的可满足性](https://leetcode.cn/problems/satisfiability-of-equality-equations/) |
-| 复盘重点 | `find` 是否路径压缩，什么时候判断冲突                                                                                                                              |
+| Dấu hiệu nhận diện | Tính liên thông, phân nhóm, mạng xã hội bạn bè, cạnh dư thừa (redundant connection), quan hệ đẳng thức |
+| Template thông dụng | `find`, `union`, nén đường đi (path compression), hợp nhất theo kích thước/hạng |
+| Bài bắt buộc làm | [547. Number of Provinces](https://leetcode.cn/problems/number-of-provinces/) |
+| Bài nâng cao | [684. Redundant Connection](https://leetcode.cn/problems/redundant-connection/), [990. Satisfiability of Equality Equations](https://leetcode.cn/problems/satisfiability-of-equality-equations/) |
+| Trọng tâm ôn tập | `find` có áp dụng nén đường đi không, khi nào thì phát hiện xung đột |
 
-## 位运算
+## Thao tác bit (Bit Manipulation)
 
-| 项目     | 内容                                                                                                                            |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| 识别信号 | 奇偶、是否为 2 的幂、只出现一次、状态压缩                                                                                       |
-| 常用模板 | 异或、与运算清最低位 1、位掩码枚举                                                                                              |
-| 必刷题   | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)、[231. 2 的幂](https://leetcode.cn/problems/power-of-two/) |
-| 进阶题   | [191. 位 1 的个数](https://leetcode.cn/problems/number-of-1-bits/)、[78. 子集](https://leetcode.cn/problems/subsets/)           |
-| 复盘重点 | 异或性质、`n & (n - 1)` 的含义、负数位表示                                                                                      |
+| Hạng mục | Nội dung |
+| -------- | ------------------------------------------------------------------------------------------------|
+| Dấu hiệu nhận diện | Kiểm tra chẵn lẻ, kiểm tra lũy thừa của 2, phần tử chỉ xuất hiện một lần, nén trạng thái (bitmask) |
+| Template thông dụng | XOR, phép AND xóa bit 1 thấp nhất (`n & (n - 1)`), duyệt bitmask |
+| Bài bắt buộc làm | [136. Single Number](https://leetcode.cn/problems/single-number/), [231. Power of Two](https://leetcode.cn/problems/power-of-two/) |
+| Bài nâng cao | [191. Number of 1 Bits](https://leetcode.cn/problems/number-of-1-bits/), [78. Subsets](https://leetcode.cn/problems/subsets/) |
+| Trọng tâm ôn tập | Tính chất phép XOR, ý nghĩa của `n & (n - 1)`, biểu diễn số âm dưới dạng bù 2 |
 
-## 复习路线入口
+## Lối vào lộ trình ôn tập
 
-这篇文章只保留经典题型和题单推荐，7 天速刷和 30 天系统路线统一维护在[算法面试复习总览](./README.md)。后续如果调整复习节奏，只需要更新总览页，避免多个题单里的路线表互相漂移。
+Bài viết này chỉ giữ lại danh sách các dạng bài và bài tập đề xuất kinh điển. Lộ trình ôn cấp tốc 7 ngày và lộ trình hệ thống 30 ngày được duy trì thống nhất tại [Tổng quan ôn tập phỏng vấn thuật toán](./README.md). Nếu sau này điều chỉnh nhịp độ ôn tập thì chỉ cần cập nhật trang tổng quan, tránh việc các bảng lộ trình ở nhiều bài bị lệch pha nhau.
 
 <!-- @include: @article-footer.snippet.md -->

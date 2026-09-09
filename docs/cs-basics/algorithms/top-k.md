@@ -1,55 +1,55 @@
 ---
-title: Top K 问题面试题总结：堆、快排分区、桶计数与数据流
-description: Top K 问题面试题总结，讲解第 K 大、前 K 高频、小顶堆、快排分区、桶计数、数据流中位数、PriorityQueue 和 LeetCode 高频题。
-category: 计算机基础
+title: "Tổng hợp bài toán phỏng vấn Top K: Heap, Phân vùng Quick Sort, Bucket Sort và Data Stream"
+description: "Tổng hợp bài toán phỏng vấn Top K, giải thích phần tử lớn thứ K, Top K phần tử có tần suất cao nhất, Min-Heap, Max-Heap, phân vùng Quick Sort (Quickselect), Bucket Sort, trung vị luồng dữ liệu (Data Stream Median), PriorityQueue và LeetCode."
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: TopK,Top K,第K大,前K高频,堆,小顶堆,快排分区,桶计数,PriorityQueue,数据流中位数,LeetCode
+      content: TopK,Top K,Lớn thứ K,Tần suất cao nhất,Heap,Min-Heap,Max-Heap,Quickselect,Phân vùng Quick Sort,Bucket Sort,PriorityQueue,Data Stream Median,Trung vị luồng dữ liệu,LeetCode
 ---
 
-Top K 问题在后端面试里很常见，因为它既能考算法，也能自然追问工程场景：排行榜、热词统计、数据流中位数、日志里最常见的错误码，都能落到 Top K。
+Bài toán Top K xuất hiện rất phổ biến trong các buổi phỏng vấn backend, bởi vì nó vừa kiểm tra được tư duy thuật toán, vừa dễ dàng mở rộng sang các tình huống kỹ thuật thực tế: Bảng xếp hạng (Leaderboard), thống kê từ khóa hot, tìm trung vị luồng dữ liệu (Data Stream Median), mã lỗi xuất hiện nhiều nhất trong log... tất cả đều quy về bài toán Top K.
 
-这类题不要只记一种写法。面试官常会追问：如果数据量很大怎么办？如果是数据流怎么办？如果要求前 K 高频怎么办？不同条件下方案会变。
+Với dạng bài này, đừng chỉ học thuộc một cách giải duy nhất. Người phỏng vấn thường sẽ hỏi mở rộng: Nếu lượng dữ liệu cực kỳ lớn thì làm thế nào? Nếu là dữ liệu luồng (Data Stream) đến liên tục thì sao? Nếu yêu cầu tìm Top K phần tử có tần suất cao nhất thì làm thế nào? Các điều kiện khác nhau sẽ dẫn đến các phương án tối ưu khác nhau.
 
-## 面试考察重点
+## Trọng tâm khảo sát trong phỏng vấn
 
-- 能用堆解决第 K 大和前 K 高频。
-- 能说清小顶堆和大顶堆怎么选。
-- 能对比堆、快排分区、桶计数的复杂度。
-- 能处理数据流场景。
-- 能写出 Java `PriorityQueue` 比较器。
+- Sử dụng thành thạo Heap để giải quyết bài toán tìm phần tử lớn thứ K và Top K phần tử có tần suất cao nhất.
+- Nêu rõ lý do lựa chọn Min-Heap hay Max-Heap trong từng trường hợp.
+- So sánh được độ phức tạp giữa Heap, Phân vùng Quick Sort (Quickselect) và Bucket Sort.
+- Xử lý tốt các tình huống dữ liệu dạng luồng (Data Stream).
+- Viết thành thạo bộ so sánh (Comparator) cho `PriorityQueue` trong Java.
 
-## Top K 题怎么选方案？
+## Chọn phương án nào cho bài toán Top K?
 
-先看 3 个条件：
+Trước tiên hãy xem xét 3 điều kiện:
 
-1. 是否只需要第 K 个元素，还是要完整的前 K 个元素？
-2. 数据是一次性给出，还是持续到来的数据流？
-3. 是否需要结果有序？
+1. Đề bài chỉ cần đúng phần tử thứ K, hay cần toàn bộ tập hợp K phần tử đầu tiên?
+2. Dữ liệu được đưa vào một lần (offline array), hay là luồng dữ liệu đến liên tục theo thời gian (stream)?
+3. Kết quả đầu ra có yêu cầu phải sắp xếp theo thứ tự hay không?
 
-如果只是一次性数组里找第 K 大，快排分区平均更快；如果数据持续到来，维护一个大小为 K 的堆更自然；如果题目问前 K 高频，要先做频率统计，再对频率做 Top K。
+Nếu chỉ tìm phần tử lớn thứ K trong một mảng tĩnh một lần, thuật toán phân vùng Quick Sort (Quickselect) có hiệu suất trung bình nhanh hơn; nếu dữ liệu đến liên tục, việc duy trì một Heap kích thước K là tự nhiên nhất; nếu đề bài hỏi Top K phần tử có tần suất cao nhất, cần thống kê tần suất trước rồi mới áp dụng Top K lên tần suất đó.
 
-## 方案对比
+## So sánh các phương án
 
-| 方案     | 适合场景                 | 时间复杂度         | 空间复杂度          |
+| Phương án | Phù hợp cho | Độ phức tạp thời gian | Độ phức tạp không gian |
 | -------- | ------------------------ | ------------------ | ------------------- |
-| 排序     | 数据量不大，代码简单优先 | `O(nlogn)`         | 取决于排序实现      |
-| 小顶堆   | 找前 K 大或第 K 大       | `O(nlogk)`         | `O(k)`              |
-| 快排分区 | 找第 K 大，平均效率高    | 平均 `O(n)`        | `O(1)` 到 `O(logn)` |
-| 桶计数   | 频率范围有限，前 K 高频  | `O(n)`             | `O(n)`              |
-| 双堆     | 数据流中位数             | 每次插入 `O(logn)` | `O(n)`              |
+| Sắp xếp toàn bộ | Dữ liệu nhỏ, ưu tiên code đơn giản | `O(n log n)` | Phụ thuộc thuật toán sắp xếp |
+| Min-Heap (Heap nhỏ) | Tìm K phần tử lớn nhất hoặc lớn thứ K | `O(n log k)` | `O(k)` |
+| Quickselect (Phân vùng Quick Sort) | Tìm phần tử lớn thứ K, hiệu suất trung bình cao | Trung bình `O(n)` | `O(1)` đến `O(log n)` |
+| Bucket Sort (Đếm theo thùng) | Phạm vi tần suất bị chặn, Top K tần suất | `O(n)` | `O(n)` |
+| Dual Heaps (Hai Heap) | Tìm trung vị trong luồng dữ liệu (Data Stream Median) | Mỗi lần thêm `O(log n)` | `O(n)` |
 
-面试里可以这样回答取舍：
+Trong phỏng vấn, bạn có thể giải thích sự đánh đổi như sau:
 
-- 排序最简单，适合数据量不大或不追求最优复杂度。
-- 堆适合 K 比 n 小很多的场景，空间只需要 `O(k)`。
-- 快排分区适合一次性找第 K 大，平均 `O(n)`，但最坏会退化。
-- 桶计数适合频率类问题，尤其是频率范围不超过 `n`。
+- Sắp xếp toàn bộ đơn giản nhất, phù hợp khi dữ liệu không quá lớn hoặc không yêu cầu tối ưu độ phức tạp.
+- Heap phù hợp khi K nhỏ hơn rất nhiều so với n, không gian bộ nhớ chỉ tốn `O(k)`.
+- Quickselect thích hợp để tìm phần tử thứ K một lần, thời gian trung bình là `O(n)`, nhưng trường hợp xấu nhất có thể bị thoái hóa.
+- Bucket Sort phù hợp cho bài toán tần suất, đặc biệt khi tần suất tối đa không vượt quá `n`.
 
-## 小顶堆求第 K 大
+## Dùng Min-Heap tìm phần tử lớn thứ K
 
 ```java
 int findKthLargest(int[] nums, int k) {
@@ -64,22 +64,22 @@ int findKthLargest(int[] nums, int k) {
 }
 ```
 
-堆里始终保留当前最大的 K 个数，堆顶就是这 K 个数里最小的，也就是整体第 K 大。
+Bên trong Heap luôn lưu giữ đúng K phần tử lớn nhất hiện tại. Đỉnh Heap (peek) chính là phần tử nhỏ nhất trong số K phần tử lớn này, tức là phần tử lớn thứ K của toàn bộ mảng.
 
-为什么是小顶堆？因为堆里要保留最大的 K 个元素。当新元素进来后，如果堆大小超过 K，就应该淘汰这 K + 1 个元素里最小的那个。小顶堆的堆顶正好是最小值。
+Tại sao lại dùng Min-Heap? Vì mục tiêu là giữ lại K phần tử lớn nhất. Khi một phần tử mới đi vào làm kích thước Heap vượt quá K, ta phải loại bỏ phần tử nhỏ nhất trong số K + 1 phần tử này. Đỉnh của Min-Heap chính là giá trị nhỏ nhất, cho phép loại bỏ cực kỳ tiện lợi với `poll()`.
 
-如果求第 K 小，思路反过来：维护大小为 K 的大顶堆，超过 K 时弹出最大值。
+Nếu bài toán yêu cầu tìm phần tử nhỏ thứ K, tư duy sẽ đảo ngược lại: Duy trì một Max-Heap (Heap lớn) kích thước K, khi kích thước vượt quá K thì loại bỏ phần tử lớn nhất ở đỉnh Heap.
 
-## 代表题精讲：前 K 高频元素
+## Phân tích bài toán tiêu biểu: Top K phần tử có tần suất cao nhất
 
-[347. 前 K 个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/) 是 Top K 里最常见的频率题。题目给定一个整数数组和整数 `k`，要求返回出现频率最高的 `k` 个元素，结果顺序通常不重要。
+[347. Top K Frequent Elements](https://leetcode.cn/problems/top-k-frequent-elements/) là bài toán tần suất phổ biến nhất của Top K. Đề bài cho một mảng số nguyên và một số nguyên `k`, yêu cầu trả về `k` phần tử xuất hiện nhiều nhất, thứ tự kết quả thông thường không quan trọng.
 
-这题不要直接对原数组排序，因为要比较的是“频率”，不是元素值。更稳的拆法是两步：
+Với bài này, không được sắp xếp trực tiếp trên mảng gốc, vì tiêu chí so sánh là "tần suất xuất hiện" chứ không phải giá trị phần tử. Cách giải ổn định gồm hai bước:
 
-1. 用 `HashMap` 统计每个元素出现次数。
-2. 维护一个按频率升序的小顶堆，堆里只保留当前频率最高的 `k` 个元素。
+1. Dùng `HashMap` để đếm số lần xuất hiện của từng phần tử.
+2. Duy trì một Min-Heap sắp xếp tăng dần theo tần suất, trong Heap chỉ giữ lại đúng `k` phần tử có tần suất cao nhất hiện tại.
 
-为什么还是小顶堆？因为堆满以后，新元素进来时，只要堆大小超过 `k`，就弹出当前频率最低的元素。这样遍历完所有不同元素后，堆里剩下的就是前 `k` 高频。
+Tại sao vẫn dùng Min-Heap? Vì sau khi Heap đầy, mỗi khi thêm phần tử mới khiến kích thước vượt quá `k`, ta sẽ loại bỏ phần tử có tần suất thấp nhất hiện tại. Nhờ đó, sau khi duyệt qua toàn bộ các phần tử phân biệt, những phần tử còn lại trong Heap chắc chắn là Top `k` phần tử có tần suất cao nhất.
 
 ```java
 int[] topKFrequent(int[] nums, int k) {
@@ -102,77 +102,77 @@ int[] topKFrequent(int[] nums, int k) {
 }
 ```
 
-这里堆按频率升序，堆大小超过 K 时弹出频率最小的元素。
+Ở đây Heap được sắp xếp tăng dần theo tần suất (`a[1]`), khi kích thước vượt quá K thì loại bỏ phần tử có tần suất nhỏ nhất.
 
-以 `nums = [1,1,1,2,2,3]`、`k = 2` 为例，频率表是 `{1=3, 2=2, 3=1}`。堆先放入 `1` 和 `2`，再放入 `3` 时大小超过 2，会弹出频率最低的 `3`，最终保留 `1` 和 `2`。
+Lấy `nums = [1,1,1,2,2,3]`, `k = 2` làm ví dụ: Bảng tần suất là `{1=3, 2=2, 3=1}`. Heap lần lượt nhận `1` và `2`, khi nhận thêm `3` thì kích thước vượt quá 2, Heap sẽ loại bỏ phần tử `3` có tần suất thấp nhất, cuối cùng giữ lại `1` và `2`.
 
-如果 `k` 等于不同元素个数，堆最后会保留全部元素；如果面试官要求输出按频率降序排列，最后还需要对结果额外排序。
+Nếu `k` bằng đúng số lượng phần tử phân biệt, Heap sẽ giữ lại tất cả các phần tử; nếu người phỏng vấn yêu cầu kết quả xuất ra phải sắp xếp giảm dần theo tần suất, ta cần sắp xếp thêm mảng kết quả cuối cùng.
 
-如果面试官要求相同频率时按元素大小或字典序排序，比较器就要把第二排序规则写进去。比如前 K 高频单词通常要求频率高的在前，频率相同时字典序小的在前。
+Nếu người phỏng vấn yêu cầu khi tần suất bằng nhau thì sắp xếp theo thứ tự từ điển hoặc độ lớn phần tử, ta cần viết quy tắc so sánh thứ hai vào trong Comparator. Ví dụ bài toán Top K từ ngữ xuất hiện nhiều nhất thường yêu cầu tần suất cao đứng trước, tần suất bằng nhau thì thứ tự từ điển nhỏ đứng trước.
 
-## 快排分区思路
+## Tư duy phân vùng Quick Sort (Quickselect)
 
-快排分区适合找第 K 大，不要求输出有序的前 K 个元素。思路是每次把数组按 pivot 分成两边，根据 pivot 的排名决定继续搜索哪一边。平均时间复杂度是 `O(n)`，但最坏可能退化到 `O(n^2)`，实际写法通常会随机选 pivot。
+Quickselect thích hợp để tìm phần tử lớn thứ K khi không yêu cầu xuất ra K phần tử theo thứ tự sắp xếp. Ý tưởng là mỗi lần chia mảng thành hai nửa dựa vào một phần tử chốt (pivot), căn cứ vào thứ hạng của pivot để quyết định chỉ tiếp tục tìm kiếm ở nửa bên trái hay nửa bên phải. Độ phức tạp thời gian trung bình là `O(n)`, nhưng trường hợp xấu nhất có thể thoái hóa về `O(n^2)`. Trong thực tế, pivot thường được chọn ngẫu nhiên để tránh thoái hóa.
 
-快排分区的优势是不用维护堆，平均时间复杂度低；局限是它更适合内存中的一次性数据。如果数据流不断到来，或者数据太大不能一次性放进内存，堆方案更容易落地。
+Ưu điểm của Quickselect là không cần cấu trúc Heap, độ phức tạp thời gian trung bình thấp; hạn chế là nó chỉ phù hợp với dữ liệu tĩnh một lần trong bộ nhớ. Nếu là dữ liệu luồng liên tục đổ về hoặc dữ liệu quá lớn không thể nạp hết vào RAM cùng lúc, phương án dùng Heap sẽ khả thi hơn nhiều.
 
-## 数据流场景
+## Tình huống dữ liệu dạng luồng (Data Stream)
 
-数据流题不能每来一个元素就重新排序。常见做法是持续维护一个数据结构：
+Với bài toán Data Stream, không thể cứ mỗi khi có phần tử mới đến lại sắp xếp lại toàn bộ. Cách làm chuẩn là duy trì liên tục một cấu trúc dữ liệu thích hợp:
 
-- 数据流第 K 大：维护大小为 K 的小顶堆。
-- 数据流中位数：维护两个堆，左边大顶堆放较小的一半，右边小顶堆放较大的一半。
-- 滑动窗口中位数：还要处理过期元素，普通堆删除任意元素不方便，通常需要延迟删除或有序集合。
+- Phần tử lớn thứ K trong luồng: Duy trì một Min-Heap kích thước K.
+- Trung vị trong luồng dữ liệu (Data Stream Median): Duy trì hai Heap, bên trái là Max-Heap lưu trữ nửa phần tử nhỏ hơn, bên phải là Min-Heap lưu trữ nửa phần tử lớn hơn.
+- Trung vị trong cửa sổ trượt (Sliding Window Median): Cần xử lý thêm phần tử hết hạn khỏi cửa sổ, Heap thông thường xóa phần tử bất kỳ không tiện, thường phải áp dụng kỹ thuật xóa lười (lazy deletion) hoặc cấu trúc tập hợp có thứ tự (TreeMap/Multiset).
 
-## 过程示意和边界样例
+## Minh họa quy trình và các trường hợp biên
 
-以数组 `[3, 2, 1, 5, 6, 4]` 求第 2 大为例，维护大小为 2 的小顶堆。表中为了方便阅读，按值升序展示堆中的元素，不代表 Java `PriorityQueue` 的内部数组顺序。
+Lấy mảng `[3, 2, 1, 5, 6, 4]` tìm phần tử lớn thứ 2 làm ví dụ, duy trì một Min-Heap kích thước 2. Trong bảng dưới đây, các phần tử trong Heap được hiển thị theo thứ tự tăng dần để tiện quan sát (không đại diện cho thứ tự mảng nội bộ của `PriorityQueue`):
 
-| 读入元素 | 候选元素    | 超过 K 后处理         |
+| Phần tử đọc vào | Các phần tử ứng viên trong Heap | Xử lý khi kích thước vượt quá K |
 | -------- | ----------- | --------------------- |
-| 3        | `[3]`       | 不处理                |
-| 2        | `[2, 3]`    | 不处理                |
-| 1        | `[1, 2, 3]` | 弹出 1，保留 `[2, 3]` |
-| 5        | `[2, 3, 5]` | 弹出 2，保留 `[3, 5]` |
-| 6        | `[3, 5, 6]` | 弹出 3，保留 `[5, 6]` |
-| 4        | `[4, 5, 6]` | 弹出 4，保留 `[5, 6]` |
+| 3 | `[3]` | Chưa vượt quá K |
+| 2 | `[2, 3]` | Chưa vượt quá K |
+| 1 | `[1, 2, 3]` | Loại bỏ 1, giữ lại `[2, 3]` |
+| 5 | `[2, 3, 5]` | Loại bỏ 2, giữ lại `[3, 5]` |
+| 6 | `[3, 5, 6]` | Loại bỏ 3, giữ lại `[5, 6]` |
+| 4 | `[4, 5, 6]` | Loại bỏ 4, giữ lại `[5, 6]` |
 
-最后堆顶是 `5`，也就是第 2 大。
+Cuối cùng, đỉnh Heap là `5`, chính là phần tử lớn thứ 2.
 
-常见错误写法：
+Lỗi thường gặp khi viết code:
 
 ```java
 PriorityQueue<Integer> heap = new PriorityQueue<>((a, b) -> b - a);
 ```
 
-这个比较器在极端整数值下可能溢出。更稳妥的写法是：
+Bộ so sánh này có thể bị tràn số nguyên (integer overflow) nếu gặp các giá trị số âm và dương cực trị. Cách viết an toàn nhất là:
 
 ```java
 PriorityQueue<Integer> heap = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
 ```
 
-## 易错点
+## Các lỗi thường gặp (Pitfalls)
 
-- 找前 K 大通常用小顶堆，找前 K 小通常用大顶堆。
-- `PriorityQueue` 默认是小顶堆。
-- 前 K 高频要先统计频率，再对频率做 Top K。
-- 如果要输出有序结果，堆或快排分区后还需要额外排序。
-- 数据流场景不能把所有数据每次重新排序。
+- Tìm K phần tử lớn nhất thường dùng Min-Heap, tìm K phần tử nhỏ nhất thường dùng Max-Heap.
+- `PriorityQueue` trong Java mặc định là Min-Heap.
+- Top K phần tử có tần suất cao nhất phải thống kê tần suất trước, sau đó mới áp dụng Top K lên tần suất.
+- Nếu yêu cầu kết quả đầu ra có thứ tự, sau khi dùng Heap hoặc Quickselect vẫn cần sắp xếp thêm.
+- Tình huống Data Stream tuyệt đối không được sắp xếp lại toàn bộ dữ liệu sau mỗi lần nhận thêm phần tử.
 
-## 高频问题自测
+## Câu hỏi tự kiểm tra tần suất cao
 
-- 找第 K 大为什么通常维护大小为 K 的小顶堆？
-- 小顶堆和大顶堆分别适合哪些 Top K 场景？
-- 堆方案和快排分区方案的时间复杂度、空间复杂度有什么区别？
-- 前 K 高频元素为什么要先做频率统计？
-- 数据流中位数为什么适合用两个堆维护？
+- Tại sao tìm phần tử lớn thứ K thông thường lại duy trì một Min-Heap kích thước K?
+- Min-Heap và Max-Heap lần lượt phù hợp cho những tình huống Top K nào?
+- Sự khác biệt về độ phức tạp thời gian và không gian giữa phương án dùng Heap và Quickselect là gì?
+- Tại sao bài toán Top K phần tử có tần suất cao nhất bắt buộc phải thống kê tần suất trước?
+- Tại sao tìm trung vị trong luồng dữ liệu lại thích hợp dùng hai Heap để duy trì?
 
-## 推荐练习题
+## Bài tập rèn luyện đề xuất
 
-- [215. 数组中的第 K 个最大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array/)
-- [347. 前 K 个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/)
-- [692. 前 K 个高频单词](https://leetcode.cn/problems/top-k-frequent-words/)
-- [703. 数据流中的第 K 大元素](https://leetcode.cn/problems/kth-largest-element-in-a-stream/)
-- [295. 数据流的中位数](https://leetcode.cn/problems/find-median-from-data-stream/)
+- [215. Kth Largest Element in an Array](https://leetcode.cn/problems/kth-largest-element-in-an-array/)
+- [347. Top K Frequent Elements](https://leetcode.cn/problems/top-k-frequent-elements/)
+- [692. Top K Frequent Words](https://leetcode.cn/problems/top-k-frequent-words/)
+- [703. Kth Largest Element in a Stream](https://leetcode.cn/problems/kth-largest-element-in-a-stream/)
+- [295. Find Median from Data Stream](https://leetcode.cn/problems/find-median-from-data-stream/)
 
 <!-- @include: @article-footer.snippet.md -->

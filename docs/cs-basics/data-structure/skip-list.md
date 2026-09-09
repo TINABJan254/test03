@@ -1,174 +1,121 @@
 ---
-title: 跳表面试题总结：多级索引、范围查询与 Redis ZSet
-description: 跳表面试题总结，讲解 SkipList 多级索引、查询、插入、删除、复杂度、范围查询、红黑树对比和 Redis ZSet 底层实现。
-category: 计算机基础
+title: Tổng hợp câu hỏi phỏng vấn Skip List: Chỉ mục đa cấp, Truy vấn khoảng và Redis ZSet
+description: Tổng hợp câu hỏi phỏng vấn về Danh sách nhảy (Skip List), giải thích nguyên lý chỉ mục đa cấp, các thao tác tìm kiếm, chèn, xóa, phân tích độ phức tạp, so sánh với Cây đỏ đen và ứng dụng làm cấu trúc lõi trong Redis ZSet.
+category: Cơ sở máy tính
 tag:
-  - 数据结构
+  - Cấu trúc dữ liệu
+  - Thuật toán
+  - Redis
 head:
   - - meta
     - name: keywords
-      content: 跳表,SkipList,Redis ZSet,有序集合,范围查询,多级索引,红黑树对比,Redis面试题,数据结构面试题
+      content: Skip List, SkipList, Redis ZSet, Sorted Set, Tập hợp có thứ tự, Truy vấn khoảng, Range Query, Chỉ mục đa cấp, Cây đỏ đen, Câu hỏi phỏng vấn Redis, Cấu trúc dữ liệu
 ---
 
-跳表可以理解为“带多级索引的有序链表”。普通有序链表查询需要从头扫到尾，时间复杂度是 `O(n)`；跳表在链表上方加了多层索引，查询时可以从高层快速跳过一批节点，再逐层下降。
+**Skip List (Danh sách nhảy)** có thể hiểu đơn giản là một **"Danh sách liên kết có thứ tự được trang bị hệ thống Chỉ mục đa cấp (Multi-level Index)"**.
 
-Redis 的有序集合 ZSet 底层就使用了跳表和哈希表的组合，所以跳表在后端面试里经常和 Redis 一起出现。
+Danh sách liên kết có thứ tự thông thường khi tìm kiếm phải quét tuần tự từng phần tử từ đầu đến cuối với độ phức tạp $O(n)$. Skip List bổ sung thêm nhiều tầng chỉ mục thưa hơn ở phía trên danh sách gốc, cho phép quá trình tìm kiếm có thể "nhảy" cóc qua một nhóm lớn các node ở tầng cao, sau đó hạ dần xuống các tầng thấp hơn để định vị chính xác vị trí mục tiêu.
 
-文章内容概览：
+Cấu trúc tập hợp có thứ tự **ZSet** nổi tiếng của **Redis** sử dụng sự kết hợp giữa **Skip List** và **Bảng băm (Hash Table)** làm cấu trúc lưu trữ bên dưới, vì vậy Skip List là chủ đề xuất hiện với tần suất rất cao trong các buổi phỏng vấn Java Backend và Redis.
 
-1. 什么是跳表？
-2. 跳表为什么能把查询从 `O(n)` 降到平均 `O(logn)`？
-3. 跳表如何查找、插入和删除？
-4. 跳表和红黑树应该怎么对比？
-5. Redis ZSet 为什么会用到跳表？
+Nội dung chính:
+1. Skip List là gì?
+2. Tại sao Skip List có thể hạ độ phức tạp tìm kiếm từ $O(n)$ xuống trung bình $O(\log n)$?
+3. Cách thực hiện Tìm kiếm, Chèn và Xóa trên Skip List?
+4. So sánh Skip List với Cây đỏ đen (Red-Black Tree)?
+5. Tại sao Redis ZSet lại lựa chọn Skip List?
 
-![跳表在有序链表上建立多级索引以加速查找](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/skip-list.png)
+![Skip List xây dựng chỉ mục đa cấp trên danh sách liên kết có thứ tự](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/skip-list.png)
 
-## 什么是跳表？
+## 1. Skip List là gì?
 
-跳表（Skip List）是一种基于有序链表的数据结构。它的底层仍然是一条完整的有序链表，所有元素都会出现在最底层；在底层链表之上，跳表再建立若干层更稀疏的索引。
+Skip List là cấu trúc dữ liệu dựa trên danh sách liên kết có thứ tự.
+- Tầng đáy cùng (Level 0) là một danh sách liên kết có thứ tự hoàn chỉnh chứa 100% tất cả các phần tử của tập dữ liệu.
+- Phía trên Level 0, Skip List xây dựng thêm các tầng chỉ mục (Level 1, Level 2, ... Level $k$) với mật độ thưa dần.
 
-可以把它想成一本书的目录：
+Có thể hình dung Skip List như mục lục của một cuốn sách dày:
+- **Tầng đáy cùng (Level 0)**: Giống như từng trang sách chi tiết, đầy đủ dữ liệu nhất nhưng lật từ trang đầu tới trang cuối thì rất chậm.
+- **Các tầng chỉ mục phía trên**: Giống như Mục lục các Chương và Mục lớn, chứa ít thông tin hơn nhưng giúp người đọc "nhảy" ngay tới trang sách gần mục tiêu nhất.
+- **Khi tìm kiếm**: Bắt đầu nhảy sang phải từ tầng chỉ mục cao nhất; khi gặp node lớn hơn giá trị cần tìm thì hạ xuống 1 tầng, và tiếp tục lặp lại quá trình này cho tới tầng đáy.
 
-- 最底层链表像正文页码，信息最完整，但从第一页翻到最后一页很慢。
-- 上层索引像目录，信息更少，但能快速跳到接近目标的位置。
-- 查询时先从最高层索引往右跳，跳不动了就下降一层，直到最底层。
+Điểm khác biệt cốt lõi: Danh sách liên kết thường mỗi bước chỉ tiến lên được 1 node; Skip List ở tầng cao có thể nhảy cóc qua hàng chục, hàng trăm node cùng lúc.
 
-跳表和普通链表最大的区别就在这里：普通链表每次只能向后走一步；跳表可以在高层索引中一次跳过多个节点。
+---
 
-## 跳表的节点长什么样？
+## 2. Cấu trúc Node và Chiều cao ngẫu nhiên
 
-普通链表节点通常只有一个 `next` 指针，而跳表节点会有多个前进指针。一个节点如果出现在第 3 层，就意味着它在第 0、1、2 层都有对应指针。
-
-抽象来看，跳表节点可以理解成这样：
+Node của danh sách liên kết thông thường chỉ có duy nhất 1 con trỏ `next`. Node của Skip List chứa một **mảng các con trỏ tiến (Forward Pointers)**:
 
 ```java
 class SkipListNode {
     int value;
-    SkipListNode[] forward;
+    SkipListNode[] forward; // forward[i] trỏ tới node tiếp theo ở tầng thứ i
 }
 ```
 
-这里的 `forward[i]` 表示当前节点在第 `i` 层指向的下一个节点。真实工程实现里还可能保存 score、member、backward 指针、span 等信息，用来支持排名、反向遍历和范围查询。
+Nếu một node xuất hiện ở Tầng 3, nó sẽ sở hữu các con trỏ ở cả Tầng 0, 1, 2 và 3. Trong Redis ZSet, node Skip List còn lưu thêm `score`, `member`, con trỏ lùi `backward`, và `span` (khoảng cách giữa 2 node) để hỗ trợ truy vấn thứ hạng (Rank).
 
-## 层数是怎么来的？
+### Chiều cao của một Node được quyết định như thế nào?
 
-跳表并不通过旋转、变色来维持平衡，它依赖随机层数。
+Skip List **không sử dụng các phép quay hay đổi màu phức tạp** như Cây đỏ đen để duy trì cân bằng, mà nó sử dụng **Cơ chế xác suất ngẫu nhiên (Randomized Level Generation)**.
 
-插入一个新节点时，通常会用随机函数决定它能升到多少层。可以把这个过程想成抛硬币：节点一定会出现在最底层；如果第一次抛到正面，就升一层；再抛到正面，再升一层；直到抛到反面或达到最大层数。
+Khi chèn một node mới, hàm xác suất (giống như tung đồng xu):
+- Node luôn xuất hiện ở Tầng 0.
+- Tung được mặt ngửa (xác suất $p = 1/2$ hoặc $p = 1/4$), node được nâng lên Tầng 1.
+- Tiếp tục tung được mặt ngửa, nâng lên Tầng 2, cho đến khi tung được mặt sấp hoặc chạm mức tầng tối đa (`MAX_LEVEL`).
 
-这样做的结果是：越高层的节点越少，越低层的节点越密。理想情况下，第 1 层大约保留一半节点，第 2 层再保留一半，第 3 层继续减少。虽然不是严格平衡，但从概率上看，高度会维持在 `O(logn)` 级别。
+Kết quả là: Càng lên tầng cao số lượng node càng giảm theo cấp số nhân (mỗi tầng giảm khoảng 50%). Về mặt xác suất thống kê, chiều cao của Skip List luôn được duy trì ở mức **$O(\log n)$**.
 
-这也是跳表名字里“跳”的来源：高层索引允许查询过程跳过一段又一段元素。
+---
 
-## 面试考察重点
+## 3. Các thao tác trên Skip List
 
-- 能说清跳表为什么比普通链表查询快。
-- 能描述查找、插入、删除的大致过程。
-- 能说明跳表平均查询、插入、删除是 `O(logn)`。
-- 能解释跳表和红黑树的取舍。
-- 能关联 Redis ZSet 的范围查询场景。
+### 1. Tìm kiếm (Search)
+Bắt đầu từ Node Đầu (Head) ở tầng cao nhất:
+1. So sánh với node kế tiếp ở cùng tầng: Nếu giá trị kế tiếp nhỏ hơn `target`, nhảy sang phải (`current = current.forward[i]`).
+2. Nếu giá trị kế tiếp lớn hơn `target` hoặc là `null`, ta hạ xuống tầng thấp hơn (`i--`).
+3. Lặp lại cho đến Tầng 0, kiểm tra xem node kế tiếp có đúng bằng `target` hay không.
 
-## 跳表怎么查找？
+### 2. Chèn (Insert) và Xóa (Delete)
+- Khi chèn hoặc xóa, ta dùng một mảng `update[]` để ghi nhận lại node đứng trước vị trí cần chèn/xóa ở **tất cả các tầng**.
+- Khi chèn: Tạo node mới với số tầng ngẫu nhiên, sau đó nối các con trỏ `forward` tại từng tầng.
+- Khi xóa: Nối con trỏ của các node trong `update[]` bỏ qua node cần xóa.
 
-查找时从最高层索引开始：
+---
 
-1. 如果当前节点的下一个节点小于目标值，就向右走。
-2. 如果下一个节点大于目标值或为空，就下降一层。
-3. 到最底层后继续查找目标节点。
+## 4. Phân tích Độ phức tạp
 
-这个过程有点像在有序数组里二分，但跳表底层仍然是链表结构。
+| Thao tác | Độ phức tạp trung bình | Trường hợp xấu nhất | Giải thích |
+| :--- | :--- | :--- | :--- |
+| **Tìm kiếm** | **$O(\log n)$** | $O(n)$ | Nhảy cóc qua các node nhờ chỉ mục đa cấp |
+| **Chèn phần tử** | **$O(\log n)$** | $O(n)$ | Tìm vị trí chèn $O(\log n)$ + Cập nhật con trỏ |
+| **Xóa phần tử** | **$O(\log n)$** | $O(n)$ | Tìm vị trí xóa $O(\log n)$ + Cập nhật con trỏ |
+| **Truy vấn khoảng (Range Query)** | **$O(\log n + k)$** | $O(n)$ | Dùng $O(\log n)$ tìm điểm bắt đầu, sau đó duyệt tuần tự $k$ phần tử ở Tầng 0 |
 
-更准确地说，跳表每一层都是有序链表。查询时始终遵循一个原则：能往右走就往右走，不能往右走就往下走。
+---
 
-假设要查找 `26`：
+## 5. So sánh: Skip List vs Cây đỏ đen (Red-Black Tree)
 
-1. 从最高层头节点开始。
-2. 如果右侧节点值小于 `26`，说明目标还在右边，可以继续右移。
-3. 如果右侧节点值大于 `26`，说明再往右就越过目标了，于是下降一层。
-4. 重复这个过程，最后在最底层确认目标是否存在。
+| Tiêu chí | Skip List | Cây đỏ đen (Red-Black Tree) |
+| :--- | :--- | :--- |
+| **Cơ chế cân bằng** | Xác suất ngẫu nhiên (Tung đồng xu) | Cân bằng cấu trúc (Phép quay và Đổi màu) |
+| **Độ phức tạp cài đặt** | **Đơn giản, dễ hiểu, dễ code** | Rất phức tạp (nhiều trường hợp quay cây) |
+| **Truy vấn khoảng (Range Query)** | **Cực kỳ tiện lợi** (chỉ cần duyệt thẳng danh sách liên kết đáy) | Phải duyệt In-order phức tạp hơn |
+| **Hỗ trợ đồng thời (Concurrency)** | Khóa từng đoạn trên danh sách liên kết dễ dàng | Khóa toàn cây khi quay rất khó khăn |
+| **Ứng dụng tiêu biểu** | **Redis ZSet**, LevelDB, RocksDB | Java `TreeMap`, `TreeSet`, Linux Kernel CFS |
 
-如果目标不存在，跳表也能找到它应该插入的位置：最底层中小于目标值的最后一个节点，就是插入位置的前驱节点。
+---
 
-## 插入和删除
+## 6. Tại sao Redis ZSet lại sử dụng Skip List?
 
-插入一个节点时，需要先找到每一层中它的前驱节点，然后把新节点接进去。新节点能提升到多少层，通常由随机函数决定。
+Trong Redis, cấu trúc `ZSet` hỗ trợ các lệnh:
+- `ZSCORE key member`: Tìm điểm số theo member -> Sử dụng **Bảng băm (Hash Table)** để đạt tốc độ $O(1)$.
+- `ZRANGEBYSCORE key min max`: Truy vấn danh sách phần tử trong khoảng điểm từ `min` đến `max` -> Sử dụng **Skip List** để đạt tốc độ $O(\log n + k)$.
+- `ZRANK key member`: Lấy thứ hạng của một phần tử -> Skip List lưu thêm trường `span` giúp tính rank trong $O(\log n)$.
 
-删除节点时，也要找到各层前驱节点，再把指针绕过目标节点。
-
-跳表不靠旋转维持平衡，而是靠随机层数让索引高度保持在合理范围内。这也是它实现起来比红黑树更容易的地方。
-
-实际写插入代码时，经常会维护一个 `update` 数组：`update[i]` 表示第 `i` 层中新节点应该插入在哪个节点后面。查找插入位置的过程中顺手把这些前驱节点记录下来，拿到随机层数后，就能逐层修改指针。
-
-删除也是类似思路：先找到每一层的前驱节点，如果这一层的下一个节点正好是目标节点，就把前驱节点的 `forward` 指向目标节点的下一个节点。
-
-因此，跳表的插入和删除并不是只改底层链表，还要同步维护目标节点出现过的那些索引层。
-
-## 复杂度
-
-| 操作     | 平均复杂度    | 说明                            |
-| -------- | ------------- | ------------------------------- |
-| 查找     | `O(logn)`     | 通过多级索引跳过节点            |
-| 插入     | `O(logn)`     | 查找位置后更新多层指针          |
-| 删除     | `O(logn)`     | 查找前驱后断开指针              |
-| 范围查询 | `O(logn + k)` | 先定位起点，再顺序返回 k 个元素 |
-
-空间复杂度是 `O(n)` 级别，但会比普通链表多一些索引指针。
-
-这里的 `O(logn)` 是平均意义上的复杂度，依赖随机层数带来的概率平衡。跳表不像红黑树那样提供严格的最坏情况平衡约束，但在随机函数正常、参数设置合理的情况下，性能通常很稳定。
-
-范围查询是跳表很舒服的场景：先用 `O(logn)` 定位到范围起点，再沿着最底层链表顺序向后遍历 `k` 个结果即可。
-
-## 跳表和红黑树怎么选？
-
-| 对比点     | 跳表                   | 红黑树                         |
-| ---------- | ---------------------- | ------------------------------ |
-| 平衡方式   | 随机层数               | 旋转和变色                     |
-| 实现难度   | 相对更直接             | 插入删除修复更复杂             |
-| 范围查询   | 顺着底层链表扫，很方便 | 中序遍历也可以，但实现更绕     |
-| 最坏复杂度 | 依赖随机性             | 有严格平衡约束                 |
-| 工程代表   | Redis ZSet             | Java `TreeMap`、`HashMap` 树化 |
-
-## Redis ZSet 为什么用跳表？
-
-ZSet 需要支持：
-
-- 按 member 快速查 score。
-- 按 score 排序。
-- 按 score 范围查询。
-- 获取排名。
-
-哈希表适合按 member 查 score，跳表适合按 score 排序和范围查询。两者组合后，ZSet 能同时支持快速查找和有序遍历。
-
-更具体一点：
-
-- 通过哈希表，可以根据 member 直接找到对应 score。
-- 通过跳表，可以按 score 从小到大维护顺序。
-- 做 `ZRANGE`、`ZRANGEBYSCORE` 这类范围查询时，跳表可以先定位起点，再沿链表连续返回结果。
-- 如果跳表节点维护 span 信息，还可以支持排名相关操作。
-
-需要注意，Redis 会根据数据规模和配置使用不同的内部编码来节省内存。面试里说“ZSet 使用哈希表 + 跳表”通常是在讨论它面向较大有序集合时的核心结构。
-
-## 易错点
-
-- 跳表不是数组，也不是二叉树，它的底层是链表。
-- 跳表平均复杂度是 `O(logn)`，不是靠严格平衡保证。
-- 范围查询是跳表的强项，先定位起点，再沿底层链表遍历。
-- Redis ZSet 不是只用跳表，还配合了哈希表。
-
-## 高频问题自测
-
-- 跳表为什么查询快？
-- 跳表和红黑树有什么区别？
-- Redis ZSet 为什么不用红黑树？
-- 跳表的层数怎么决定？
-- 跳表范围查询复杂度是多少？
-
-## 参考资料
-
-- [Skip Lists: A Probabilistic Alternative to Balanced Trees](https://dl.acm.org/doi/10.1145/78973.78977)
-- [William Pugh：A Skip List Cookbook](https://drum.lib.umd.edu/bitstreams/17176ef8-8330-4a6c-8b75-4cd18c570bec/download)
-- [Redis Docs：Sorted Sets](https://redis.io/docs/latest/develop/data-types/sorted-sets/)
-- [Redis 源码：t_zset.c](https://github.com/redis/redis/blob/unstable/src/t_zset.c)
+> **Tại sao Redis chọn Skip List thay vì Red-Black Tree?** (Giải thích chính thức từ Antirez - tác giả của Redis):
+> 1. **Hiệu năng truy vấn khoảng vượt trội**: Skip List chỉ cần tìm node đầu tiên của khoảng, sau đó duyệt thẳng theo con trỏ `forward[0]` là lấy được toàn bộ dữ liệu.
+> 2. **Cài đặt và bảo trì đơn giản**: Thuật toán Skip List dễ debug và mở rộng hơn nhiều so với Red-Black Tree.
+> 3. **Tiết kiệm bộ nhớ hơn**: Với xác suất $p = 1/4$, trung bình mỗi node chỉ tốn $1.33$ con trỏ, ít hơn so với 3 con trỏ + bit màu của cây nhị phân.
 
 <!-- @include: @article-footer.snippet.md -->

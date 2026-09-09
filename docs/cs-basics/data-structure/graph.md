@@ -1,191 +1,140 @@
 ---
-title: 图详解（DFS、BFS、最短路径）
-description: 介绍图的基本概念与常用表示，结合 DFS/BFS 等核心算法与应用场景，掌握图论入门必备知识。
-category: 计算机基础
+title: Chi tiết Cấu trúc Đồ thị (Biểu diễn, BFS, DFS và Đường đi ngắn nhất)
+description: Giới thiệu toàn diện các khái niệm cơ bản và phương thức biểu diễn Đồ thị (Ma trận kề, Danh sách kề), kết hợp với các thuật toán duyệt đồ thị cốt lõi (DFS, BFS, Đường đi ngắn nhất) và ứng dụng thực tế.
+category: Cơ sở máy tính
 tag:
-  - 数据结构
+  - Cấu trúc dữ liệu
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 图,邻接表,邻接矩阵,DFS,BFS,度,有向图,无向图,连通性
+      content: Đồ thị, Graph, Danh sách kề, Ma trận kề, DFS, BFS, Bậc của đỉnh, Đồ thị có hướng, Đồ thị vô hướng, Tính liên thông
 ---
 
-# 图
+# Đồ thị (Graph)
 
-图是一种较为复杂的非线性结构。**为啥说其较为复杂呢？**
+Đồ thị là một cấu trúc dữ liệu phi tuyến tính phức tạp và linh hoạt bậc nhất trong khoa học máy tính.
 
-根据前面的内容，我们知道：
+So sánh với các cấu trúc dữ liệu đã học:
+- **Cấu trúc dữ liệu tuyến tính**: Các phần tử có quan hệ tuyến tính 1-1 duy nhất (mỗi phần tử trừ đầu và cuối chỉ có 1 phần tử đứng trước và 1 phần tử đứng sau).
+- **Cấu trúc Cây**: Các phần tử có quan hệ phân cấp 1-N rõ ràng (mỗi node con chỉ có duy nhất 1 node cha).
+- **Cấu trúc Đồ thị**: Quan hệ giữa các phần tử là **N-N tùy ý** (bất kỳ đỉnh nào cũng có thể kết nối với bất kỳ đỉnh nào khác).
 
-- 线性数据结构的元素满足唯一的线性关系，每个元素（除第一个和最后一个外）只有一个直接前趋和一个直接后继。
-- 树形数据结构的元素之间有着明显的层次关系。
+**Đồ thị là gì?**  
+Đơn giản nhất, Đồ thị là một tập hợp gồm **Tập hợp các Đỉnh (Vertices)** hữu hạn, không rỗng và **Tập hợp các Cạnh (Edges)** nối giữa các đỉnh đó. Đồ thị thường được ký hiệu là: **$G(V, E)$**, trong đó:
+- $V$ (Vertices) biểu diễn tập hợp các đỉnh.
+- $E$ (Edges) biểu diễn tập hợp các cạnh.
 
-但是，图形结构的元素之间的关系是任意的。
+![Đồ thị có hướng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/directed-graph.png)
 
-**何为图呢？** 简单来说，图就是由顶点的有穷非空集合和顶点之间的边组成的集合。通常表示为：**G(V,E)**，其中，G 表示一个图，V 表示顶点的集合，E 表示边的集合。
+Cấu trúc đồ thị xuất hiện khắp nơi trong thế giới thực: Mạng lưới bạn bè trên mạng xã hội (Facebook, LinkedIn), bản đồ giao thông đường bộ (Google Maps), mạng lưới Internet (Router/Switch), hệ thống gợi ý sản phẩm, đồ thị phụ thuộc giữa các package trong Maven/Gradle.
 
-下图所展示的就是图这种数据结构，并且还是一张有向图。
+---
 
-![有向图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/directed-graph.png)
+## Các khái niệm cơ bản trong Đồ thị
 
-图在我们日常生活中的例子很多！比如我们在社交软件上好友关系就可以用图来表示。
+### 1. Đỉnh (Vertex / Node)
+Mỗi phần tử dữ liệu trong đồ thị được gọi là một Đỉnh. Đồ thị luôn có ít nhất 1 đỉnh. Trong mạng xã hội, mỗi tài khoản người dùng đại diện cho một Đỉnh.
 
-## 图的基本概念
+### 2. Cạnh (Edge)
+Mối quan hệ kết nối giữa hai đỉnh được biểu diễn bằng một Cạnh. Nếu hai người dùng là bạn bè của nhau, giữa hai đỉnh của họ tồn tại một Cạnh.
 
-### 顶点
+### 3. Bậc của đỉnh (Degree)
+Bậc biểu thị số lượng cạnh gắn liền với đỉnh đó (tương ứng với số lượng bạn bè của một người dùng).
+- Trong **Đồ thị có hướng (Directed Graph)**, bậc được chia thành:
+  - **Bán bậc ra (Out-degree)**: Số lượng cạnh đi ra từ đỉnh đó.
+  - **Bán bậc vào (In-degree)**: Số lượng cạnh đi vào đỉnh đó.
 
-图中的数据元素，我们称之为顶点，图至少有一个顶点（非空有穷集合）。
+### 4. Đồ thị vô hướng (Undirected Graph) và Đồ thị có hướng (Directed Graph)
+- **Đồ thị vô hướng**: Mối quan hệ giữa hai đỉnh mang tính chất 2 chiều bình đẳng (ví dụ: Quan hệ bạn bè 2 chiều trên Facebook, quan hệ bạn cùng lớp). Cạnh nối không có mũi tên định hướng.
+- **Đồ thị có hướng**: Mối quan hệ mang tính 1 chiều (ví dụ: Quan hệ Follow trên Twitter/TikTok, quan hệ cha - con, chuyển khoản ngân hàng). Cạnh nối có mũi tên chỉ rõ hướng từ đỉnh nguồn tới đỉnh đích.
 
-对应到好友关系图，每一个用户就代表一个顶点。
+### 5. Đồ thị không trọng số (Unweighted Graph) và Đồ thị có trọng số (Weighted Graph)
+- **Đồ thị không trọng số**: Chúng ta chỉ quan tâm giữa hai đỉnh có kết nối hay không ($1$ hoặc $0$).
+- **Đồ thị có trọng số (Network)**: Mỗi cạnh được gán thêm một giá trị số gọi là **Trọng số (Weight)**, biểu thị khoảng cách vật lý (km), chi phí truyền tải (latency, bandwidth) hoặc độ thân thiết giữa hai đỉnh.
 
-### 边
+![Đồ thị có hướng có trọng số](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/weighted-directed-graph.png)
 
-顶点之间的关系用边表示。
+---
 
-对应到好友关系图，两个用户是好友的话，那两者之间就存在一条边。
+## Phương thức lưu trữ Đồ thị
 
-### 度
+### 1. Ma trận kề (Adjacency Matrix)
 
-度表示一个顶点包含多少条边，在有向图中，还分为出度和入度，出度表示从该顶点出去的边的条数，入度表示进入该顶点的边的条数。
+Ma trận kề biểu diễn đồ thị bằng một **Mảng hai chiều kích thước $V \times V$** (trong đó $V$ là số lượng đỉnh):
+- Nếu đỉnh $i$ và đỉnh $j$ có cạnh nối mang trọng số $w$, thì `matrix[i][j] = w`.
+- Đối với đồ thị vô hướng không trọng số: `matrix[i][j] = 1` nếu có cạnh nối, ngược lại bằng `0`.
 
-对应到好友关系图，度就代表了某个人的好友数量。
+![Ma trận kề đồ thị vô hướng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-matrix-representation-of-undirected-graph.png)
 
-### 无向图和有向图
+> **Lưu ý**: Ma trận kề của đồ thị vô hướng luôn là một **Ma trận đối xứng** qua đường chéo chính (`matrix[i][j] == matrix[j][i]`).
 
-边表示的是顶点之间的关系，有的关系是双向的，比如同学关系，A 是 B 的同学，那么 B 也肯定是 A 的同学，那么在表示 A 和 B 的关系时，就不用关注方向，用不带箭头的边表示，这样的图就是无向图。
+![Ma trận kề đồ thị có hướng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-matrix-representation-of-directed-graph.png)
 
-有的关系是有方向的，比如父子关系，师生关系，微博的关注关系，A 是 B 的爸爸，但 B 肯定不是 A 的爸爸，A 关注 B，B 不一定关注 A。在这种情况下，我们就用带箭头的边表示二者的关系，这样的图就是有向图。
+- **Ưu điểm**: Cực kỳ trực quan, kiểm tra xem hai đỉnh có nối với nhau hay không chỉ mất thời gian **$O(1)$**.
+- **Nhược điểm**: Tốn không gian bộ nhớ **$O(V^2)$**. Nếu đồ thị là đồ thị thưa (Sparse Graph - số cạnh ít hơn rất nhiều so với $V^2$), ma trận kề sẽ gây lãng phí bộ nhớ nghiêm trọng.
 
-### 无权图和带权图
+### 2. Danh sách kề (Adjacency List)
 
-对于一个关系，如果我们只关心关系的有无，而不关心关系有多强，那么就可以用无权图表示二者的关系。
+Để giải quyết nhược điểm lãng phí RAM của ma trận kề, **Danh sách kề** được sử dụng phổ biến nhất:
+Mỗi đỉnh $V_i$ sở hữu một danh sách liên kết (hoặc `ArrayList`) chứa toàn bộ các đỉnh kề trực tiếp với nó.
 
-对于一个关系，如果我们既关心关系的有无，也关心关系的强度，比如描述地图上两个城市的关系，需要用到距离，那么就用带权图来表示，带权图中的每一条边用一个数值表示权值，代表关系的强度。
+![Danh sách kề đồ thị vô hướng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-list-representation-of-undirected-graph.png)
 
-下图就是一个带权有向图。
+![Danh sách kề đồ thị có hướng](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-list-representation-of-directed-graph.png)
 
-![带权有向图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/weighted-directed-graph.png)
+- **Bộ nhớ tiêu thụ**:
+  - Đồ thị vô hướng: Chứa $2E$ phần tử (mỗi cạnh xuất hiện ở cả 2 danh sách kề).
+  - Đồ thị có hướng: Chứa đúng $E$ phần tử.
+- **Ưu điểm**: Tiết kiệm bộ nhớ tối đa ($O(V + E)$), duyệt qua tất cả các đỉnh lân cận của một đỉnh cực nhanh.
 
-## 图的存储
+---
 
-### 邻接矩阵存储
+## Các thuật toán duyệt Đồ thị (Graph Traversal)
 
-邻接矩阵将图用二维矩阵存储，是一种较为直观的表示方式。
+### 1. Tìm kiếm theo chiều rộng (BFS - Breadth-First Search)
 
-如果第 i 个顶点和第 j 个顶点之间有关系，且关系权值为 n，则 `A[i][j]=n`。
+BFS duyệt đồ thị lan tỏa ra ngoài theo từng lớp vòng tròn đồng tâm như sóng nước lan trên mặt hồ.
 
-在无向图中，我们只关心关系的有无，所以当顶点 i 和顶点 j 有关系时，`A[i][j]`=1，当顶点 i 和顶点 j 没有关系时，`A[i][j]`=0。如下图所示：
+![Minh họa BFS](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search.png)
 
-![无向图的邻接矩阵存储](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-matrix-representation-of-undirected-graph.png)
+**Cài đặt BFS sử dụng cấu trúc Hàng đợi (Queue)**:
+1. Đưa đỉnh xuất phát vào Hàng đợi, đánh dấu đỉnh đó đã thăm (`visited[start] = true`).
+2. Lặp khi hàng đợi chưa rỗng: Lấy đỉnh `u` ra khỏi hàng đợi; duyệt tất cả các đỉnh láng giềng `v` của `u`. Nếu `v` chưa thăm, đánh dấu `visited[v] = true` và đưa `v` vào hàng đợi.
 
-值得注意的是：**无向图的邻接矩阵是一个对称矩阵，因为在无向图中，顶点 i 和顶点 j 有关系，则顶点 j 和顶点 i 必有关系。**
+> **Ứng dụng quan trọng nhất của BFS**: Tìm **Đường đi ngắn nhất** (Số bước ít nhất) trên đồ thị không trọng số.
 
-![有向图的邻接矩阵存储](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-matrix-representation-of-directed-graph.png)
+### 2. Tìm kiếm theo chiều sâu (DFS - Depth-First Search)
 
-邻接矩阵存储的方式优点是简单直接（直接使用一个二维数组即可），并且，在获取两个顶点之间的关系的时候也非常高效（直接获取指定位置的数组元素的值即可）。但是，这种存储方式的缺点也比较明显，那就是比较浪费空间。
+DFS thực hiện chiến lược "đi một mạch tới tận cùng con đường", khi chạm ngõ cụt thì mới quay lui (Backtrack) về đỉnh liền trước để thử các ngã rẽ khác.
 
-### 邻接表存储
+![Minh họa DFS](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search.png)
 
-针对上面邻接矩阵比较浪费内存空间的问题，诞生了图的另外一种存储方法——**邻接表**。
+**Cài đặt DFS sử dụng Ngăn xếp (Stack) hoặc Đệ quy (Recursion)**:
+1. Đánh dấu đỉnh hiện tại đã thăm (`visited[u] = true`).
+2. Với mỗi đỉnh kề `v` của `u`: Nếu `v` chưa được thăm, đệ quy gọi `DFS(v)`.
 
-邻接链表使用一个链表来存储某个顶点的所有后继相邻顶点。对于图中每个顶点 Vi，把所有邻接于 Vi 的顶点 Vj 链成一个单链表，这个单链表称为顶点 Vi 的 **邻接表**。如下图所示：
+---
 
-![无向图的邻接表存储](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-list-representation-of-undirected-graph.png)
+## Bảng so sánh các cấu trúc và thuật toán đồ thị trong phỏng vấn
 
-![有向图的邻接表存储](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/adjacency-list-representation-of-directed-graph.png)
+| Phương thức | Không gian | Kiểm tra 2 đỉnh kề nhau | Duyệt láng giềng của 1 đỉnh | Phù hợp |
+| :--- | :--- | :--- | :--- | :--- |
+| **Ma trận kề** | $O(V^2)$ | $O(1)$ | $O(V)$ | Đồ thị dày (Dense Graph), số đỉnh nhỏ |
+| **Danh sách kề** | $O(V + E)$ | $O(\text{degree}(u))$ | $O(\text{degree}(u))$ | Đồ thị thưa (Sparse Graph), bài tập giải thuật |
 
-大家可以数一数邻接表中所存储的元素的个数以及图中边的条数，你会发现：
+### Các thuật toán kinh điển cần nắm:
+- **Tìm đường đi ngắn nhất đồ thị không trọng số**: Dùng **BFS** ($O(V + E)$).
+- **Tìm đường đi ngắn nhất đồ thị có trọng số dương**: Dùng **Dijkstra** kết hợp `PriorityQueue` ($O(E \log V)$).
+- **Sắp xếp lịch trình / Phụ thuộc tác vụ (DAG)**: Dùng **Sắp xếp tô-pô (Topological Sort)** (Thuật toán Kahn dùng BFS In-degree).
+- **Kiểm tra tính liên thông / Phát hiện chu trình đồ thị vô hướng**: Dùng **Union-Find (DSU)** hoặc DFS/BFS.
 
-- 在无向图中，邻接表元素个数等于边的条数的两倍，如左图所示的无向图中，边的条数为 7，邻接表存储的元素个数为 14。
-- 在有向图中，邻接表元素个数等于边的条数，如右图所示的有向图中，边的条数为 8，邻接表存储的元素个数为 8。
+---
 
-## 图的搜索
-
-### 广度优先搜索
-
-广度优先搜索就像水面上的波纹一样一层一层向外扩展，如下图所示：
-
-![广度优先搜索图示](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search.png)
-
-**广度优先搜索的具体实现方式用到了之前所学过的线性数据结构——队列**。具体过程如下图所示：
-
-**第 1 步：**
-
-![广度优先搜索1](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search1.png)
-
-**第 2 步：**
-
-![广度优先搜索2](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search2.png)
-
-**第 3 步：**
-
-![广度优先搜索3](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search3.png)
-
-**第 4 步：**
-
-![广度优先搜索4](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search4.png)
-
-**第 5 步：**
-
-![广度优先搜索5](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search5.png)
-
-**第 6 步：**
-
-![广度优先搜索6](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/breadth-first-search6.png)
-
-### 深度优先搜索
-
-深度优先搜索就是“一条路走到黑”，从源顶点开始，一直走到没有后继节点，才回溯到上一顶点，然后继续“一条路走到黑”，如下图所示：
-
-![深度优先搜索图示](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search.png)
-
-**和广度优先搜索类似，深度优先搜索的具体实现用到了另一种线性数据结构——栈**。具体过程如下图所示：
-
-**第 1 步：**
-
-![深度优先搜索1](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search1.png)
-
-**第 2 步：**
-
-![深度优先搜索2](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search2.png)
-
-**第 3 步：**
-
-![深度优先搜索3](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search3.png)
-
-**第 4 步：**
-
-![深度优先搜索4](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search4.png)
-
-**第 5 步：**
-
-![深度优先搜索5](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search5.png)
-
-**第 6 步：**
-
-![深度优先搜索6](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/depth-first-search6.png)
-
-## 面试复盘重点
-
-图题先选存储方式，再选遍历方式。面试里最常见的 4 类图题是：连通块、最短步数、依赖关系和判环。
-
-| 存储方式 | 空间复杂度 | 判断两点是否相邻 | 遍历某点邻居 | 适合场景           |
-| -------- | ---------- | ---------------- | ------------ | ------------------ |
-| 邻接矩阵 | `O(V^2)`   | `O(1)`           | `O(V)`       | 稠密图、节点数较少 |
-| 邻接表   | `O(V + E)` | 取决于邻接表结构 | 和度数有关   | 稀疏图、算法题常用 |
-
-DFS/BFS 模板可以参考 [DFS 与 BFS 面试题总结](../algorithms/dfs-bfs.md)。这里再补几个面试回答点：
-
-- 邻接表下，DFS 和 BFS 的时间复杂度通常是 `O(V + E)`。
-- 无权图求最短步数，优先考虑 BFS。
-- 有向图依赖关系常用拓扑排序，典型题是课程表。
-- 无向图连通性和判环可以用 DFS/BFS，也可以用并查集。
-- 带权最短路径不是普通 BFS，常见算法有 Dijkstra、Bellman-Ford、Floyd，面试中按题目范围选择。
-
-## Java 代码模板
-
-算法题中最常用的是邻接表。节点编号通常是 `0` 到 `n - 1`，可以用 `List<Integer>[]` 表示。
+## Template mã nguồn Java biểu diễn Đồ thị và BFS
 
 ```java
+// Xây dựng Danh sách kề cho đồ thị
 List<Integer>[] buildGraph(int n, int[][] edges) {
     List<Integer>[] graph = new ArrayList[n];
     for (int i = 0; i < n; i++) {
@@ -195,22 +144,20 @@ List<Integer>[] buildGraph(int n, int[][] edges) {
         int from = edge[0];
         int to = edge[1];
         graph[from].add(to);
-        // 无向图需要再加一条反向边：
+        // Nếu là đồ thị vô hướng, thêm cạnh ngược lại:
         // graph[to].add(from);
     }
     return graph;
 }
-```
 
-BFS 适合求无权图最短步数：
-
-```java
+// Thuật toán BFS tìm số bước ngắn nhất
 int bfs(List<Integer>[] graph, int start, int target) {
     boolean[] visited = new boolean[graph.length];
     Queue<Integer> queue = new ArrayDeque<>();
     queue.offer(start);
     visited[start] = true;
     int step = 0;
+
     while (!queue.isEmpty()) {
         int size = queue.size();
         for (int i = 0; i < size; i++) {
@@ -227,35 +174,16 @@ int bfs(List<Integer>[] graph, int start, int target) {
         }
         step++;
     }
-    return -1;
+    return -1; // Không tìm thấy đường đi
 }
 ```
 
-## 过程示意和边界样例
+## Đề xuất bài tập luyện tập
 
-以无权图最短路径为例，BFS 的层序扩散过程可以这样理解：
-
-```text
-第 0 层：start
-第 1 层：start 的所有未访问邻居
-第 2 层：第 1 层节点的所有未访问邻居
-...
-第一次遇到 target 时，当前层数就是最短步数
-```
-
-几个边界样例建议先过一遍：
-
-- `start == target`，答案应该是 `0`。
-- 图不连通，目标点不可达，答案应该是 `-1`。
-- 无向图建图时忘记加反向边，会把连通图误判成不连通。
-- 有环图如果不标记 `visited`，BFS/DFS 会重复访问甚至死循环。
-
-## 推荐练习题
-
-- [200. 岛屿数量](https://leetcode.cn/problems/number-of-islands/)
-- [695. 岛屿的最大面积](https://leetcode.cn/problems/max-area-of-island/)
-- [994. 腐烂的橘子](https://leetcode.cn/problems/rotting-oranges/)
-- [207. 课程表](https://leetcode.cn/problems/course-schedule/)
-- [547. 省份数量](https://leetcode.cn/problems/number-of-provinces/)
+- [LeetCode 200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
+- [LeetCode 695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
+- [LeetCode 994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/)
+- [LeetCode 207. Course Schedule](https://leetcode.com/problems/course-schedule/)
+- [LeetCode 547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
 
 <!-- @include: @article-footer.snippet.md -->

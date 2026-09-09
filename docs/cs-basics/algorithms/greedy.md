@@ -1,48 +1,48 @@
 ---
-title: 贪心算法面试题总结：区间贪心、跳跃游戏与证明思路
-description: 贪心算法面试题总结，讲解贪心题型识别、排序贪心、区间贪心、跳跃游戏、贪心证明思路和 LeetCode 高频题。
-category: 计算机基础
+title: "Tổng hợp bài toán phỏng vấn Thuật toán tham lam (Greedy): Khoảng tham lam, Jump Game và Phương pháp chứng minh"
+description: "Tổng hợp bài toán phỏng vấn thuật toán tham lam, giải thích nhận diện dạng bài toán tham lam, tham lam sắp xếp, tham lam khoảng, trò chơi nhảy, tư duy chứng minh tham lam và các bài toán LeetCode tần suất cao."
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 贪心算法,贪心算法模板,区间贪心,排序贪心,跳跃游戏,贪心证明,LeetCode贪心,算法面试题
+      content: Thuật toán tham lam,Greedy,Greedy template,Tham lam khoảng,Tham lam sắp xếp,Trò chơi nhảy,Jump Game,Chứng minh tham lam,LeetCode Greedy,Bài toán phỏng vấn thuật toán
 ---
 
-贪心算法的代码往往不长，难点在于为什么当前选择不会影响全局最优。面试里如果只写代码，不解释贪心策略，很容易被追问到卡住。
+Code của thuật toán tham lam (Greedy Algorithm) thường không dài, nhưng điểm khó nằm ở việc chứng minh tại sao lựa chọn cục bộ hiện tại lại không làm ảnh hưởng đến tính tối ưu toàn cục. Trong phỏng vấn, nếu chỉ viết code mà không giải thích chiến lược tham lam, bạn sẽ rất dễ bị người phỏng vấn hỏi dồn đến mức bế tắc.
 
-可以先记一个判断方式：如果问题可以通过排序或维护一个当前最优边界，每一步做出局部选择，并且这个选择不会破坏后续最优解，就可以尝试贪心。
+Bạn có thể ghi nhớ một nguyên tắc phán đoán: Nếu bài toán có thể thông qua việc sắp xếp hoặc duy trì một biên tối ưu hiện tại, ở mỗi bước đưa ra một lựa chọn cục bộ và lựa chọn này không phá vỡ nghiệm tối ưu về sau, thì có thể thử tiếp cận theo hướng tham lam.
 
-## 面试考察重点
+## Trọng tâm khảo sát trong phỏng vấn
 
-- 能找出贪心策略。
-- 能用交换、反证或直觉边界说明策略合理。
-- 能处理排序后的遍历条件。
-- 能区分贪心和动态规划。
+- Tìm ra chiến lược tham lam chuẩn xác.
+- Sử dụng phương pháp tráo đổi (exchange argument), phản chứng hoặc biên trực giác để chứng minh tính hợp lý của chiến lược.
+- Xử lý điều kiện duyệt sau khi sắp xếp dữ liệu.
+- Phân biệt rõ ràng giữa Greedy và Quy hoạch động (Dynamic Programming).
 
-## 贪心题怎么想？
+## Tư duy giải bài toán Greedy như thế nào?
 
-贪心题最怕“凭感觉选”。写代码前至少要说清两个东西：
+Điều kỵ nhất của bài toán tham lam là "chọn theo cảm tính". Trước khi viết code, ít nhất bạn phải nói rõ được 2 điều:
 
-1. 每一步贪的是什么，比如结束时间最早、当前能跳到最远、当前收益为正。
-2. 为什么这个选择不会让后面变差。
+1. Mỗi bước tham lam cái gì? Ví dụ: Thời gian kết thúc sớm nhất, vị trí hiện tại có thể nhảy xa nhất, hoặc lợi nhuận hiện tại là số dương.
+2. Tại sao lựa chọn này sẽ không làm kết quả phía sau bị tệ đi?
 
-证明不一定要很形式化，但要能讲出取舍。比如区间调度里，选择结束最早的区间，是因为它给后面留下的可选空间最大；如果选择一个结束更晚的区间，不会让答案变得更多。
+Chứng minh không nhất thiết phải dùng toán học quá hình thức, nhưng phải giải thích được sự đánh đổi (trade-off). Ví dụ trong bài toán xếp lịch khoảng thời gian (Interval Scheduling), ta chọn khoảng có thời gian kết thúc sớm nhất vì nó để lại không gian lựa chọn lớn nhất cho các khoảng phía sau; nếu chọn một khoảng kết thúc muộn hơn thì số lượng khoảng chọn được chắc chắn không thể nhiều hơn.
 
-## 常见题型
+## Các dạng bài thường gặp
 
-| 题型       | 贪心策略                       | 代表题                             |
+| Dạng bài | Chiến lược tham lam | Bài toán tiêu biểu |
 | ---------- | ------------------------------ | ---------------------------------- |
-| 分配问题   | 优先满足最容易满足的对象       | 分发饼干                           |
-| 股票买卖   | 把所有正收益累加               | 买卖股票的最佳时机 II              |
-| 跳跃问题   | 维护当前能到达的最远位置       | 跳跃游戏                           |
-| 区间问题   | 按右端点或左端点排序           | 无重叠区间、用最少数量的箭引爆气球 |
-| 字符串重构 | 维护剩余可用次数或最远覆盖位置 | 划分字母区间                       |
+| Bài toán phân phối (Allocation) | Ưu tiên thỏa mãn đối tượng dễ thỏa mãn nhất | Chia bánh quy (Assign Cookies) |
+| Mua bán cổ phiếu | Cộng dồn tất cả các khoản lợi nhuận dương | Thời điểm mua bán cổ phiếu tốt nhất II |
+| Bài toán nhảy (Jump Game) | Duy trì vị trí xa nhất hiện tại có thể đạt tới | Jump Game |
+| Bài toán khoảng (Intervals) | Sắp xếp theo đầu mút phải hoặc đầu mút trái | Non-overlapping Intervals, Dùng ít tên nhất bắn nổ bóng bay |
+| Tái cấu trúc chuỗi | Duy trì số lần còn lại hoặc phạm vi bao phủ xa nhất | Phân chia khoảng ký tự (Partition Labels) |
 
-贪心常常和排序一起出现，因为排序能让“当前最优选择”变得明确。区间题经常按左端点或右端点排序，分配题经常把需求和资源都排序后用双指针匹配。
+Greedy rất thường xuyên xuất hiện cùng với việc sắp xếp (Sort), bởi vì sắp xếp giúp cho "lựa chọn tối ưu hiện tại" trở nên rõ ràng. Bài toán khoảng thường sắp xếp theo điểm đầu hoặc điểm cuối; bài toán phân phối thường sắp xếp cả nhu cầu lẫn tài nguyên rồi dùng Two Pointers để ghép cặp.
 
-## 跳跃游戏模板
+## Template Jump Game (Trò chơi nhảy)
 
 ```java
 boolean canJump(int[] nums) {
@@ -57,20 +57,20 @@ boolean canJump(int[] nums) {
 }
 ```
 
-`farthest` 表示当前能到达的最远位置。遍历到 `i` 时，如果 `i > farthest`，说明当前位置根本不可达。
+`farthest` biểu thị vị trí xa nhất hiện tại có thể chạm tới. Khi duyệt đến vị trí `i`, nếu `i > farthest`, điều đó có nghĩa là vị trí hiện tại hoàn toàn không thể nhảy tới được.
 
-这题的贪心点是：不关心具体从哪一步跳到 `i`，只关心当前能覆盖到的最远位置。只要当前位置在覆盖范围内，就可以用它继续更新覆盖范围。
+Điểm tham lam của bài này là: Không quan tâm cụ thể từ bước nào nhảy đến `i`, chỉ quan tâm đến phạm vi xa nhất hiện tại có thể bao phủ. Chỉ cần vị trí hiện tại nằm trong phạm vi bao phủ, ta có thể dùng nó để tiếp tục mở rộng phạm vi bao phủ tối đa.
 
-“跳跃游戏 II”多了一个最少步数。它维护两个边界：
+Bài toán "Jump Game II" yêu cầu thêm số bước nhảy ít nhất. Bài này sẽ duy trì hai biên:
 
-- `curEnd`：当前步数能覆盖到的最远位置。
-- `farthest`：在当前覆盖范围内再跳一步能到的最远位置。
+- `curEnd`: Vị trí xa nhất mà số bước hiện tại có thể bao phủ tới.
+- `farthest`: Vị trí xa nhất có thể tới nếu nhảy thêm một bước nữa từ phạm vi hiện tại.
 
-当遍历到 `curEnd` 时，说明当前步数的范围用完了，必须多跳一步，并把 `curEnd` 更新为 `farthest`。
+Khi duyệt đến `curEnd`, tức là phạm vi của số bước hiện tại đã dùng hết, bắt buộc phải nhảy thêm một bước nữa và cập nhật `curEnd = farthest`.
 
-## 区间贪心模板
+## Template Interval Greedy (Khoảng tham lam)
 
-以无重叠区间为例，按右端点升序排序，每次保留结束最早的区间：
+Lấy bài toán tìm các khoảng không trùng lặp (Non-overlapping Intervals) làm ví dụ: Sắp xếp các khoảng theo chiều tăng dần của đầu mút phải (end point), mỗi lần luôn giữ lại khoảng kết thúc sớm nhất:
 
 ```java
 int eraseOverlapIntervals(int[][] intervals) {
@@ -90,23 +90,23 @@ int eraseOverlapIntervals(int[][] intervals) {
 }
 ```
 
-结束越早，留给后面区间的空间越大，这是这类题的核心选择。
+Kết thúc càng sớm thì không gian để lại cho các khoảng phía sau càng lớn, đây chính là lựa chọn cốt lõi của dạng bài này.
 
-区间题最容易错在排序字段。几个常见选择：
+Điểm dễ sai nhất trong bài toán khoảng là chọn sai trường để sắp xếp. Một vài quy tắc lựa chọn phổ biến:
 
-- 要选最多不重叠区间：按右端点升序。
-- 要合并区间：按左端点升序。
-- 要用最少箭引爆气球：按右端点升序，尽量用当前箭覆盖更多气球。
+- Muốn chọn nhiều khoảng không trùng nhau nhất: Sắp xếp tăng dần theo đầu mút phải (`end`).
+- Muốn gộp các khoảng lại với nhau: Sắp xếp tăng dần theo đầu mút trái (`start`).
+- Dùng ít mũi tên nhất để bắn nổ bóng bay: Sắp xếp tăng dần theo đầu mút phải, cố gắng dùng mũi tên hiện tại bắn xuyên nhiều quả bóng nhất.
 
-如果一个贪心策略不好解释，先用小样例找反例。比如“每次选长度最短的区间”看起来合理，但并不能保证选出最多不重叠区间。
+Nếu một chiến lược tham lam khó giải thích, hãy thử tìm phản ví dụ (counterexample) bằng các test case nhỏ. Ví dụ "mỗi lần chọn khoảng có độ dài ngắn nhất" nghe có vẻ hợp lý, nhưng không thể đảm bảo chọn được số khoảng không trùng nhau nhiều nhất.
 
-## 代表题精讲：用最少数量的箭引爆气球
+## Phân tích bài toán tiêu biểu: Dùng ít tên nhất bắn nổ bóng bay
 
-[452. 用最少数量的箭引爆气球](https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/) 是区间贪心的典型题。题目给出一组气球区间 `[start, end]`，一支箭射在某个坐标 `x` 上，只要 `start <= x <= end`，这个气球就会被引爆，要求用最少的箭引爆所有气球。
+[452. Minimum Number of Arrows to Burst Balloons](https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/) là bài toán kinh điển của Interval Greedy. Đề bài cho một tập hợp các quả bóng dạng khoảng tọa độ `[start, end]`, một mũi tên bắn tại tọa độ `x` sẽ làm nổ quả bóng nếu `start <= x <= end`. Yêu cầu tìm số mũi tên ít nhất để bắn nổ toàn bộ bóng bay.
 
-这题的贪心点是：**每次把箭射在当前可选区间的最右边界**。先按右端点升序排序，第一支箭放在第一个气球的右端点。后面的气球如果左端点 `<= arrow`，说明这支箭还能覆盖它；如果左端点 `> arrow`，说明当前箭已经够不到了，必须新增一支箭，并把新箭放在这个气球的右端点。
+Điểm tham lam của bài này là: **Mỗi lần bắn mũi tên vào đúng biên phải xa nhất của quả bóng hiện tại**. Đầu tiên sắp xếp theo đầu mút phải tăng dần, mũi tên đầu tiên đặt tại đầu mút phải của quả bóng thứ nhất. Với các quả bóng tiếp theo, nếu đầu mút trái `<= arrow`, tức là mũi tên này vẫn bắn trúng nó; nếu đầu mút trái `> arrow`, tức là mũi tên hiện tại không thể với tới quả bóng này nữa, bắt buộc phải dùng thêm một mũi tên mới và đặt tại đầu mút phải của quả bóng mới đó.
 
-代码里要注意两个边界：空数组返回 `0`；排序比较器不要写成 `a[1] - b[1]`，极端坐标下可能溢出。
+Trong code cần chú ý hai điều kiện biên: Mảng rỗng trả về `0`; comparator sắp xếp không nên viết `a[1] - b[1]` vì có thể bị tràn số (integer overflow) ở các giá trị tọa độ âm lớn, nên dùng `Integer.compare`.
 
 ```java
 int findMinArrowShots(int[][] points) {
@@ -126,41 +126,41 @@ int findMinArrowShots(int[][] points) {
 }
 ```
 
-如果样例是 `[[10,16],[2,8],[1,6],[7,12]]`，按右端点排序后是 `[1,6]、[2,8]、[7,12]、[10,16]`。第一支箭放在 `6`，能覆盖前两个区间；遇到 `[7,12]` 时左端点已经大于 `6`，必须新增一支箭，放在 `12`，它又能覆盖 `[10,16]`。最终答案是 `2`。
+Nếu test case là `[[10,16],[2,8],[1,6],[7,12]]`, sau khi sắp xếp theo biên phải sẽ thành `[1,6], [2,8], [7,12], [10,16]`. Mũi tên đầu tiên bắn tại `6`, bao phủ được 2 quả bóng đầu tiên; khi gặp `[7,12]`, biên trái của nó đã lớn hơn `6`, bắt buộc thêm mũi tên thứ hai bắn tại `12`, mũi tên này lại bao phủ được `[10,16]`. Kết quả cuối cùng cần 2 mũi tên.
 
-## 贪心和动态规划怎么区分？
+## Phân biệt giữa Greedy và Dynamic Programming
 
-| 对比点       | 贪心                     | 动态规划               |
+| Tiêu chí so sánh | Greedy (Thuật toán tham lam) | Dynamic Programming (Quy hoạch động) |
 | ------------ | ------------------------ | ---------------------- |
-| 决策方式     | 当前一步直接选           | 依赖前面多个状态       |
-| 是否回看历史 | 通常不回看               | 需要状态转移           |
-| 证明重点     | 当前选择不会破坏全局最优 | 最优子结构和重叠子问题 |
-| 常见题       | 区间、跳跃、分配         | 背包、子序列、路径     |
+| Cách thức quyết định | Quyết định trực tiếp ở bước hiện tại | Phụ thuộc vào nhiều trạng thái trước đó |
+| Có nhìn lại lịch sử không | Thông thường không nhìn lại | Cần chuyển tiếp trạng thái |
+| Trọng tâm chứng minh | Lựa chọn hiện tại không phá vỡ tối ưu toàn cục | Cấu trúc con tối ưu và bài toán con trùng lặp |
+| Bài toán thường gặp | Khoảng, Nhảy, Phân phối | Knapsack, Subsequence, Đường đi trên lưới |
 
-如果当前选择看起来合理，但举个小反例就会错，那它更可能需要 DP 或搜索。
+Nếu lựa chọn hiện tại nhìn có vẻ hợp lý nhưng chỉ cần đưa ra một phản ví dụ nhỏ là sai ngay, thì rất có khả năng bài đó phải dùng DP hoặc tìm kiếm (DFS/BFS).
 
-## 易错点
+## Các lỗi thường gặp (Pitfalls)
 
-- 贪心题常常需要先排序，排序字段错了答案就错。
-- 区间题要看边界是否允许相等，比如 `[1,2]` 和 `[2,3]` 是否重叠。
-- 跳跃游戏 II 里“步数增加”的时机和当前覆盖边界有关。
-- 贪心策略要能解释，不要只说“每次选最优”。
+- Bài toán tham lam thường cần sắp xếp trước, nếu sắp xếp sai trường dữ liệu thì kết quả sẽ sai hoàn toàn.
+- Với bài toán khoảng, cần chú ý xem đề bài có cho phép các đầu mút bằng nhau hay không (ví dụ `[1,2]` và `[2,3]` có tính là trùng nhau không).
+- Trong Jump Game II, thời điểm "tăng số bước nhảy" gắn liền với biên bao phủ hiện tại (`curEnd`).
+- Chiến lược tham lam phải giải thích được logic, không thể chỉ nói chung chung là "mỗi lần chọn cái tốt nhất".
 
-## 高频问题自测
+## Câu hỏi tự kiểm tra tần suất cao
 
-- 贪心和动态规划怎么区分？
-- 区间题为什么经常按右端点排序？
-- 跳跃游戏里为什么只维护最远可达位置就够了？
-- 贪心题怎样用交换或反证说明策略正确？
-- 区间边界允许相等时，判断条件应该怎么写？
+- Phân biệt giữa Greedy và Quy hoạch động như thế nào?
+- Tại sao bài toán khoảng thường sắp xếp theo đầu mút phải?
+- Trong Jump Game, tại sao chỉ cần duy trì vị trí xa nhất có thể tới là đủ?
+- Trong bài toán tham lam, làm thế nào để dùng phương pháp tráo đổi hoặc phản chứng chứng minh tính đúng đắn của chiến lược?
+- Khi các biên của khoảng cho phép bằng nhau, điều kiện so sánh nên viết như thế nào?
 
-## 推荐练习题
+## Bài tập rèn luyện đề xuất
 
-- [455. 分发饼干](https://leetcode.cn/problems/assign-cookies/)
-- [122. 买卖股票的最佳时机 II](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/)
-- [55. 跳跃游戏](https://leetcode.cn/problems/jump-game/)
-- [45. 跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/)
-- [435. 无重叠区间](https://leetcode.cn/problems/non-overlapping-intervals/)
-- [763. 划分字母区间](https://leetcode.cn/problems/partition-labels/)
+- [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/)
+- [122. Best Time to Buy and Sell Stock II](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/)
+- [55. Jump Game](https://leetcode.cn/problems/jump-game/)
+- [45. Jump Game II](https://leetcode.cn/problems/jump-game-ii/)
+- [435. Non-overlapping Intervals](https://leetcode.cn/problems/non-overlapping-intervals/)
+- [763. Partition Labels](https://leetcode.cn/problems/partition-labels/)
 
 <!-- @include: @article-footer.snippet.md -->

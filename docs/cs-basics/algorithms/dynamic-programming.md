@@ -1,57 +1,55 @@
 ---
-title: 动态规划面试题总结：状态转移、背包、子序列与 Java 模板
-description: 动态规划面试题总结，讲解状态定义、状态转移、初始化、遍历顺序、0-1 背包、完全背包、子序列、区间 DP 和 LeetCode 高频题。
-category: 计算机基础
+title: "Tổng hợp bài toán phỏng vấn Quy hoạch động (Dynamic Programming): Chuyển trạng thái, Knapsack, Subsequence và Java Template"
+description: "Tổng hợp bài toán phỏng vấn quy hoạch động, giải thích định nghĩa trạng thái, chuyển trạng thái, khởi tạo, thứ tự duyệt, 0-1 Knapsack, Complete Knapsack, Subsequence, Interval DP và các bài toán LeetCode tần suất cao."
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 动态规划,DP,状态转移,背包问题,0-1背包,完全背包,子序列,区间DP,Java动态规划,LeetCode动态规划
+      content: Quy hoạch động,DP,Dynamic Programming,Chuyển trạng thái,Bài toán cái túi,Knapsack,0-1 Knapsack,Complete Knapsack,Subsequence,Interval DP,Java DP,LeetCode DP
 ---
 
-动态规划难，不是因为代码一定长，而是因为状态定义一旦错了，后面的转移方程、初始化和遍历顺序都会跟着错。
+Độ khó của Quy hoạch động (Dynamic Programming - DP) không phải vì code nhất định dài, mà vì một khi định nghĩa trạng thái bị sai thì toàn bộ phương trình chuyển trạng thái, giá trị khởi tạo và thứ tự duyệt phía sau đều sẽ sai theo.
 
-面试里不要一上来就背模板。先问自己两个问题：这个问题能不能拆成子问题？当前答案是否依赖前面已经算过的答案？如果这两个问题都成立，再考虑 DP。
+Trong phỏng vấn, đừng vừa vào đã học vẹt template. Trước tiên hãy tự hỏi bản thân hai câu hỏi: Vấn đề này có thể chia thành các bài toán con (subproblems) không? Đáp án hiện tại có phụ thuộc vào các đáp án đã tính toán phía trước không? Nếu cả hai câu hỏi đều đúng, lúc đó mới cân nhắc áp dụng DP.
 
-## 面试考察重点
+## Trọng tâm khảo sát trong phỏng vấn
 
-- 能说清 `dp[i]` 或 `dp[i][j]` 的含义。
-- 能写出状态转移方程。
-- 能处理初始化和遍历顺序。
-- 能判断是否可以压缩空间。
-- 能区分背包、子序列、区间等常见类型。
+- Trình bày rõ ràng ý nghĩa của `dp[i]` hoặc `dp[i][j]`.
+- Viết được phương trình chuyển trạng thái (state transition equation).
+- Xử lý chính xác giá trị khởi tạo và thứ tự duyệt.
+- Phán đoán xem có thể nén không gian (space optimization) được không.
+- Phân biệt các dạng bài phổ biến: Knapsack (Cái túi), Subsequence (Dãy con), Interval (Khoảng/Đoạn).
 
-## 什么时候考虑动态规划？
+## Khi nào nên cân nhắc Quy hoạch động?
 
-DP 不是看到“最值”就套。更靠谱的判断是看两个条件：
+Không phải cứ thấy bài toán tìm "giá trị lớn nhất/nhỏ nhất" là áp dụng DP. Dấu hiệu phán đoán đáng tin cậy hơn là nhìn vào hai điều kiện:
 
-1. 问题能不能拆成规模更小的同类问题。
-2. 子问题会不会被反复计算。
+1. Bài toán có thể chia thành các bài toán con cùng loại có quy mô nhỏ hơn (Optimal Substructure).
+2. Các bài toán con có bị tính toán lặp đi lặp lại nhiều lần không (Overlapping Subproblems).
 
-比如斐波那契数列，`f(n)` 依赖 `f(n - 1)` 和 `f(n - 2)`，而 `f(n - 2)` 会在递归里被反复计算。把这些中间结果存下来，就是 DP。
+Ví dụ với dãy số Fibonacci: `f(n)` phụ thuộc vào `f(n - 1)` và `f(n - 2)`, mà `f(n - 2)` sẽ bị tính toán lặp lại nhiều lần trong cây đệ quy. Lưu trữ lại các kết quả trung gian này chính là bản chất của DP.
 
-面试里可以先从暴力递归说起，再说明哪里重复计算，最后把递归改成记忆化搜索或表格递推。这个过程比直接背 `dp` 数组更容易让面试官相信你真的理解。
+Trong phỏng vấn, bạn có thể bắt đầu trình bày từ đệ quy vét cạn (brute-force recursion), sau đó chỉ ra chỗ nào bị tính toán trùng lặp, và cuối cùng cải tiến đệ quy thành tìm kiếm có nhớ (Memoization) hoặc quy hoạch động dạng bảng (Tabulation). Quá trình này giúp người phỏng vấn tin tưởng rằng bạn thực sự hiểu rõ bản chất vấn đề hơn là việc chỉ học thuộc lòng mảng `dp`.
 
-## DP 五步法
+## Phương pháp 5 bước giải bài toán DP
 
-1. 定义状态：`dp[i]` 到底表示什么。
-2. 写转移：当前状态从哪些状态推出来。
-3. 做初始化：没有前置状态时答案是什么。
-4. 定遍历顺序：先算哪些状态，后算哪些状态。
-5. 检查样例：用一个小输入手推数组。
+1. Định nghĩa trạng thái: `dp[i]` rốt cuộc đại diện cho điều gì.
+2. Viết phương trình chuyển trạng thái: Trạng thái hiện tại được suy ra từ những trạng thái nào trước đó.
+3. Khởi tạo giá trị ban đầu: Khi chưa có trạng thái phía trước thì đáp án cơ sở là gì.
+4. Xác định thứ tự duyệt: Tính toán trạng thái nào trước, trạng thái nào sau.
+5. Kiểm tra mẫu thử (Dry run): Dùng một test case nhỏ để chạy tay qua mảng `dp`.
 
-其中最重要的是第 1 步。`dp[i]` 的含义一旦含糊，后面的代码就会变成试出来的。
+Trong đó, quan trọng nhất là bước 1. Một khi ý nghĩa của `dp[i]` bị mơ hồ thì toàn bộ code phía sau sẽ trở thành việc đoán mò và thử sai.
 
-一个好的状态定义通常满足：
+Một định nghĩa trạng thái tốt thường thỏa mãn:
 
-- 能覆盖题目要问的答案。
-- 能从更小状态推出来。
-- 维度尽量少，但不要为了省空间把含义写乱。
+- Bao phủ được câu hỏi mà đề bài yêu cầu.
+- Có thể suy diễn ra được từ các trạng thái nhỏ hơn.
+- Số chiều càng ít càng tốt, nhưng đừng vì tiết kiệm không gian mà làm ý nghĩa trạng thái bị rối loạn.
 
-## 一维 DP 示例
-
-爬楼梯问题：
+## Ví dụ DP một chiều: Bài toán leo thang (Climbing Stairs)
 
 ```java
 int climbStairs(int n) {
@@ -69,19 +67,19 @@ int climbStairs(int n) {
 }
 ```
 
-状态含义：到第 `i` 阶有多少种走法。转移方程：`dp[i] = dp[i - 1] + dp[i - 2]`。
+Ý nghĩa trạng thái: Có bao nhiêu cách để bước lên bậc thứ `i`. Phương trình chuyển trạng thái: `dp[i] = dp[i - 1] + dp[i - 2]`.
 
-这题还可以从递归推出来：
+Bài này có thể suy luận trực tiếp từ tư duy đệ quy:
 
 ```text
-到第 i 阶的最后一步，要么从 i-1 走 1 步上来，要么从 i-2 走 2 步上来。
+Bước cuối cùng để lên đến bậc thứ i: Hoặc là từ bậc i-1 bước lên 1 bước, hoặc từ bậc i-2 bước lên 2 bước.
 ```
 
-所以 `dp[i]` 只依赖前两个状态，可以把数组压缩成两个变量。空间压缩的前提是你确认旧状态以后不会再用。
+Vì vậy, `dp[i]` chỉ phụ thuộc vào đúng hai trạng thái liền trước, có thể nén mảng thành hai biến. Tiền đề của việc nén không gian là bạn chắc chắn các trạng thái cũ phía trước sẽ không bao giờ được sử dụng lại nữa.
 
-## 0-1 背包模板
+## Template 0-1 Knapsack (Balo 0-1)
 
-每个物品只能选一次：
+Mỗi đồ vật chỉ được chọn tối đa một lần:
 
 ```java
 int knapsack01(int[] weights, int[] values, int capacity) {
@@ -95,15 +93,15 @@ int knapsack01(int[] weights, int[] values, int capacity) {
 }
 ```
 
-容量要倒序遍历，避免同一个物品在一轮里被重复使用。
+Dung lượng balo (capacity) bắt buộc phải duyệt theo thứ tự ngược (từ lớn về nhỏ), để tránh một đồ vật bị sử dụng nhiều lần trong cùng một lượt.
 
-倒序遍历是 0-1 背包最容易被问的点。假设容量正序遍历，计算 `dp[j]` 时可能用到本轮刚更新过的 `dp[j - weight]`，等于同一个物品被选了多次。这就变成完全背包了。
+Duyệt ngược là câu hỏi thường xuyên được hỏi nhất về 0-1 Knapsack. Giả sử duyệt xuôi dung lượng, khi tính `dp[j]` có thể sẽ sử dụng `dp[j - weight]` vừa mới được cập nhật trong chính lượt này, tương đương với việc đồ vật đó được chọn nhiều lần. Khi đó bài toán sẽ biến thành Complete Knapsack (Balo hoàn toàn).
 
-0-1 背包的典型问法不一定直接叫背包，像“能否分成两个和相等的子集”，可以转成：能否从数组里选一些数，使它们的和等于总和的一半。
+Cách hỏi điển hình của 0-1 Knapsack không nhất thiết phải dùng từ "cái túi/balo". Ví dụ bài toán "Có thể chia mảng thành hai tập con có tổng bằng nhau không?", thực chất có thể chuyển đổi thành: Liệu có thể chọn một số phần tử từ mảng sao cho tổng của chúng bằng đúng một nửa tổng mảng ban đầu.
 
-## 完全背包模板
+## Template Complete Knapsack (Balo hoàn toàn)
 
-每个物品可以选多次：
+Mỗi đồ vật có thể được chọn nhiều lần không giới hạn:
 
 ```java
 int unboundedKnapsack(int[] weights, int[] values, int capacity) {
@@ -117,62 +115,62 @@ int unboundedKnapsack(int[] weights, int[] values, int capacity) {
 }
 ```
 
-容量正序遍历，允许当前物品被重复使用。
+Dung lượng balo duyệt theo thứ tự xuôi, cho phép đồ vật hiện tại được sử dụng lặp lại nhiều lần.
 
-完全背包里，正序遍历容量正是为了允许当前物品重复使用。比如零钱兑换，每种硬币可以用多次，计算更大金额时可以基于当前硬币已经参与过的状态继续转移。
+Trong Complete Knapsack, việc duyệt xuôi dung lượng chính là để cho phép đồ vật hiện tại được dùng lại. Ví dụ trong bài toán đổi tiền xu (Coin Change), mỗi loại mệnh giá tiền có thể dùng nhiều lần, khi tính số tiền lớn hơn có thể chuyển tiếp trạng thái dựa trên chính trạng thái đã sử dụng đồng xu này trước đó.
 
-如果题目问的是“组合数”还是“排列数”，遍历顺序也会变：
+Nếu đề bài hỏi về "Số tổ hợp" (Combinations) hay "Số hoán vị" (Permutations), thứ tự duyệt của hai vòng lặp cũng sẽ thay đổi:
 
-- 组合数：通常先遍历物品，再遍历容量。
-- 排列数：通常先遍历容量，再遍历物品。
+- Số tổ hợp: Thường duyệt đồ vật (tiền xu) ở vòng ngoài, duyệt dung lượng (số tiền) ở vòng trong.
+- Số hoán vị: Thường duyệt dung lượng (số tiền) ở vòng ngoài, duyệt đồ vật (tiền xu) ở vòng trong.
 
-这块面试不一定问很深，但遇到零钱兑换 II 这类题时很关键。
+Phần này trong phỏng vấn không hẳn sẽ hỏi quá sâu, nhưng là mấu chốt khi giải các bài như Coin Change II.
 
-## 常见题型
+## Các dạng bài thường gặp
 
-| 题型            | 状态设计                                               | 代表题        |
+| Dạng bài | Thiết kế trạng thái | Bài toán tiêu biểu |
 | --------------- | ------------------------------------------------------ | ------------- |
-| 爬楼梯/打家劫舍 | `dp[i]` 表示前 `i` 个位置的最优值                      | 70、198       |
-| 背包            | `dp[j]` 表示容量为 `j` 时的最优值或方案数              | 416、518、322 |
-| 子序列          | `dp[i]` 或 `dp[i][j]` 表示以某位置结尾或两个前缀的答案 | 300、1143     |
-| 回文            | `dp[i][j]` 表示区间 `[i, j]` 是否满足条件或最优值      | 647、516      |
-| 路径            | `dp[i][j]` 表示走到格子 `(i, j)` 的答案                | 62、64        |
+| Leo thang / Trộm nhà (House Robber) | `dp[i]` biểu thị giá trị tối ưu của `i` vị trí đầu tiên | 70, 198 |
+| Knapsack (Balo) | `dp[j]` biểu thị giá trị tối ưu hoặc số phương án khi dung lượng là `j` | 416, 518, 322 |
+| Dãy con (Subsequence) | `dp[i]` hoặc `dp[i][j]` biểu thị kết quả kết thúc tại vị trí nào hoặc của hai tiền tố | 300, 1143 |
+| Palindrome (Đối xứng) | `dp[i][j]` biểu thị đoạn `[i, j]` có đối xứng hay giá trị tối ưu không | 647, 516 |
+| Đường đi trên lưới (Path) | `dp[i][j]` biểu thị kết quả khi đi đến ô `(i, j)` | 62, 64 |
 
-## 记忆化搜索和递推怎么选？
+## Nên chọn Memoization (Đệ quy có nhớ) hay Tabulation (Quy hoạch động lặp bảng)?
 
-两种写法都在存子问题答案。
+Cả hai cách viết đều lưu lại đáp án của các bài toán con:
 
-| 写法       | 特点                         | 适合场景                   |
+| Cách viết | Đặc điểm | Phù hợp cho |
 | ---------- | ---------------------------- | -------------------------- |
-| 记忆化搜索 | 从目标状态往下递归，按需计算 | 状态转移复杂、递归更自然   |
-| 递推       | 从小状态往大状态填表         | 遍历顺序清楚、方便压缩空间 |
+| Memoization (Đệ quy có nhớ) | Xuất phát từ trạng thái mục tiêu gọi đệ quy xuống, tính toán theo nhu cầu | Chuyển trạng thái phức tạp, tư duy đệ quy tự nhiên hơn |
+| Tabulation (Lặp điền bảng) | Điền bảng từ trạng thái nhỏ dần lên trạng thái lớn | Thứ tự duyệt rõ ràng, dễ dàng nén không gian bộ nhớ |
 
-如果一开始想不清遍历顺序，可以先写记忆化搜索。等状态关系清楚后，再改成递推。很多树形 DP、区间 DP，用记忆化搜索更容易写对。
+Nếu ban đầu chưa hình dung rõ thứ tự duyệt bảng, bạn có thể viết Memoization trước. Khi quan hệ trạng thái đã sáng tỏ thì chuyển đổi sang Tabulation. Rất nhiều bài Tree DP (DP trên cây) hay Interval DP (DP trên đoạn) viết bằng Memoization sẽ trực quan và ít bị lỗi biên hơn.
 
-## 面试手写路径
+## Lộ trình viết code từng bước trong phỏng vấn
 
-DP 题不建议直接从代码开始。面试手写时，可以先把下面 4 句话讲清楚：
+Với bài toán DP, không nên bắt đầu ngay bằng việc viết code. Khi phỏng vấn viết tay hoặc live coding, hãy làm rõ 4 câu sau đây trước:
 
-1. `dp` 数组的含义是什么，答案最终落在哪个位置。
-2. 当前状态依赖哪些旧状态，为什么这些旧状态已经算过。
-3. 初始化为什么这样写，尤其是 `0`、`1`、无穷大分别代表什么。
-4. 遍历顺序为什么不会提前使用未计算或不该重复使用的状态。
+1. Ý nghĩa mảng `dp` là gì, và đáp án cuối cùng nằm ở vị trí nào.
+2. Trạng thái hiện tại phụ thuộc vào những trạng thái cũ nào, tại sao các trạng thái cũ đó chắc chắn đã được tính toán xong.
+3. Tại sao giá trị khởi tạo lại được gán như vậy, đặc biệt là `0`, `1`, hoặc dương/âm vô cùng đại diện cho điều gì.
+4. Tại sao thứ tự duyệt không vô tình sử dụng các trạng thái chưa được tính hoặc các trạng thái không được phép tái sử dụng.
 
-如果这 4 句话说不清，代码大概率是靠记忆写出来的，遇到变体就容易散。
+Nếu không trình bày rõ được 4 câu này, code phần lớn chỉ là viết theo trí nhớ, khi gặp bài biến thể sẽ rất dễ bị rối loạn.
 
-## 代表题精讲：零钱兑换
+## Phân tích bài toán tiêu biểu: Coin Change (Đổi tiền xu)
 
-[322. 零钱兑换](https://leetcode.cn/problems/coin-change/) 是完全背包里很适合面试的一题。题目给定硬币面额和目标金额，问凑成目标金额最少需要多少枚硬币，每种硬币可以使用无限次。
+[322. Coin Change](https://leetcode.cn/problems/coin-change/) là bài toán Complete Knapsack cực kỳ phổ biến trong các buổi phỏng vấn. Đề bài cho các mệnh giá tiền xu và số tiền mục tiêu `amount`, hỏi cần ít nhất bao nhiêu đồng xu để ghép thành số tiền đó, mỗi loại đồng xu được dùng số lần không giới hạn.
 
-状态定义可以这样说：
+Định nghĩa trạng thái có thể trình bày như sau:
 
 ```text
-dp[j] 表示凑成金额 j 所需的最少硬币数。
+dp[j] biểu thị số lượng đồng xu ít nhất cần dùng để tạo thành số tiền j.
 ```
 
-初始化是这题的关键。`dp[0] = 0`，表示凑成金额 0 不需要硬币；其他金额先设成一个不可能的较大值，表示暂时不可达。
+Khởi tạo là mấu chốt của bài này: `dp[0] = 0`, vì để tạo thành số tiền 0 thì cần 0 đồng xu; các số tiền còn lại ban đầu được gán một giá trị lớn không thể đạt tới (`amount + 1`), biểu thị tạm thời chưa có cách ghép hợp lệ.
 
-代码里用到 `Arrays.fill`，需要导入 `java.util.Arrays`。
+Trong code có dùng `Arrays.fill`, cần import `java.util.Arrays`.
 
 ```java
 int coinChange(int[] coins, int amount) {
@@ -191,78 +189,78 @@ int coinChange(int[] coins, int amount) {
 }
 ```
 
-为什么容量正序遍历？因为一枚硬币可以用多次。计算 `dp[j]` 时使用 `dp[j - coin]`，如果 `dp[j - coin]` 已经在本轮被当前硬币更新过，就代表当前硬币可以继续被使用，这正好符合完全背包。
+Tại sao dung lượng duyệt theo thứ tự xuôi? Vì mỗi đồng xu có thể được dùng nhiều lần. Khi tính `dp[j]`, ta sử dụng `dp[j - coin]`. Nếu `dp[j - coin]` đã được cập nhật bởi chính đồng xu này trong lượt hiện tại, điều đó có nghĩa là đồng xu hiện tại có thể tiếp tục được sử dụng, hoàn toàn khớp với bài toán Complete Knapsack.
 
-如果题目变成“每种硬币只能用一次”，容量就要倒序遍历。遍历方向不是格式问题，而是在控制同一件物品能不能重复参与转移。
+Nếu đề bài đổi thành "mỗi đồng xu chỉ được dùng đúng một lần", dung lượng sẽ phải duyệt ngược. Hướng duyệt không phải là vấn đề hình thức, mà là công cụ để kiểm soát xem cùng một vật phẩm có được phép tái sử dụng trong quá trình chuyển trạng thái hay không.
 
-## 状态定义对比
+## So sánh các định nghĩa trạng thái dễ nhầm lẫn
 
-DP 题经常不是不会写转移，而是状态含义选错。下面几组状态看起来接近，但写法完全不同：
+Trong DP, nguyên nhân thất bại thường không phải là không biết viết chuyển trạng thái, mà do chọn sai ý nghĩa trạng thái. Những nhóm trạng thái dưới đây nhìn rất giống nhau nhưng cách viết hoàn toàn khác biệt:
 
-| 题型           | 状态含义                                 | 常见转移关注点                 |
+| Dạng bài | Ý nghĩa trạng thái | Điểm trọng tâm khi chuyển trạng thái |
 | -------------- | ---------------------------------------- | ------------------------------ |
-| 最长递增子序列 | `dp[i]` 表示以 `nums[i]` 结尾的 LIS 长度 | 必须选 `nums[i]`，向前找更小值 |
-| 打家劫舍       | `dp[i]` 表示前 `i` 间房子的最大金额      | 第 `i` 间偷或不偷              |
-| 最长公共子序列 | `dp[i][j]` 表示两个前缀的 LCS 长度       | 比较两个前缀最后一个字符       |
-| 回文子串       | `dp[i][j]` 表示区间 `[i, j]` 是否回文    | 依赖内部区间 `[i + 1, j - 1]`  |
+| Longest Increasing Subsequence (LIS) | `dp[i]` biểu thị độ dài LIS kết thúc tại `nums[i]` | Bắt buộc phải chọn `nums[i]`, tìm kiếm ngược về trước giá trị nhỏ hơn |
+| House Robber (Trộm nhà) | `dp[i]` biểu thị số tiền lớn nhất trong `i` ngôi nhà đầu | Ngôi nhà thứ `i` chọn trộm hoặc không trộm |
+| Longest Common Subsequence (LCS) | `dp[i][j]` biểu thị độ dài LCS của hai tiền tố | So sánh ký tự cuối cùng của hai tiền tố |
+| Palindromic Substring | `dp[i][j]` biểu thị đoạn `[i, j]` có phải là chuỗi đối xứng không | Phụ thuộc vào đoạn con bên trong `[i + 1, j - 1]` |
 
-面试里可以主动说一句：这里的 `dp[i]` 是“以 i 结尾”，不是“前 i 个元素里的最优值”。这句话能避免很多子序列题写错。
+Trong phỏng vấn, bạn nên chủ động nói rõ một câu: Ở đây `dp[i]` là "kết thúc tại vị trí i", chứ không phải là "kết quả tối ưu trong số i phần tử đầu tiên". Câu nói này sẽ giúp bạn tránh được rất nhiều lỗi logic trong các bài toán dãy con.
 
-## 过程示意和边界样例
+## Minh họa quy trình và các trường hợp biên
 
-以爬楼梯为例，`n = 5` 时的状态变化如下：
+Lấy bài toán leo thang làm ví dụ, với `n = 5`, sự biến đổi trạng thái như sau:
 
 | `i` | `dp[i - 2]` | `dp[i - 1]` | `dp[i]` |
 | --- | ----------- | ----------- | ------- |
-| 3   | 1           | 2           | 3       |
-| 4   | 2           | 3           | 5       |
-| 5   | 3           | 5           | 8       |
+| 3 | 1 | 2 | 3 |
+| 4 | 2 | 3 | 5 |
+| 5 | 3 | 5 | 8 |
 
-这张表要看的不是数字本身，而是状态只依赖前两个位置，所以可以压缩成两个变量。
+Điểm cần chú ý ở bảng này không phải là bản thân các con số, mà là trạng thái chỉ phụ thuộc vào đúng hai vị trí liền trước, vì vậy hoàn toàn có thể nén thành 2 biến cục bộ thay vì dùng cả mảng.
 
-DP 题建议检查这些边界：
+Với các bài toán DP, bạn nên kiểm tra các trường hợp biên sau:
 
-| 输入             | 重点                     |
+| Đầu vào | Trọng tâm kiểm tra |
 | ---------------- | ------------------------ |
-| `n = 0` 或空数组 | 初始化是否覆盖           |
-| 只有 1 个元素    | 是否越界访问 `dp[1]`     |
-| 无法组成目标     | 初始值是否能表达“不可达” |
-| 求方案数         | 初始化和遍历顺序是否正确 |
+| `n = 0` hoặc mảng rỗng | Khởi tạo đã bao phủ trường hợp này chưa |
+| Chỉ có 1 phần tử | Có bị truy cập mảng vượt biên tại `dp[1]` không |
+| Không thể ghép thành mục tiêu | Giá trị ban đầu có thể hiện rõ trạng thái "không thể đạt tới" hay không |
+| Đếm số phương án | Khởi tạo và thứ tự duyệt có chuẩn xác không |
 
-常见错误写法：
+Lỗi thường gặp khi viết code:
 
 ```java
 for (int j = weights[i]; j <= capacity; j++) {
-    dp[j] = Math.max(dp[j], dp[j - weights[i]] + values[i]); // 0-1 背包中是错的
+    dp[j] = Math.max(dp[j], dp[j - weights[i]] + values[i]); // Sai trong 0-1 Knapsack
 }
 ```
 
-0-1 背包中容量要倒序遍历，否则本轮刚更新的状态会被再次使用，相当于同一个物品被选了多次。
+Trong 0-1 Knapsack, dung lượng bắt buộc phải duyệt ngược, nếu không trạng thái vừa cập nhật trong lượt này sẽ bị tái sử dụng, tương đương với việc một đồ vật bị chọn nhiều lần.
 
-## 易错点
+## Các lỗi thường gặp (Pitfalls)
 
-- `dp` 含义不要频繁变化。
-- 初始化不是随便填 0，要看状态含义。
-- 0-1 背包容量倒序，完全背包容量正序。
-- 求方案数和求最值的初始化不同。
-- 子序列题经常需要区分“以 i 结尾”和“前 i 个元素内”。
+- Ý nghĩa của `dp` không được thay đổi giữa chừng.
+- Khởi tạo không phải lúc nào cũng điền 0 bừa bãi, phải dựa theo đúng định nghĩa trạng thái.
+- 0-1 Knapsack duyệt dung lượng ngược, Complete Knapsack duyệt dung lượng xuôi.
+- Khởi tạo khi đếm số phương án khác với khởi tạo khi tìm giá trị lớn nhất/nhỏ nhất.
+- Bài toán Subsequence thường cần phân biệt rõ giữa "kết thúc tại i" và "trong phạm vi i phần tử đầu tiên".
 
-## 高频问题自测
+## Câu hỏi tự kiểm tra tần suất cao
 
-- 为什么 DP 的第一步一定是定义状态？
-- 记忆化搜索和递推的区别是什么？什么时候先写记忆化更稳？
-- 0-1 背包为什么容量要倒序遍历？
-- 完全背包为什么容量可以正序遍历？
-- `dp[i]` 表示“以 i 结尾”和表示“前 i 个元素”时，转移有什么区别？
-- 求最少次数、最大价值、方案数时，初始化分别要注意什么？
+- Tại sao bước đầu tiên của DP nhất định phải là định nghĩa trạng thái?
+- Sự khác biệt giữa Memoization và Tabulation là gì? Khi nào viết Memoization trước sẽ an toàn hơn?
+- Tại sao trong 0-1 Knapsack, dung lượng balo phải duyệt theo chiều ngược?
+- Tại sao trong Complete Knapsack, dung lượng balo lại có thể duyệt theo chiều xuôi?
+- Khi `dp[i]` biểu thị "kết thúc tại i" so với biểu thị "trong i phần tử đầu tiên", phương trình chuyển trạng thái khác nhau ra sao?
+- Khi tìm số lần ít nhất, giá trị lớn nhất, và số phương án, việc khởi tạo giá trị ban đầu cần chú ý những gì?
 
-## 推荐练习题
+## Bài tập rèn luyện đề xuất
 
-- [70. 爬楼梯](https://leetcode.cn/problems/climbing-stairs/)
-- [198. 打家劫舍](https://leetcode.cn/problems/house-robber/)
-- [322. 零钱兑换](https://leetcode.cn/problems/coin-change/)
-- [416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/)
-- [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)
-- [1143. 最长公共子序列](https://leetcode.cn/problems/longest-common-subsequence/)
+- [70. Climbing Stairs](https://leetcode.cn/problems/climbing-stairs/)
+- [198. House Robber](https://leetcode.cn/problems/house-robber/)
+- [322. Coin Change](https://leetcode.cn/problems/coin-change/)
+- [416. Partition Equal Subset Sum](https://leetcode.cn/problems/partition-equal-subset-sum/)
+- [300. Longest Increasing Subsequence](https://leetcode.cn/problems/longest-increasing-subsequence/)
+- [1143. Longest Common Subsequence](https://leetcode.cn/problems/longest-common-subsequence/)
 
 <!-- @include: @article-footer.snippet.md -->

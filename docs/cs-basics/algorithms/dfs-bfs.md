@@ -1,44 +1,44 @@
 ---
-title: DFS 与 BFS 面试题总结：树、图、矩阵搜索与最短路径模板
-description: DFS 与 BFS 面试题总结，讲解深度优先搜索、广度优先搜索、树遍历、图遍历、矩阵搜索、层序遍历、最短路径和 Java 模板。
-category: 计算机基础
+title: "Tổng hợp bài toán phỏng vấn DFS và BFS: Cây, Đồ thị, Tìm kiếm trên ma trận và Template đường đi ngắn nhất"
+description: "Tổng hợp bài toán phỏng vấn DFS và BFS, giải thích Depth-First Search, Breadth-First Search, duyệt cây, duyệt đồ thị, tìm kiếm trên ma trận, Level-order Traversal, đường đi ngắn nhất và Java template."
+category: Cơ sở máy tính
 tag:
-  - 算法
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: DFS,BFS,深度优先搜索,广度优先搜索,树遍历,图遍历,矩阵搜索,层序遍历,最短路径,Java DFS,Java BFS,LeetCode
+      content: DFS,BFS,Depth-First Search,Breadth-First Search,Duyệt cây,Duyệt đồ thị,Tìm kiếm trên ma trận,Level-order Traversal,Đường đi ngắn nhất,Java DFS,Java BFS,LeetCode
 ---
 
-DFS 和 BFS 是树、图、矩阵题的基础。面试里不会只问“DFS 是什么”，更常见的是给你一个岛屿、课程依赖、最短步数或二叉树层序遍历，让你选搜索方式并写出边界处理。
+DFS (Depth-First Search - Tìm kiếm theo chiều sâu) và BFS (Breadth-First Search - Tìm kiếm theo chiều rộng) là nền tảng của các bài toán về Cây (Tree), Đồ thị (Graph) và Ma trận (Matrix). Trong phỏng vấn, người phỏng vấn sẽ không chỉ hỏi đơn thuần "DFS là gì", mà phổ biến hơn là đưa ra bài toán đếm số đảo (Number of Islands), phụ thuộc khóa học (Course Schedule), số bước di chuyển ngắn nhất hoặc duyệt cây nhị phân theo tầng (Binary Tree Level Order Traversal), yêu cầu bạn chọn phương pháp tìm kiếm phù hợp và xử lý chuẩn xác các điều kiện biên.
 
-一个简单判断：需要一路走到底、枚举路径或处理连通块时，优先想 DFS；需要按层推进、求最短步数时，优先想 BFS。
+Một quy tắc phán đoán đơn giản: Khi cần đi một mạch đến tận cùng, vét cạn/liệt kê tất cả đường đi hoặc xử lý thành phần liên thông (connected component), hãy ưu tiên nghĩ đến DFS; khi cần duyệt theo từng tầng, tìm số bước ngắn nhất/khoảng cách ngắn nhất, hãy ưu tiên nghĩ đến BFS.
 
-## 面试考察重点
+## Trọng tâm khảo sát trong phỏng vấn
 
-- 能写递归 DFS、队列 BFS。
-- 能说出树和图搜索的复杂度。
-- 能处理 `visited`，避免重复访问和死循环。
-- 能区分“遍历所有节点”和“求最短步数”。
-- 能把矩阵题转换成图搜索。
+- Viết thành thạo đệ quy DFS và hàng đợi (Queue) BFS.
+- Nêu rõ độ phức tạp thuật toán khi tìm kiếm trên cây và đồ thị.
+- Xử lý mảng hoặc tập hợp `visited` để tránh duyệt lặp và vòng lặp vô tận (infinite loop).
+- Phân biệt rõ giữa "duyệt qua tất cả các đỉnh" và "tìm số bước ngắn nhất".
+- Chuyển đổi thành thạo các bài toán ma trận lưới thành bài toán tìm kiếm trên đồ thị.
 
-## 怎么选择 DFS 还是 BFS？
+## Khi nào nên chọn DFS, khi nào chọn BFS?
 
-DFS 和 BFS 都能遍历节点，但它们的天然优势不同。
+Cả DFS và BFS đều có thể duyệt qua các node, nhưng ưu thế tự nhiên của chúng khác nhau:
 
-| 目标             | 更常用            | 原因                         |
+| Mục tiêu | Thường dùng | Nguyên nhân |
 | ---------------- | ----------------- | ---------------------------- |
-| 遍历所有节点     | DFS 或 BFS 都可以 | 只要不重复访问即可           |
-| 找连通块面积     | DFS 更顺手        | 一路递归扩展，代码短         |
-| 求无权图最短步数 | BFS               | 按层推进，第一次到达就是最短 |
-| 枚举所有路径     | DFS               | 路径天然存在递归栈里         |
-| 二叉树层序遍历   | BFS               | 队列正好按层处理             |
+| Duyệt qua tất cả các node | DFS hoặc BFS đều được | Miễn là không truy cập lặp lại |
+| Tìm diện tích thành phần liên thông | DFS thuận tiện hơn | Đệ quy mở rộng liên tục, code ngắn gọn |
+| Tìm số bước ngắn nhất trong đồ thị vô hướng không trọng số | BFS | Lan tỏa theo từng tầng, lần đầu tiên chạm tới đích chắc chắn là ngắn nhất |
+| Liệt kê tất cả các đường đi | DFS | Đường đi được lưu trữ tự nhiên trong ngăn xếp đệ quy (call stack) |
+| Duyệt cây nhị phân theo tầng | BFS | Hàng đợi xử lý chính xác theo từng tầng |
 
-如果题目里出现“最少几步”“最短路径”“扩散到所有位置”，先想 BFS。如果题目里出现“所有方案”“是否存在一条路径”“连通块大小”，先想 DFS。
+Nếu bài toán xuất hiện cụm từ "ít bước nhất", "đường đi ngắn nhất", "lan tỏa ra toàn bộ các vị trí", hãy nghĩ đến BFS trước. Nếu bài toán xuất hiện cụm từ "tất cả các phương án", "có tồn tại đường đi hay không", "kích thước thành phần liên thông", hãy nghĩ đến DFS trước.
 
-## DFS 模板
+## Template DFS
 
-矩阵 DFS 常见写法：
+Cách viết DFS phổ biến trên ma trận:
 
 ```java
 void dfs(char[][] grid, int i, int j) {
@@ -56,22 +56,22 @@ void dfs(char[][] grid, int i, int j) {
 }
 ```
 
-这里直接把访问过的陆地改成 `'2'`，相当于使用原数组做访问标记。如果题目不允许修改输入，就单独建 `boolean[][] visited`。
+Ở đây, ta trực tiếp đổi các ô đất liền đã duyệt thành `'2'`, tương đương với việc dùng chính mảng đầu vào để đánh dấu đã truy cập. Nếu đề bài không cho phép sửa đổi mảng đầu vào, hãy tạo riêng một mảng `boolean[][] visited`.
 
-DFS 的递归函数要先定义清楚含义。上面这段代码可以解释为：从 `(i, j)` 出发，把和它连通的所有陆地都标记掉。
+Hàm đệ quy DFS cần định nghĩa rõ ràng ý nghĩa trước khi viết. Đoạn code trên có thể diễn giải là: Xuất phát từ ô `(i, j)`, đánh dấu toàn bộ các ô đất liền liên thông với nó.
 
-这个含义决定了代码顺序：
+Ý nghĩa này quyết định thứ tự thực thi trong code:
 
-1. 越界直接返回。
-2. 当前格子不是陆地直接返回。
-3. 标记当前格子，避免重复访问。
-4. 继续访问上下左右 4 个方向。
+1. Vượt quá biên ma trận: `return` ngay lập tức.
+2. Ô hiện tại không phải đất liền: `return` ngay lập tức.
+3. Đánh dấu ô hiện tại đã duyệt để tránh truy cập lặp lại.
+4. Đệ quy tiếp tục duyệt sang 4 hướng: trên, dưới, trái, phải.
 
-很多 DFS bug 都来自第 3 步写晚了。如果先递归邻居，再标记当前节点，就可能在两个相邻格子之间来回递归。
+Rất nhiều bug trong DFS xuất phát từ việc thực hiện bước 3 quá muộn. Nếu đệ quy duyệt các ô lân cận trước rồi mới đánh dấu ô hiện tại, chương trình có thể bị đệ quy qua lại vô tận giữa hai ô kề nhau.
 
-## BFS 模板
+## Template BFS
 
-BFS 适合层序遍历和最短步数。下面的模板约定输入是非空矩形矩阵，其中 `0` 表示可以通行，`1` 表示障碍物；函数返回起点到目标点的最短步数，坐标越界或目标不可达时返回 `-1`：
+BFS rất thích hợp cho việc duyệt theo tầng và tìm số bước ngắn nhất. Template dưới đây quy ước đầu vào là ma trận chữ nhật không rỗng, trong đó `0` biểu thị đường đi được, `1` biểu thị vật cản; hàm trả về số bước ngắn nhất từ điểm xuất phát đến điểm đích, nếu tọa độ vượt biên hoặc không thể đến đích thì trả về `-1`:
 
 ```java
 int bfs(int[][] grid, int startX, int startY, int targetX, int targetY) {
@@ -115,94 +115,94 @@ int bfs(int[][] grid, int startX, int startY, int targetX, int targetY) {
 }
 ```
 
-这段代码在目标节点第一次出队时返回当前层数，而不是等队列清空。具体题目的可通行条件可能不是 `0` 和 `1`，需要按题意调整。
+Đoạn code này trả về số tầng hiện tại ngay khi node đích lần đầu tiên được lấy ra khỏi hàng đợi, chứ không đợi đến khi hàng đợi rỗng hoàn toàn. Điều kiện đi được trong từng bài toán cụ thể có thể khác nhau (không nhất thiết là `0` và `1`), cần điều chỉnh theo đúng yêu cầu đề bài.
 
-BFS 的关键是“按层处理”。队列里一开始是第 0 层节点，每轮取出当前队列大小 `size`，只处理这一层的节点；它们扩展出来的新节点属于下一层。
+Điểm mấu chốt của BFS là "xử lý theo từng tầng". Ban đầu trong hàng đợi là các node tầng 0, mỗi vòng lặp lấy ra kích thước hàng đợi hiện tại `size`, chỉ xử lý đúng số node thuộc tầng này; các node mới được mở rộng từ chúng sẽ thuộc về tầng tiếp theo.
 
-为什么无权图 BFS 能求最短路径？因为每条边的代价相同。BFS 第一次到达某个节点时，一定是用了最少的边数。后面即使还能再次到达，也不会更短，所以可以直接标记访问。
+Tại sao BFS trên đồ thị không trọng số tìm được đường đi ngắn nhất? Vì chi phí của mỗi cạnh là như nhau. Khi BFS lần đầu tiên chạm tới một node nào đó, chắc chắn nó đã đi qua số cạnh ít nhất. Về sau dù có đường khác đến được node đó thì cũng không thể ngắn hơn, vì vậy ta có thể đánh dấu đã duyệt ngay lập tức.
 
-多源 BFS 也很常见。比如“腐烂的橘子”里，所有烂橘子同时开始扩散。做法是先把所有初始烂橘子都入队，再按层扩散。
+Dạng bài Multi-source BFS (BFS đa nguồn) cũng rất phổ biến. Ví dụ trong bài "Rotting Oranges" (Cam thối), tất cả các quả cam thối ban đầu cùng đồng thời lan tỏa. Cách làm là đưa tất cả các quả cam thối ban đầu vào hàng đợi trước, sau đó lan tỏa theo từng tầng.
 
-## 树搜索和图搜索的区别
+## Sự khác biệt giữa tìm kiếm trên Cây và Đồ thị
 
-树没有环，很多时候不需要 `visited`。图可能有环，必须考虑重复访问。
+Cây không có chu trình (cycle), phần lớn trường hợp không cần mảng `visited`. Đồ thị có thể có chu trình nên bắt buộc phải xem xét việc tránh duyệt lặp.
 
-| 场景           | 是否常用 `visited` | 说明                   |
+| Kịch bản | Có thường dùng `visited` không | Giải thích |
 | -------------- | ------------------ | ---------------------- |
-| 二叉树递归遍历 | 通常不用           | 节点没有回到父节点的边 |
-| 无向图遍历     | 需要               | 否则两个节点会互相访问 |
-| 有向图遍历     | 通常需要           | 可能存在环             |
-| 矩阵搜索       | 需要               | 上下左右可能走回原点   |
+| Duyệt đệ quy cây nhị phân | Thường không cần | Node con không có cạnh nối ngược về node cha |
+| Duyệt đồ thị vô hướng | Bắt buộc cần | Nếu không hai node sẽ liên tục duyệt qua lại lẫn nhau |
+| Duyệt đồ thị có hướng | Thường cần | Có thể tồn tại chu trình |
+| Tìm kiếm trên ma trận | Bắt buộc cần | Trên dưới trái phải có thể quay lại điểm xuất phát |
 
-## 复杂度
+## Độ phức tạp
 
-图搜索常用 `V` 表示顶点数，`E` 表示边数。邻接表存储时，DFS 和 BFS 的时间复杂度通常是 `O(V + E)`，空间复杂度是 `O(V)`。
+Trong tìm kiếm đồ thị, ta thường dùng `V` biểu thị số đỉnh (vertices) và `E` biểu thị số cạnh (edges). Khi lưu trữ bằng danh sách kề (adjacency list), độ phức tạp thời gian của cả DFS và BFS thông thường là `O(V + E)`, độ phức tạp không gian là `O(V)`.
 
-矩阵搜索如果矩阵大小是 `m * n`，每个格子最多访问一次，时间复杂度是 `O(mn)`，访问标记或队列空间最坏也是 `O(mn)`。
+Với tìm kiếm trên ma trận kích thước `m * n`, mỗi ô tối đa được duyệt một lần, độ phức tạp thời gian là `O(mn)`, không gian đánh dấu đã duyệt hoặc hàng đợi trong trường hợp xấu nhất cũng là `O(mn)`.
 
-## 矩阵题怎么转成图？
+## Chuyển bài toán ma trận thành đồ thị như thế nào?
 
-矩阵中的每个格子都可以看成图里的一个节点。上下左右 4 个方向，就是这个节点连出去的边。
+Mỗi ô trong ma trận đều có thể xem như một đỉnh (node) trong đồ thị. 4 hướng trên, dưới, trái, phải chính là các cạnh nối từ đỉnh đó ra ngoài.
 
-常用方向数组：
+Mảng hướng (direction array) thường dùng:
 
 ```java
 int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 ```
 
-遍历邻居时只需要做 3 件事：
+Khi duyệt các ô lân cận, ta chỉ cần làm 3 việc:
 
-1. 计算新坐标。
-2. 判断是否越界。
-3. 判断是否已经访问过，或是否符合题目要求。
+1. Tính toán tọa độ mới.
+2. Kiểm tra xem có vượt ra ngoài biên ma trận không.
+3. Kiểm tra xem đã duyệt qua chưa hoặc có thỏa mãn điều kiện đề bài không.
 
-如果题目允许斜向移动，把方向数组扩展成 8 个方向即可。不要在代码里手写 4 段几乎相同的递归调用，方向数组更不容易漏条件。
+Nếu đề bài cho phép di chuyển theo đường chéo, chỉ cần mở rộng mảng hướng thành 8 hướng. Đừng viết 4 đoạn gọi đệ quy lặp đi lặp lại trong code, dùng mảng hướng sẽ gọn gàng và ít khi bị sót điều kiện.
 
-## 过程示意和边界样例
+## Minh họa quy trình và các trường hợp biên
 
-以岛屿数量为例，遇到一个未访问过的陆地格子，就从它开始 DFS/BFS，把整座岛都标记掉。
+Lấy bài toán đếm số đảo (Number of Islands) làm ví dụ: khi gặp một ô đất liền chưa được duyệt, ta bắt đầu DFS/BFS từ ô đó để đánh dấu toàn bộ hòn đảo.
 
-| 步骤 | 操作                   | 目的                   |
+| Bước | Thao tác | Mục đích |
 | ---- | ---------------------- | ---------------------- |
-| 1    | 扫描矩阵，找到一个 `1` | 发现一座新岛           |
-| 2    | 岛屿数量加 1           | 记录连通块             |
-| 3    | 从当前格子 DFS/BFS     | 把这座岛所有陆地标记掉 |
-| 4    | 继续扫描后续格子       | 避免重复统计同一座岛   |
+| 1 | Quét qua ma trận, tìm thấy một ô `'1'` | Phát hiện một hòn đảo mới |
+| 2 | Tăng số lượng đảo thêm 1 | Ghi nhận một thành phần liên thông |
+| 3 | Thực hiện DFS/BFS từ ô hiện tại | Đánh dấu toàn bộ đất liền của hòn đảo này |
+| 4 | Tiếp tục quét các ô tiếp theo | Tránh thống kê trùng lặp cùng một hòn đảo |
 
-矩阵搜索建议检查这些边界：
+Với tìm kiếm trên ma trận, bạn nên kiểm tra các trường hợp biên sau:
 
-| 输入         | 重点                               |
+| Đầu vào | Trọng tâm kiểm tra |
 | ------------ | ---------------------------------- |
-| 空矩阵       | 是否先判断行列长度                 |
-| 全是水       | 结果应该是 0                       |
-| 全是陆地     | 只能统计成 1 个连通块              |
-| 只有斜向相邻 | 如果题目只允许上下左右，不能算连通 |
+| Ma trận rỗng | Đã kiểm tra số hàng và số cột chưa |
+| Toàn bộ là nước | Kết quả phải bằng 0 |
+| Toàn bộ là đất liền | Chỉ được tính thành đúng 1 thành phần liên thông |
+| Chỉ tiếp xúc theo đường chéo | Nếu đề bài chỉ cho phép 4 hướng thì không được tính là liên thông |
 
-常见错误写法：
+Lỗi thường gặp khi viết code:
 
 ```java
 void dfs(char[][] grid, int i, int j) {
     dfs(grid, i + 1, j);
-    grid[i][j] = '2'; // 错：标记太晚，可能来回递归
+    grid[i][j] = '2'; // Sai: Đánh dấu quá muộn, có thể gây đệ quy qua lại vô tận
 }
 ```
 
-访问标记要在递归扩展邻居之前完成。图和矩阵里只要存在回边或相邻互访，标记太晚就可能重复访问甚至栈溢出。
+Việc đánh dấu đã duyệt phải hoàn thành trước khi gọi đệ quy mở rộng sang các ô lân cận. Trong đồ thị và ma trận, chỉ cần tồn tại cạnh quay ngược hoặc kề nhau hai chiều, đánh dấu quá muộn sẽ gây duyệt lặp và thậm chí tràn ngăn xếp (Stack Overflow).
 
-## 易错点
+## Các lỗi thường gặp (Pitfalls)
 
-- BFS 入队时就标记访问，避免同一个节点被重复入队。
-- DFS 递归深度过大可能栈溢出，面试中可以说明可改成显式栈。
-- 矩阵题先判断越界，再访问数组。
-- 无向图要注意从子节点走回父节点的问题。
-- 求最短步数时，BFS 的层数统计要和队列当前层大小绑定。
+- Với BFS, phải đánh dấu đã duyệt ngay khi đưa vào hàng đợi (`offer`), tránh trường hợp một node bị thêm vào hàng đợi nhiều lần.
+- DFS có độ sâu đệ quy quá lớn có thể dẫn đến tràn ngăn xếp (Stack Overflow); trong phỏng vấn có thể giải thích phương án chuyển sang dùng ngăn xếp tường minh (explicit stack).
+- Bài toán ma trận phải kiểm tra điều kiện vượt biên trước khi truy cập vào phần tử mảng.
+- Đồ thị vô hướng phải chú ý vấn đề node con duyệt ngược lại node cha.
+- Khi tìm số bước ngắn nhất, việc đếm tầng trong BFS phải gắn chặt với kích thước tầng hiện tại của hàng đợi (`queue.size()`).
 
-## 推荐练习题
+## Bài tập rèn luyện đề xuất
 
-- [102. 二叉树的层序遍历](https://leetcode.cn/problems/binary-tree-level-order-traversal/)
-- [200. 岛屿数量](https://leetcode.cn/problems/number-of-islands/)
-- [695. 岛屿的最大面积](https://leetcode.cn/problems/max-area-of-island/)
-- [994. 腐烂的橘子](https://leetcode.cn/problems/rotting-oranges/)
-- [207. 课程表](https://leetcode.cn/problems/course-schedule/)
+- [102. Binary Tree Level Order Traversal](https://leetcode.cn/problems/binary-tree-level-order-traversal/)
+- [200. Number of Islands](https://leetcode.cn/problems/number-of-islands/)
+- [695. Max Area of Island](https://leetcode.cn/problems/max-area-of-island/)
+- [994. Rotting Oranges](https://leetcode.cn/problems/rotting-oranges/)
+- [207. Course Schedule](https://leetcode.cn/problems/course-schedule/)
 
 <!-- @include: @article-footer.snippet.md -->

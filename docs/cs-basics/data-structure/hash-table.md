@@ -1,149 +1,165 @@
 ---
-title: 哈希表面试题总结：哈希冲突、扩容与 Java HashMap
-description: 哈希表面试题总结，讲解哈希函数、哈希冲突、拉链法、开放寻址法、负载因子、扩容、Java HashMap 和 LeetCode 高频题。
-category: 计算机基础
+title: Tổng hợp câu hỏi phỏng vấn Bảng băm: Xung đột băm, Rehash và Java HashMap
+description: Cẩm nang tổng hợp câu hỏi phỏng vấn về Bảng băm (Hash Table), phân tích chuyên sâu về Hàm băm, Xung đột băm, Separate Chaining, Open Addressing, Hệ số tải (Load Factor), Rehash, cấu trúc Java HashMap và các bài toán thuật toán tần suất cao.
+category: Cơ sở máy tính
 tag:
-  - 数据结构
+  - Cấu trúc dữ liệu
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 哈希表,HashMap,哈希函数,哈希冲突,拉链法,开放寻址法,负载因子,扩容,Java集合,数据结构面试题
+      content: Bảng băm, Hash Table, HashMap, Hàm băm, Xung đột băm, Separate Chaining, Open Addressing, Load Factor, Rehash, Java Collections, Câu hỏi phỏng vấn Cấu trúc dữ liệu
 ---
 
-哈希表（Hash Table，也叫散列表）的面试价值很高，因为它一头连着算法题里的快速查找和计数，另一头连着 Java `HashMap`、缓存、去重和分布式系统里的分片路由。
+Bảng băm (**Hash Table** hay **Bảng phân tán**) có giá trị vô cùng to lớn trong các buổi phỏng vấn kỹ thuật, bởi vì nó vừa gắn liền với các thuật toán tìm kiếm/đếm tần suất nhanh chóng, vừa là nền tảng cốt lõi của `HashMap` trong Java, các hệ thống Cache, khử trùng lặp dữ liệu và phân mảnh định tuyến (Sharding) trong hệ thống phân tán.
 
-这个问题问的是：如何把一个 key 快速映射到数组下标，并在冲突、扩容和极端数据下仍然保持可接受的查询效率。
+Bản chất cốt lõi của bảng băm là: **Làm sao để ánh xạ một Key bất kỳ sang chỉ số mảng (Index) trong thời gian cực nhanh, đồng thời vẫn duy trì hiệu suất truy vấn ổn định khi xảy ra xung đột, mở rộng dung lượng và đối mặt với các tập dữ liệu bất lợi.**
 
-文章内容概览：
+Tổng quan nội dung bài viết:
+1. Bảng băm là gì?
+2. Bảng băm định vị từ Key sang chỉ số mảng như thế nào?
+3. Xung đột băm (Hash Collision), Hệ số tải (Load Factor) và Rehash giải quyết những bài toán nào?
+4. Mối liên hệ giữa Java `HashMap` và Bảng băm nguyên lý?
+5. Bảng băm được ứng dụng như thế nào trong giải thuật và kiến trúc hệ thống?
 
-1. 什么是哈希表？
-2. 哈希表怎么从 key 定位到数组下标？
-3. 哈希冲突、负载因子和扩容分别解决什么问题？
-4. Java `HashMap` 和普通哈希表有什么关系？
-5. 哈希表在算法题和工程场景中怎么用？
+![Sơ đồ cấu trúc ánh xạ Key sang chỉ số mảng thông qua hàm băm](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/hash-table.png)
 
-![哈希表通过哈希函数把键映射到数组位置的结构示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/hash-table.png)
+## Bảng băm là gì?
 
-## 什么是哈希表？
+Bảng băm là cấu trúc dữ liệu dùng để lưu trữ các cặp quan hệ **Key - Value** (Khóa - Giá trị). Các khái niệm quen thuộc như `Map`, `Dictionary`, `Associative Array` về bản chất đều có thể được cài đặt dựa trên Bảng băm.
 
-哈希表是一种用来存储 key-value 映射关系的数据结构。我们平时说的 Map、Dictionary、Associative Array，本质上都可以用哈希表来实现。
+Nếu Key là các số nguyên liên tục, ví dụ mã sinh viên từ `0` đến `999`, ta chỉ cần dùng mảng thông thường là có thể truy cập `students[id]` với thời gian $O(1)$. Nhưng trong thực tế nghiệp vụ, Key rất đa dạng: có thể là chuỗi ký tự, UUID, mã đơn hàng, URL hoặc các đối tượng tùy biến (Custom Objects). Nhiệm vụ của bảng băm là:
+1. Thông qua **Hàm băm (Hash Function)** biến đổi các Key thuộc đủ loại kiểu dữ liệu và độ dài khác nhau thành một **Số nguyên (Hash Code)**.
+2. Ánh xạ số nguyên đó vào phạm vi **Chỉ số mảng (Index)**.
 
-如果 key 是连续整数，比如学生编号刚好是 `0` 到 `999`，直接用数组就能做到 `students[id]` 这种 `O(1)` 访问。但真实业务里的 key 通常不是这么规整：可能是字符串、用户 ID、订单号、URL，也可能是自定义对象。哈希表要做的事情，就是先把这些不同类型、不同长度的 key 通过哈希函数转换成一个整数，再把这个整数映射到数组下标。
+Có thể nhìn nhận Bảng băm qua 3 tầng cấu trúc:
+1. **Mảng (Array / Bucket Array)**: Vị trí lưu trữ dữ liệu thực tế, thường được gọi là các Thùng (Buckets).
+2. **Hàm băm (Hash Function)**: Đảm nhận chuyển đổi Key thành giá trị băm.
+3. **Chiến lược giải quyết xung đột (Collision Resolution)**: Quyết định cách lưu trữ tiếp theo khi có nhiều Key khác nhau cùng bị ánh xạ vào một Bucket duy nhất.
 
-可以把哈希表拆成三层来看：
+Vì vậy, bảng băm không phải là "hoàn toàn không cần tìm kiếm", mà nó sử dụng hàm băm để thu hẹp phạm vi tìm kiếm xuống mức tối đa: Ở điều kiện lý tưởng, chỉ cần đúng 1 phép tính là định vị được bucket mục tiêu; khi có xung đột, ta chỉ cần so sánh một số lượng rất ít phần tử bên trong bucket đó.
 
-1. **数组**：真正存放数据的位置，也常被称为桶（bucket）。
-2. **哈希函数**：负责把 key 转换成哈希值。
-3. **冲突解决策略**：当多个 key 落到同一个桶时，决定这些 key 怎么继续存。
+## Tại sao chúng ta cần Bảng băm?
 
-所以，哈希表不是“完全没有查找过程”，而是通过哈希函数把查找范围大幅缩小：理想情况下，一次定位就能找到目标桶；发生冲突时，再在桶内部做少量比较。
+Giả sử cần kiểm tra xem một URL đã được crawler thu thập hay chưa. Cách trực tiếp nhất là lưu tất cả URL đã cào vào một danh sách, mỗi khi có URL mới lại quét từ đầu đến cuối danh sách. Khi dữ liệu nhỏ thì không vấn đề gì, nhưng khi danh sách lên tới hàng triệu URL, việc quét tuyến tính $O(n)$ sẽ khiến hệ thống bị quá tải hoàn toàn.
 
-## 为什么需要哈希表？
+Ý tưởng của bảng băm là **Dùng không gian đánh đổi thời gian (Space-time tradeoff)**: Cấp phát một mảng dung lượng vừa đủ, dùng hàm băm phân tán các URL vào các bucket khác nhau. Khi truy vấn, thay vì duyệt toàn bộ danh sách, ta chỉ cần tính mã băm của URL và nhảy thẳng tới bucket tương ứng để kiểm tra trong thời gian $O(1)$.
 
-假设要判断一个 URL 是否已经爬取过，最直接的方式是把爬过的 URL 放到列表里，每来一个新 URL 就从头扫一遍。数据量很小时问题不大，但如果已经爬了几百万个 URL，每次都线性扫描，性能很快就扛不住。
+Đó là lý do bảng băm là lựa chọn số 1 cho các bài toán: Tìm kiếm nhanh, Đếm tần suất, Khử trùng lặp và Đánh chỉ mục Cache. Bảng băm không quan tâm tới quan hệ thứ tự lớn nhỏ giữa các phần tử, mà chỉ tập trung vào câu hỏi: *"Cho trước một Key, làm sao tìm ra Value nhanh nhất có thể?"*.
 
-哈希表的思路是用空间换时间：多开一块数组空间，把 URL 通过哈希函数分散到不同桶里。查询时不再从头遍历所有 URL，而是先计算哈希值，直接跳到对应桶附近查找。
+## Hàm băm (Hash Function) cần giải quyết vấn đề gì?
 
-这也是哈希表适合做查找、计数、去重、缓存索引的原因。它不关心元素之间的大小关系，也不保证有序；它关心的是“给定 key，能不能尽快找到对应的 value”。
+Mục tiêu của hàm băm không phải là làm cho Key trở nên huyền bí, mà là **phân tán các Key càng đồng đều càng tốt vào các bucket trong mảng**. Một hàm băm tốt cần thỏa mãn 3 tiêu chí:
 
-## 哈希函数要解决什么问题？
+| Tiêu chí | Ý nghĩa |
+| :--- | :--- |
+| **Tính ổn định (Deterministic)** | Cùng một Key khi tính toán nhiều lần phải luôn cho ra cùng một giá trị băm |
+| **Tốc độ tính toán nhanh** | Bản thân hàm băm phải có chi phí tính toán rất thấp, nếu không sẽ làm mất đi lợi thế thời gian $O(1)$ |
+| **Phân bố đồng đều (Uniformity)** | Các Key khác nhau phải được phân tán ngẫu nhiên và đồng đều, giảm thiểu tối đa hiện tượng xung đột băm |
 
-哈希函数的目标不是把 key 变得神秘，而是尽量把 key 均匀地分散到数组里。一个好的哈希函数通常要满足三个要求：
+> **Lưu ý quan trọng**: Hàm băm trong cấu trúc dữ liệu và Hàm băm trong Mật mã học (Cryptographic Hash như SHA-256) là hai phạm trù khác nhau. Hàm băm cấu trúc dữ liệu ưu tiên tốc độ và độ phân tán; còn hàm băm mật mã học ưu tiên tính bảo mật, chống va chạm (Collision Resistance) và tính một chiều không thể đảo ngược.
 
-| 要求       | 含义                                             |
-| ---------- | ------------------------------------------------ |
-| 稳定       | 同一个 key 多次计算得到的哈希值应该一致          |
-| 计算快     | 哈希函数本身不能太慢，否则会抵消哈希表的性能优势 |
-| 分布尽量散 | 不同 key 尽量落到不同位置，减少哈希冲突          |
+Trong Java, khi sử dụng đối tượng tùy biến làm Key trong `HashMap`, hai phương thức `hashCode()` và `equals()` bắt buộc phải tuân thủ nghiêm ngặt giao ước (Contract):
+- Nếu hai đối tượng `equals()` bằng nhau thì `hashCode()` của chúng **bắt buộc phải bằng nhau**.
+- Nếu hai đối tượng có `hashCode()` bằng nhau thì chúng **chưa chắc đã `equals()` bằng nhau** (đây chính là nguyên nhân dẫn tới xung đột băm).
 
-需要注意的是，普通哈希表里的哈希函数和密码学哈希不是一回事。哈希表更关注速度和分布质量；密码学哈希更关注抗碰撞、抗篡改等安全性质。
+---
 
-在 Java 里，自定义对象作为 `HashMap` 的 key 时，`hashCode()` 和 `equals()` 必须配合好：如果两个对象通过 `equals()` 判断相等，它们的 `hashCode()` 也必须相同；但两个对象的 `hashCode()` 相同，不代表它们一定相等。这一点正是哈希冲突会存在的根源之一。
+## Bảng băm hoạt động như thế nào?
 
-## 面试考察重点
-
-- 哈希函数负责把 key 映射成数组下标。
-- 哈希冲突无法完全避免，只能设计策略处理。
-- 哈希表平均查询、插入、删除是 `O(1)`，最坏情况可能退化。
-- Java `HashMap` 使用数组 + 链表 + 红黑树，JDK 8 后链表过长会树化。
-- 哈希表常用于快速查找、计数、去重、缓存索引。
-
-## 哈希表怎么工作？
-
-以插入一个 key-value 为例，哈希表通常会做这几步：
-
-1. 对 key 计算哈希值。
-2. 根据数组长度把哈希值映射成下标。
-3. 如果该位置为空，直接放入。
-4. 如果发生冲突，按冲突解决策略继续处理。
+Khi thực hiện chèn một cặp Key-Value (`put`), bảng băm thực hiện các bước sau:
+1. Tính giá trị băm của Key: `hash = hash(key)`.
+2. Ánh xạ giá trị băm thành chỉ số mảng: `index = hash & (table.length - 1)` (khi kích thước mảng là lũy thừa của 2).
+3. Nếu vị trí `table[index]` đang rỗng (null), tạo node mới và đặt trực tiếp vào vị trí đó.
+4. Nếu vị trí `table[index]` đã có dữ liệu (xảy ra xung đột), xử lý theo chiến lược giải quyết xung đột (Separate Chaining hoặc Open Addressing).
 
 ```java
 int index = hash(key) & (table.length - 1);
 ```
 
-`HashMap` 的容量是 2 的幂时，可以用位运算替代取模。位运算更快，也方便扩容后重新分布。
-
-这里的 `hash(key)` 通常不是直接使用对象原始的 `hashCode()`，还会做一次扰动，让高位信息也参与到低位下标计算中。原因也很好理解：当数组长度是 2 的幂时，`length - 1` 的二进制低位全是 1，直接 `&` 会更依赖哈希值低位。如果低位分布不好，冲突就会更集中。
-
-## 哈希冲突怎么解决？
-
-| 方法       | 思路                     | 典型应用         | 注意点                   |
-| ---------- | ------------------------ | ---------------- | ------------------------ |
-| 拉链法     | 数组位置上挂链表或树     | Java `HashMap`   | 链表过长会影响查询       |
-| 开放寻址法 | 冲突后继续探测下一个位置 | 一些高性能哈希表 | 删除和负载因子处理更复杂 |
-| 再哈希     | 冲突后换一个哈希函数     | 理论方案较常见   | 实现成本更高             |
-
-Java `HashMap` 主要使用拉链法。JDK 8 开始，当链表长度达到阈值并且数组容量足够大时，会把链表转换成红黑树，降低极端冲突下的查询成本。
-
-拉链法的优点是实现直观，删除也比较容易。数组中的每个桶不只放一个元素，而是挂一条链表，冲突的元素追加到这条链上。查询时先通过哈希定位桶，再在桶里的链表或树中比较 key。
-
-开放寻址法则不额外挂链表，所有元素都放在数组内部。发生冲突后，它会按照某种探测规则继续找下一个可用位置，比如线性探测、二次探测、双重哈希。它的好处是内存局部性通常更好，但删除元素、控制负载因子和处理连续聚集会更麻烦。
-
-## 负载因子和扩容
-
-负载因子表示哈希表使用程度：
-
-```text
-负载因子 = 元素数量 / 数组容量
+Trong Java `HashMap`, hàm `hash(key)` không dùng trực tiếp mã `hashCode()` gốc của Object mà thực hiện thêm một phép dịch bit và XOR (Perturbation Function):
+```java
+static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
 ```
+Phép toán này làm cho các bit bậc cao (16 bit đầu) cũng tham gia vào việc tính toán chỉ số ở các bit bậc thấp, giúp giảm thiểu đáng kể xung đột khi dung lượng mảng còn nhỏ.
 
-`HashMap` 默认负载因子是 `0.75`。当元素数量超过 `capacity * loadFactor` 时触发扩容，容量通常变为原来的 2 倍。
+---
 
-扩容会带来一次 rehash 成本。面试里可以这样回答：哈希表单次插入平均是 `O(1)`，但触发扩容的那次会搬迁元素；从摊还角度看，多次插入仍然可以看作平均 `O(1)`。
+## Các phương pháp giải quyết Xung đột băm (Hash Collision)
 
-负载因子不能只看“空间利用率”。负载因子越高，数组越满，空间越省，但冲突概率也会上升；负载因子越低，冲突少一些，但会浪费更多桶位。`0.75` 是 Java `HashMap` 在时间和空间之间做的一个经验折中。
+| Phương pháp | Ý tưởng thực hiện | Ứng dụng tiêu biểu | Điểm cần lưu ý |
+| :--- | :--- | :--- | :--- |
+| **Separate Chaining (Nối chuỗi)** | Mỗi ô mảng là đầu của một Danh sách liên kết hoặc Cây | Java `HashMap` | Nếu chuỗi quá dài sẽ làm giảm tốc độ truy vấn |
+| **Open Addressing (Địa chỉ mở)** | Khi xung đột, tiếp tục dò tìm ô nhớ trống tiếp theo trong mảng | Python dict, Caching hiệu năng cao | Thao tác xóa phức tạp, nhạy cảm với hệ số tải cao |
+| **Re-hashing (Băm kép)** | Khi xung đột, dùng một hàm băm thứ hai để tính bước nhảy | Lý thuyết bảng băm | Tăng thêm chi phí tính toán |
 
-## 哈希表为什么平均是 O(1)？
+### 1. Phương pháp nối chuỗi (Separate Chaining)
+Mỗi bucket trong mảng đóng vai trò là một đầu danh sách liên kết. Khi có xung đột, phần tử mới được thêm vào danh sách liên kết của bucket đó.
+- **Ưu điểm**: Dễ cài đặt, thao tác xóa phần tử đơn giản.
+- **Cải tiến trong JDK 8+**: Khi độ dài danh sách liên kết tại một bucket vượt quá ngưỡng **8** và dung lượng mảng $\ge 64$, danh sách liên kết sẽ được tự động chuyển đổi thành **Cây đỏ đen (Red-Black Tree)**, giúp hạ độ phức tạp tìm kiếm trong trường hợp xấu nhất từ $O(n)$ xuống $O(\log n)$.
 
-哈希表的 `O(1)` 说的是平均情况或者期望情况，不是所有输入下的绝对保证。
+### 2. Phương pháp địa chỉ mở (Open Addressing)
+Tất cả các phần tử đều được lưu trực tiếp bên trong mảng, không dùng thêm danh sách liên kết ngoài. Khi vị trí $H_0$ bị chiếm dụng, hệ thống sẽ dò tìm vị trí trống tiếp theo theo các quy tắc:
+- **Dò tìm tuyến tính (Linear Probing)**: $H_i = (H_0 + i) \pmod m$
+- **Dò tìm bậc hai (Quadratic Probing)**: $H_i = (H_0 + c_1 i + c_2 i^2) \pmod m$
+- **Băm kép (Double Hashing)**: $H_i = (H_0 + i \cdot \text{hash}_2(\text{key})) \pmod m$
+- **Ưu điểm**: Tính cục bộ bộ nhớ (Memory Locality) tốt, thân thiện với CPU Cache.
+- **Nhược điểm**: Hiện tượng tập hợp cụm (Clustering), thao tác xóa phần tử phải dùng cờ đánh dấu (Tombstone) thay vì xóa thật.
 
-在哈希函数分布比较均匀、负载因子控制得当时，元素会比较分散，每个桶里的元素数量很少。因此查询时的主要成本就是：计算哈希值、定位数组下标、在桶里做少量比较，这些操作可以看作常数级。
+---
 
-但如果大量 key 落到同一个桶，哈希表就会退化。使用拉链法时，桶内链表太长，查询会接近 `O(n)`；JDK 8 之后的 `HashMap` 会在满足条件时树化，把极端冲突下的桶内查询成本降到 `O(logn)` 级别，但这不代表哈希表永远不会受冲突影响。
+## Hệ số tải (Load Factor) và Cơ chế Rehash
 
-## 和 Java HashMap 的关系
+**Hệ số tải (Load Factor)** phản ánh mức độ lấp đầy của bảng băm:
 
-`HashMap` 常见追问：
+$$\text{Load Factor} = \frac{\text{Số lượng phần tử hiện có}}{\text{Tổng dung lượng mảng (Capacity)}}$$
 
-- 初始容量为什么建议设置成 2 的幂？
-- 默认负载因子为什么是 `0.75`？
-- JDK 8 为什么引入红黑树？
-- `HashMap` 为什么线程不安全？
-- `HashMap` 和 `ConcurrentHashMap` 有什么区别？
+Trong Java `HashMap`, giá trị mặc định của `DEFAULT_LOAD_FACTOR` là **`0.75`**.
+- Khi số lượng phần tử vượt quá ngưỡng $\text{Threshold} = \text{Capacity} \times \text{Load Factor}$, bảng băm sẽ tự động kích hoạt quá trình **Mở rộng dung lượng (Resize / Rehash)**.
+- Dung lượng mảng mới thường được gấp đôi lên ($2 \times \text{Old Capacity}$).
+- Toàn bộ các phần tử cũ sẽ được phân bổ lại vào các bucket mới.
 
-这些问题已经超出纯数据结构，但底层仍然是哈希表：数组负责定位，链表或红黑树负责处理冲突，扩容负责控制负载。
+> **Tại sao giá trị mặc định lại là 0.75?**  
+> `0.75` là sự cân bằng tối ưu giữa **Hiệu suất thời gian** và **Không gian bộ nhớ**. Nếu hệ số tải quá lớn (ví dụ 1.0), bộ nhớ được tiết kiệm nhưng tỷ lệ xung đột băm tăng cao, làm chậm truy vấn. Nếu hệ số tải quá nhỏ (ví dụ 0.5), xung đột rất ít nhưng sẽ lãng phí tới một nửa dung lượng mảng.
 
-## 常见算法题模板
+---
 
-两数之和：
+## Tại sao độ phức tạp của Bảng băm là $O(1)$?
+
+Độ phức tạp $O(1)$ của Bảng băm được hiểu theo **Ý nghĩa kỳ vọng trung bình (Average-case / Expected Time)**, chứ không phải đảm bảo tuyệt đối trong mọi trường hợp xấu nhất.
+
+Khi hàm băm phân phối đều và hệ số tải được kiểm soát tốt, số lượng phần tử trong mỗi bucket chỉ là một hằng số nhỏ. Chi phí tính hash, định vị bucket và so sánh `equals` đều là hằng số.
+
+Tuy nhiên, nếu bị tấn công băm (Hash Collision Attack) khi tất cả các Key đều bị cố ý băm về cùng một bucket, bảng băm dùng Separate Chaining thông thường sẽ bị suy thoái thành một danh sách liên kết đơn với thời gian truy vấn $O(n)$. Cơ chế chuyển đổi sang Red-Black Tree trong JDK 8 chính là giải pháp phòng vệ giúp giới hạn thời gian xấu nhất ở mức $O(\log n)$.
+
+---
+
+## Các câu hỏi phỏng vấn đào sâu về Java HashMap
+
+| Câu hỏi đào sâu | Trọng tâm trả lời |
+| :--- | :--- |
+| **Tại sao dung lượng `HashMap` luôn là lũy thừa của 2?** | Để có thể thay thế phép chia lấy dư `%` bằng phép toán bit `hash & (length - 1)`, vừa tăng tốc độ tính toán vừa giúp phân tán lại phần tử khi resize cực nhanh (chỉ cần kiểm tra 1 bit mới). |
+| **Tại sao JDK 8 đưa vào Red-Black Tree?** | Khi xảy ra xung đột nghiêm trọng (hoặc bị tấn công băm), cây đỏ đen giúp hạ độ phức tạp truy vấn từ $O(n)$ xuống $O(\log n)$. |
+| **Tại sao `HashMap` không an toàn trong đa luồng (Thread-unsafe)?** | Nhiều luồng cùng `put` đồng thời có thể gây ghi đè dữ liệu mất mát (Data Overwrite), sai lệch biến đếm `size`, và trong JDK 7 từng gây ra vòng lặp vô tận (Infinite Loop / Deadlock) khi resize. Trong môi trường đa luồng cần dùng `ConcurrentHashMap`. |
+| **Khi dùng Object tùy biến làm Key cần lưu ý gì?** | Bắt buộc phải Override đồng thời cả `equals()` và `hashCode()`, và đối tượng Key nên là Bất biến (Immutable) để tránh việc thay đổi thuộc tính làm thay đổi mã hash sau khi đã lưu vào Map. |
+
+---
+
+## Bài toán thuật toán kinh điển
+
+### 1. Two Sum (LeetCode 1)
+Sử dụng `HashMap` lưu lại giá trị đã duyệt qua để biến thao tác tìm kiếm số bù `target - nums[i]` từ $O(n)$ thành $O(1)$, đưa tổng thời gian giải thuật từ $O(n^2)$ xuống $O(n)$.
 
 ```java
-int[] twoSum(int[] nums, int target) {
+public int[] twoSum(int[] nums, int target) {
     Map<Integer, Integer> map = new HashMap<>();
     for (int i = 0; i < nums.length; i++) {
-        int need = target - nums[i];
-        if (map.containsKey(need)) {
-            return new int[] {map.get(need), i};
+        int complement = target - nums[i];
+        if (map.containsKey(complement)) {
+            return new int[] {map.get(complement), i};
         }
         map.put(nums[i], i);
     }
@@ -151,24 +167,13 @@ int[] twoSum(int[] nums, int target) {
 }
 ```
 
-这段代码体现了哈希表最常见的用法：用空间换时间，把一次查找从 `O(n)` 降到平均 `O(1)`。
-
-## 代表题精讲：和为 K 的子数组
-
-[560. 和为 K 的子数组](https://leetcode.cn/problems/subarray-sum-equals-k/) 很适合用来理解“前缀和 + 哈希表”。题目要求统计连续子数组和等于 `k` 的个数。
-
-如果只枚举左右端点，复杂度是 `O(n^2)`。换个角度看，假设当前前缀和是 `sum`，想找到一个之前的前缀和 `prev`，使得：
-
-```text
-sum - prev = k
-```
-
-也就是 `prev = sum - k`。所以只要用哈希表记录每个前缀和出现过几次，就能在遍历到当前位置时立刻知道有多少个子数组以当前位置结尾、和为 `k`。
+### 2. Subarray Sum Equals K (LeetCode 560 - Mảng tiền tố + Bảng băm)
+Dùng `HashMap` lưu tần suất xuất hiện của các giá trị Tiền tố tổng (Prefix Sum) để tìm số lượng mảng con có tổng bằng $k$ chỉ trong một lần duyệt $O(n)$.
 
 ```java
-int subarraySum(int[] nums, int k) {
+public int subarraySum(int[] nums, int k) {
     Map<Integer, Integer> count = new HashMap<>();
-    count.put(0, 1);
+    count.put(0, 1); // Khởi tạo tiền tố tổng rỗng bằng 0
 
     int sum = 0;
     int ans = 0;
@@ -181,55 +186,12 @@ int subarraySum(int[] nums, int k) {
 }
 ```
 
-这里 `count.put(0, 1)` 很重要，它表示空前缀出现过一次。这样当从数组开头到当前位置的和刚好等于 `k` 时，也能被统计到。
+## Đề xuất bài tập luyện tập
 
-另一个易错点是“先查再加”。如果先把当前 `sum` 加进哈希表，再查 `sum - k`，在 `k = 0` 时可能把当前前缀自己算进去，导致答案偏大。
-
-比如 `nums = [1]`、`k = 0`。正确的“先查再加”不会找到和为 0 的非空子数组；如果先把当前前缀和 `1` 加进去，再查 `sum - k = 1`，就会把当前前缀和自己配对，错误地多算 1 次。
-
-## Java HashMap 面试追问
-
-哈希表文章只讲概念还不够，Java 后端面试里经常会继续追问 `HashMap`。可以按下面的层次准备：
-
-| 追问                          | 回答重点                                                              |
-| ----------------------------- | --------------------------------------------------------------------- |
-| 为什么容量通常是 2 的幂？     | 方便用 `hash & (length - 1)` 定位，同时扩容后元素迁移更容易           |
-| 为什么默认负载因子是 `0.75`？ | 在空间利用率和冲突概率之间取折中，太小浪费空间，太大冲突增多          |
-| 为什么 JDK 8 引入红黑树？     | 极端冲突时链表查询会退化，树化后能把查询成本从链表长度级别降下来      |
-| 为什么 `HashMap` 线程不安全？ | 多线程并发修改会破坏结构一致性，读写也没有可见性和互斥保证            |
-| 自定义 key 要注意什么？       | `equals()` 和 `hashCode()` 要一致，参与计算的字段不要在放入后再被修改 |
-
-面试里不用把源码细节全部背下来，但要讲清楚一条主线：数组定位、冲突处理、扩容迁移、极端冲突优化，这四件事共同决定了 `HashMap` 的性能表现。
-
-## 易错点
-
-- 哈希表平均 `O(1)` 不等于任何情况下都是 `O(1)`。
-- 自定义对象作为 key 时，要正确重写 `equals()` 和 `hashCode()`。
-- 可变对象不适合直接作为哈希表 key。
-- 统计频率时，数组计数比 `HashMap` 更适合字符集很小的场景。
-- 哈希表能加速查找，但会带来额外空间。
-
-## 高频问题自测
-
-- 哈希表为什么平均查询是 `O(1)`？什么情况下会退化？
-- 拉链法和开放寻址法有什么区别？
-- `HashMap` 为什么需要扩容？扩容成本怎么理解？
-- 为什么自定义对象作为 key 时要同时重写 `equals()` 和 `hashCode()`？
-- 前缀和 + 哈希表为什么要“先查再加”？
-
-## 推荐练习题
-
-- [1. 两数之和](https://leetcode.cn/problems/two-sum/)
-- [242. 有效的字母异位词](https://leetcode.cn/problems/valid-anagram/)
-- [49. 字母异位词分组](https://leetcode.cn/problems/group-anagrams/)
-- [560. 和为 K 的子数组](https://leetcode.cn/problems/subarray-sum-equals-k/)
-- [146. LRU 缓存](https://leetcode.cn/problems/lru-cache/)
-
-## 参考资料
-
-- [Algorithms, 4th Edition：Hash Tables](https://algs4.cs.princeton.edu/34hash/)
-- [Java SE 21 API：HashMap](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html)
-- [OpenJDK：HashMap 源码](https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/util/HashMap.java)
-- [Java SE 21 API：Object#hashCode](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode%28%29)
+- [LeetCode 1. Two Sum](https://leetcode.com/problems/two-sum/)
+- [LeetCode 242. Valid Anagram](https://leetcode.com/problems/valid-anagram/)
+- [LeetCode 49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
+- [LeetCode 560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
+- [LeetCode 146. LRU Cache](https://leetcode.com/problems/lru-cache/)
 
 <!-- @include: @article-footer.snippet.md -->

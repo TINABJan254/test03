@@ -1,246 +1,133 @@
 ---
-title: 堆详解（最大堆、最小堆、优先队列）
-description: 解析堆的性质与操作，理解优先队列实现与堆排序性能优势，掌握插入/删除的复杂度与实践场景。
-category: 计算机基础
+title: Chi tiết Heap (Max-Heap, Min-Heap, Hàng đợi ưu tiên PriorityQueue)
+description: Phân tích toàn diện cấu trúc Heap: Phân biệt Max-Heap/Min-Heap, cơ chế Sift-Up/Sift-Down, thuật toán Heap Sort và giải quyết các bài toán Top-K, Trung vị luồng dữ liệu trong Java.
+category: Cơ sở máy tính
 tag:
-  - 数据结构
+  - Cấu trúc dữ liệu
+  - Thuật toán
 head:
   - - meta
     - name: keywords
-      content: 堆,最大堆,最小堆,优先队列,堆化,上浮,下沉,堆排序
+      content: Heap, Đống, Max-Heap, Min-Heap, PriorityQueue, Hàng đợi ưu tiên, Heapify, Sift-Up, Sift-Down, Heap Sort, Top-K, Trung vị luồng dữ liệu
 ---
 
-## 什么是堆
+## 1. Heap là gì?
 
-堆是一种满足以下条件的树：
+**Heap (Đống)** là một cấu trúc dữ liệu dạng cây thỏa mãn tính chất sau:
 
-堆中的每一个节点值都大于等于（或小于等于）子树中所有节点的值。或者说，任意一个节点的值都大于等于（或小于等于）所有子节点的值。
+> **Tính chất Heap**: Với mọi node trong cây, giá trị của node cha luôn **lớn hơn hoặc bằng** (hoặc **nhỏ hơn hoặc bằng**) giá trị của tất cả các node con trong cây con của nó.
 
-> 大家可以把堆（最大堆）理解为一个公司，这个公司很公平，谁能力强谁就当老大，不存在弱的人当老大，老大手底下的人一定不会比他强。这样有助于理解后续堆的操作。
+> *Ẩn dụ trực quan*: Có thể hình dung Heap (Max-Heap) như một tổ chức làm việc công bằng: người nào có năng lực cao nhất sẽ ngồi ở vị trí cao nhất (đỉnh Heap), và bất kỳ cấp trên nào cũng luôn giỏi hơn hoặc bằng cấp dưới trực tiếp của mình.
 
-**!!!特别提示：**
+> [!NOTE]
+> **Lưu ý quan trọng**:
+> - Rất nhiều tài liệu nói rằng "Heap bắt buộc phải là cây nhị phân hoàn chỉnh", nhưng điều này không hoàn toàn chính xác. Về mặt định nghĩa toán học, **Heap không bắt buộc phải là cây nhị phân hoàn chỉnh**. Chúng ta thường dùng hình thức cây nhị phân hoàn chỉnh để biểu diễn **Binary Heap** nhằm mục đích lưu trữ bằng mảng tiện lợi nhất. Trên thực tế, các biến thể nổi tiếng như *Fibonacci Heap* hay *Binomial Heap* hoàn toàn không phải là cây nhị phân hoàn chỉnh.
+> - Trong cuốn sách kinh điển *Introduction to Algorithms (CLRS)*: *"Binary Heap là một mảng dữ liệu có thể được xem như một cây nhị phân gần như hoàn chỉnh."*
 
-- 很多博客说堆是完全二叉树，其实并非如此，**堆不一定是完全二叉树**，只是为了方便存储和索引，我们通常用完全二叉树的形式来表示堆，事实上，广为人知的斐波那契堆和二项堆就不是完全二叉树，它们甚至都不是二叉树。
-- （**二叉**）堆是一个数组，它可以被看成是一个 **近似的完全二叉树**。——《算法导论》第三版
+![Ví dụ minh họa cấu trúc Heap](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-1.png)
 
-大家可以尝试判断下面给出的图是否是堆？
+Trong hình trên:
+- Cây 1 là **Max-Heap** (Mọi node cha đều $\ge$ node con).
+- Cây 2 là **Min-Heap** (Mọi node cha đều $\le$ node con).
+- Cây 3 **không phải là Heap** (Gốc 1 nhỏ hơn con 2 và 15, nhưng 15 lại lớn hơn 3).
 
-![判断是否满足堆性质的示例](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-1.png)
+---
 
-第 1 个和第 2 个是堆。第 1 个是最大堆，每个节点都比子树中所有节点大。第 2 个是最小堆，每个节点都比子树中所有节点小。
+## 2. Ứng dụng và Điểm mạnh của Heap
 
-第 3 个不是，第三个中，根结点 1 比 2 和 15 小，而 15 却比 3 大，19 比 5 大，不满足堆的性质。
+Heap được sử dụng khi chúng ta **liên tục cần truy xuất giá trị lớn nhất (hoặc nhỏ nhất)** từ một tập dữ liệu biến động (có liên tục các thao tác thêm mới hoặc xóa bỏ phần tử cực trị).
 
-## 堆的用途
+So sánh với Mảng có thứ tự (Sorted Array):
+- Khởi tạo mảng có thứ tự mất $O(n \log n)$. Lấy giá trị lớn nhất mất $O(1)$. Nhưng mỗi khi **chèn hoặc xóa một phần tử**, ta mất tới **$O(n)$** để dịch chuyển các phần tử trong mảng.
+- **Heap vượt trội hơn hẳn khi thao tác Chèn và Xóa**: Do chỉ cần di chuyển dọc theo chiều cao của cây nhị phân, thao tác chèn và xóa trên Heap chỉ tiêu tốn **$O(\log n)$**!
 
-当我们只关心所有数据中的最大值或者最小值，存在多次获取最大值或者最小值，多次插入或删除数据时，就可以使用堆。
+| Thao tác | Heap (Binary Heap) | Sorted Array (Mảng có thứ tự) | Unsorted Array (Mảng chưa sắp xếp) |
+| :--- | :--- | :--- | :--- |
+| **Xem phần tử cực trị** | $O(1)$ | $O(1)$ | $O(n)$ |
+| **Chèn phần tử mới** | $O(\log n)$ | $O(n)$ | $O(1)$ |
+| **Xóa phần tử cực trị** | $O(\log n)$ | $O(n)$ | $O(n)$ |
+| **Xây dựng từ mảng (Build Heap)** | **$O(n)$** (Floyd) | $O(n \log n)$ | $O(1)$ |
 
-有小伙伴可能会想到用有序数组，初始化一个有序数组时间复杂度是 `O(nlog(n))`，查找最大值或者最小值时间复杂度都是 `O(1)`，但是，涉及到更新（插入或删除）数据时，时间复杂度为 `O(n)`，即使是使用复杂度为 `O(log(n))` 的二分法找到要插入或者删除的数据，在移动数据时也需要 `O(n)` 的时间复杂度。
+---
 
-**相对于有序数组而言，堆的主要优势在于插入和删除数据效率较高。** 因为堆是基于完全二叉树实现的，所以在插入和删除数据时，只需要在二叉树中上下移动节点，时间复杂度为 `O(log(n))`，相比有序数组的 `O(n)`，效率更高。
+## 3. Phân loại Heap
 
-不过，需要注意的是：使用 Floyd 建堆法，从最后一个非叶节点开始依次执行下沉，时间复杂度为 `O(n)`；如果从空堆开始逐个插入 n 个元素，时间复杂度则为 `O(nlogn)`。
+- **Max-Heap (Đống cực đại)**: Giá trị của mọi node cha đều $\ge$ giá trị các node con. Đỉnh Heap luôn là phần tử **lớn nhất** trong toàn bộ tập dữ liệu.
+- **Min-Heap (Đống cực tiểu)**: Giá trị của mọi node cha đều $\le$ giá trị các node con. Đỉnh Heap luôn là phần tử **nhỏ nhất** trong toàn bộ tập dữ liệu.
 
-## 堆的分类
+![Minh họa Max-Heap và Min-Heap](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-2.png)
 
-堆分为 **最大堆** 和 **最小堆**。二者的区别在于节点的排序方式。
+---
 
-- **最大堆**：堆中的每一个节点的值都大于等于子树中所有节点的值
-- **最小堆**：堆中的每一个节点的值都小于等于子树中所有节点的值
+## 4. Cách lưu trữ Heap trong Mảng
 
-如下图所示，图 1 是最大堆，图 2 是最小堆
+Nhờ cấu trúc cây nhị phân hoàn chỉnh, Binary Heap được lưu trữ trực tiếp trong một **Mảng một chiều (Array)** mà không tốn thêm bất kỳ con trỏ nào.
 
-![最大堆和最小堆示例](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-2.png)
+![Lưu trữ Heap trong Mảng một chiều](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-storage.png)
 
-## 堆的存储
+Với quy ước chỉ số mảng bắt đầu từ **1** (hoặc điều chỉnh tương ứng nếu bắt đầu từ 0):
+- Node cha tại vị trí $i$.
+- Node con bên trái nằm tại vị trí: **$2i$** (hoặc $2i + 1$ nếu mảng 0-indexed).
+- Node con bên phải nằm tại vị trí: **$2i + 1$** (hoặc $2i + 2$ nếu mảng 0-indexed).
+- Node cha của node $i$ nằm tại vị trí: **$\lfloor i / 2 \rfloor$** (hoặc $\lfloor (i - 1) / 2 \rfloor$).
 
-之前介绍树的时候说过，由于完全二叉树的优秀性质，利用数组存储二叉树即节省空间，又方便索引（若根结点的序号为 1，那么对于树中任意节点 i，其左子节点序号为 `2*i`，右子节点序号为 `2*i+1`）。
+---
 
-为了方便存储和索引，（二叉）堆可以用完全二叉树的形式进行存储。存储的方式如下图所示：
+## 5. Các thao tác cốt lõi trên Heap
 
-![堆的数组顺序存储示意图](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-storage.png)
+### 1. Thao tác Chèn phần tử (Insertion / Sift-Up - Nổi lên)
+1. Đặt phần tử mới vào vị trí cuối cùng của mảng (cuối Heap).
+2. So sánh phần tử mới với node cha của nó. Nếu vi phạm tính chất Heap (ví dụ lớn hơn cha trong Max-Heap), ta **hoán đổi vị trí của nó với node cha**.
+3. Lặp lại quá trình này hướng lên trên cho đến khi thỏa mãn tính chất Heap hoặc chạm tới gốc. Thao tác này gọi là **Sift-Up (Thao tác nổi lên)**, độ phức tạp $O(\log n)$.
 
-## 堆的操作
+![Thao tác chèn và Sift-Up trong Heap](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-insert-2.png)
 
-堆的更新操作主要包括两种：**插入元素** 和 **删除堆顶元素**。操作过程需要着重掌握和理解。
+### 2. Thao tác Xóa đỉnh Heap (Extract-Max / Sift-Down - Chìm xuống)
+1. Lấy giá trị tại đỉnh Heap (vị trí chỉ số 1 / 0) ra ngoài.
+2. Đưa phần tử cuối cùng của mảng lên thế chỗ cho đỉnh Heap vừa bị xóa.
+3. So sánh phần tử này với các node con của nó. Hoán đổi nó với **node con có giá trị lớn hơn** (trong Max-Heap).
+4. Lặp lại quá trình hoán đổi đi xuống dưới cho đến khi nó lớn hơn tất cả các con hoặc trở thành node lá. Thao tác này gọi là **Sift-Down (Thao tác chìm xuống / Heapify)**, độ phức tạp $O(\log n)$.
 
-> 在进入正题之前，再重申一遍，堆是一个公平的公司，有能力的人自然会走到与他能力所匹配的位置
+![Thao tác xóa đỉnh và Sift-Down trong Heap](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-delete-top-5.png)
 
-### 插入元素
+---
 
-> 插入元素，作为一个新入职的员工，初来乍到，这个员工需要从基层做起
+## 6. Thuật toán Sắp xếp vun đống (Heap Sort)
 
-**1. 将要插入的元素放到最后**
+Heap Sort bao gồm 2 giai đoạn:
+1. **Xây dựng Heap (Build Heap)**: Biến mảng $n$ phần tử thành một Max-Heap. Bằng thuật toán Floyd (Sift-Down từ vị trí $\lfloor n/2 \rfloor$ ngược về 1), thời gian xây dựng chỉ tốn **$O(n)$**.
+2. **Sắp xếp (Sorting)**:
+   - Lặp $n-1$ lần: Hoán đổi đỉnh Heap (phần tử lớn nhất) với phần tử cuối cùng của Heap, thu hẹp kích thước Heap đi 1, sau đó thực hiện Sift-Down từ đỉnh để khôi phục Max-Heap.
+   - Kết quả thu được một mảng sắp xếp tăng dần tại chỗ (**In-place Sort**) với thời gian $O(n \log n)$ và bộ nhớ phụ $O(1)$.
 
-![堆插入元素：新元素放到数组末尾](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-insert-1.png)
+![Quy trình sắp xếp vun đống Heap Sort](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-sort-6.png)
 
-> 有能力的人会逐渐升职加薪，是金子总会发光的！！！
+---
 
-**2. 从底向上，如果父结点比该元素小，则该节点和父结点交换，直到无法交换**
+## 7. Ứng dụng thực tế và Bài toán Top-K trong Java
 
-![堆插入元素：新元素与父节点比较并上浮](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-insert-2.png)
-
-![堆插入元素：上浮后恢复堆性质](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-insert-3.png)
-
-### 删除堆顶元素
-
-根据堆的性质可知，最大堆的堆顶元素为所有元素中最大的，最小堆的堆顶元素是所有元素中最小的。当我们需要多次查找最大元素或者最小元素的时候，可以利用堆来实现。
-
-删除堆顶元素后，为了保持堆的性质，需要对堆的结构进行调整，我们将这个过程称之为“**堆化**”。常见调整方向有两种：
-
-- 自底向上堆化：插入元素时，新元素从末尾向上移动，也叫上浮。
-- 自顶向下堆化：删除堆顶时，末尾元素移到堆顶后向下移动，也叫下沉。
-
-#### 一个不完整的空穴上移过程
-
-> 在堆这个公司中，会出现老大离职的现象，老大离职之后，他的位置就空出来了
-
-下面先看一种容易想到但不完整的做法：直接删除堆顶元素，使数组中下标为 1 的位置空出。
-
-![删除堆顶元素：移除根节点](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-delete-top-1.png)
-
-> 那么他的位置由谁来接替呢，当然是他的直接下属了，谁能力强就让谁上呗
-
-比较根结点的左子节点和右子节点，也就是下标为 2,3 的数组元素，将较大的元素填充到根结点（下标为 1）的位置。
-
-![删除堆顶元素：较大的子节点上移到根节点](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-delete-top-2.png)
-
-> 这个时候又空出一个位置了，老规矩，谁有能力谁上
-
-一直循环比较空出位置的左右子节点，并将较大者移至空位，直到堆的最底部。
-
-![删除堆顶元素：自底向上堆化后留下空位](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-delete-top-3.png)
-
-此时虽然较大的子节点沿路径上移了，但数组内部留下了空位，已经不再满足完全二叉树的结构，因此不能算作一次完整、有效的堆顶删除。标准做法是先用末尾元素填补堆顶，再让它向下调整。
-
-#### 自顶向下堆化
-
-自顶向下的堆化用一个词形容就是“石沉大海”，那么第一件事情，就是把石头抬起来，从海面扔下去。这个石头就是堆的最后一个元素，我们将最后一个元素移动到堆顶。
-
-![删除堆顶元素：将末尾元素移动到堆顶](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-delete-top-4.png)
-
-然后开始将这个石头沉入海底，不停与左右子节点的值进行比较，和较大的子节点交换位置，直到无法交换位置。
-
-![删除堆顶元素：堆顶元素向下调整](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-delete-top-5.png)
-
-![删除堆顶元素：自顶向下堆化完成](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-delete-top-6.png)
-
-### 堆的操作总结
-
-- **插入元素**：先将元素放至数组末尾，再自底向上堆化，将末尾元素上浮
-- **删除堆顶元素**：将堆顶元素与末尾元素交换，缩小堆的大小，再从堆顶开始向下调整，直到恢复堆的性质。
-
-## 堆排序
-
-堆排序的过程分为两步：
-
-- 第一步是建堆，将一个无序的数组建立为一个堆
-- 第二步是排序，将堆顶元素取出，然后对剩下的元素进行堆化，反复迭代，直到所有元素被取出为止。
-
-### 建堆
-
-如果你已经足够了解堆化的过程，那么建堆的过程掌握起来就比较容易了。建堆的过程就是一个对所有非叶节点的自顶向下堆化过程。
-
-首先要了解哪些是非叶节点，最后一个节点的父结点及它之前的元素，都是非叶节点。也就是说，如果节点个数为 n，那么我们需要对 n/2 到 1 的节点进行自顶向下（沉底）堆化。
-
-具体过程如下图：
-
-![建堆过程：初始无序数组对应的完全二叉树](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-build-1.png)
-
-将初始的无序数组抽象为一棵树，图中的节点个数为 6，所以 4,5,6 节点为叶节点，1,2,3 节点为非叶节点，所以要对 1-3 号节点进行自顶向下（沉底）堆化，注意，顺序是从后往前堆化，从 3 号节点开始，一直到 1 号节点。
-
-3 号节点堆化结果：
-
-![建堆过程：3 号节点完成下沉](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-build-2.png)
-
-2 号节点堆化结果：
-
-![建堆过程：2 号节点完成下沉](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-build-3.png)
-
-1 号节点堆化结果：
-
-![建堆过程：1 号节点完成下沉并形成最大堆](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-build-4.png)
-
-至此，数组所对应的树已经成为了一个最大堆，建堆完成！
-
-### 排序
-
-由于堆顶元素是所有元素中最大的，所以我们重复取出堆顶元素，将这个最大的堆顶元素放至数组末尾，并对剩下的元素进行堆化即可。
-
-现在思考两个问题：
-
-- 删除堆顶元素后需要执行自顶向下（沉底）堆化还是自底向上（上浮）堆化？
-- 取出的堆顶元素存在哪，新建一个数组存？
-
-先回答第一个问题，我们需要执行自顶向下（沉底）堆化，这个堆化一开始要将末尾元素移动至堆顶，这个时候末尾的位置就空出来了，由于堆中元素已经减小，这个位置不会再被使用，所以我们可以将取出的元素放在末尾。
-
-机智的小伙伴已经发现了，这其实是做了一次交换操作，将堆顶和末尾元素调换位置，从而将取出堆顶元素和堆化的第一步（将末尾元素放至根结点位置）进行合并。
-
-详细过程如下图所示：
-
-取出第一个元素并堆化：
-
-![堆排序过程：第 1 轮取出堆顶元素并堆化](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-sort-1.png)
-
-取出第二个元素并堆化：
-
-![堆排序过程：第 2 轮取出堆顶元素并堆化](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-sort-2.png)
-
-取出第三个元素并堆化：
-
-![堆排序过程：第 3 轮取出堆顶元素并堆化](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-sort-3.png)
-
-取出第四个元素并堆化：
-
-![堆排序过程：第 4 轮取出堆顶元素并堆化](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-sort-4.png)
-
-取出第五个元素并堆化：
-
-![堆排序过程：第 5 轮取出堆顶元素并堆化](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-sort-5.png)
-
-取出第六个元素并堆化：
-
-![堆排序过程：所有元素完成排序](https://oss.javaguide.cn/github/javaguide/cs-basics/data-structure/heap-sort-6.png)
-
-堆排序完成！
-
-## 面试复盘重点
-
-堆在面试里常和优先队列、Top K、定时任务、延迟队列放在一起问。
-
-| 操作     | 时间复杂度 | 说明                           |
-| -------- | ---------- | ------------------------------ |
-| 查看堆顶 | `O(1)`     | 最大堆堆顶最大，最小堆堆顶最小 |
-| 插入元素 | `O(logn)`  | 插入末尾后上浮                 |
-| 删除堆顶 | `O(logn)`  | 末尾元素换到堆顶后下沉         |
-| 建堆     | `O(n)`     | 从最后一个非叶子节点开始下沉   |
-| 堆排序   | `O(nlogn)` | 原地排序，但不稳定             |
-
-Java 里的 `PriorityQueue` 默认是小顶堆：
+Trong Java, `java.util.PriorityQueue` chính là cài đặt chuẩn mực của **Min-Heap (Đống cực tiểu)**.
 
 ```java
+// Mặc định là Min-Heap (phần tử nhỏ nhất ở đầu)
 PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+// Tùy biến thành Max-Heap (phần tử lớn nhất ở đầu)
 PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
 ```
 
-不要写成 `b - a`，极端整数值下可能溢出，导致比较结果错误。
+> **Lưu ý**: Tuyệt đối không viết biểu thức so sánh dạng `(b - a)` vì có thể gây ra hiện tượng tràn số nguyên (Integer Overflow) khi gặp giá trị cực đoan (`Integer.MIN_VALUE`). Hãy luôn dùng `Integer.compare(b, a)`.
 
-Top K 问题常见选择：
+### Giải quyết bài toán Tìm phần tử lớn thứ K (Kth Largest Element)
 
-- 通用场景或数据流中求第 K 大：维护大小为 K 的小顶堆，时间复杂度为 `O(nlogk)`，空间复杂度为 `O(k)`。
-- 一次性数组中求第 K 大，且要求线性时间：使用快速选择，平均时间复杂度为 `O(n)`。
-- 求前 K 高频：先用哈希表计数，再用小顶堆保留 K 个高频元素。
-- 数据流中位数：一个大顶堆维护较小的一半，一个小顶堆维护较大的一半。
-
-需要注意的是，小顶堆是求第 K 大的通用解法，但不满足所有题目的复杂度要求。例如，[LeetCode 215. 数组中的第 K 个最大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array/) 要求使用 `O(n)` 时间复杂度的算法，通常应采用随机化快速选择，其期望时间复杂度为 `O(n)`；如果严格要求最坏时间复杂度为 `O(n)`，则需要使用 BFPRT 算法。具体的方案对比可以参考 [Top K 问题面试题总结](../algorithms/top-k.md#快排分区思路)。
-
-## Java 代码模板
-
-第 K 大问题可以用大小为 K 的小顶堆。堆顶始终是当前前 K 大里最小的那个元素，如果新元素比堆顶大，就替换堆顶。这种写法的时间复杂度为 `O(nlogk)`，空间复杂度为 `O(k)`，适合通用 Top K 和数据流场景。
+Sử dụng một **Min-Heap kích thước K**:
+- Duyệt qua từng phần tử trong mảng: Nếu Heap chưa đủ $K$ phần tử thì `offer` vào; nếu Heap đã đủ $K$ phần tử và phần tử hiện tại lớn hơn đỉnh Heap (`num > heap.peek()`), ta `poll` đỉnh cũ và `offer` phần tử mới vào.
+- Sau khi duyệt hết mảng, đỉnh Heap chính là **Phần tử lớn thứ K**!
+- Độ phức tạp thời gian: **$O(n \log k)$**, độ phức tạp không gian: **$O(k)$**.
 
 ```java
-int findKthLargest(int[] nums, int k) {
-    PriorityQueue<Integer> heap = new PriorityQueue<>();
+public int findKthLargest(int[] nums, int k) {
+    PriorityQueue<Integer> heap = new PriorityQueue<>(k);
     for (int num : nums) {
         if (heap.size() < k) {
             heap.offer(num);
@@ -253,52 +140,11 @@ int findKthLargest(int[] nums, int k) {
 }
 ```
 
-前 K 高频元素通常是“哈希表计数 + 小顶堆”：
+## Đề xuất bài tập luyện tập
 
-```java
-int[] topKFrequent(int[] nums, int k) {
-    Map<Integer, Integer> count = new HashMap<>();
-    for (int num : nums) {
-        count.put(num, count.getOrDefault(num, 0) + 1);
-    }
-    PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> Integer.compare(a[1], b[1]));
-    for (Map.Entry<Integer, Integer> entry : count.entrySet()) {
-        heap.offer(new int[] {entry.getKey(), entry.getValue()});
-        if (heap.size() > k) {
-            heap.poll();
-        }
-    }
-    int[] ans = new int[k];
-    for (int i = k - 1; i >= 0; i--) {
-        ans[i] = heap.poll()[0];
-    }
-    return ans;
-}
-```
-
-## 过程示意和边界样例
-
-维护大小为 K 的小顶堆时，可以把堆理解成“候选池”：
-
-```text
-1. 候选池没满：直接放入。
-2. 候选池已满，新元素 <= 堆顶：进不了前 K，跳过。
-3. 候选池已满，新元素 > 堆顶：弹出堆顶，放入新元素。
-4. 遍历结束后，堆顶就是第 K 大。
-```
-
-几个边界样例建议先过一遍：
-
-- `k == 1`：求最大值。
-- `k == nums.length`：求最小值。
-- 数组里有重复元素：第 K 大通常按排序位置算，不是第 K 个不同元素。
-- 比较器不要写 `b - a`，极端值可能溢出。
-
-## 推荐练习题
-
-- [215. 数组中的第 K 个最大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array/)（题目要求 `O(n)` 时间复杂度，优先练习快速选择）
-- [347. 前 K 个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/)
-- [703. 数据流中的第 K 大元素](https://leetcode.cn/problems/kth-largest-element-in-a-stream/)
-- [295. 数据流的中位数](https://leetcode.cn/problems/find-median-from-data-stream/)
+- [LeetCode 215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+- [LeetCode 347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
+- [LeetCode 703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/)
+- [LeetCode 295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/)
 
 <!-- @include: @article-footer.snippet.md -->
